@@ -1,0 +1,27 @@
+# dependencies
+node_modules/
+
+# secrets / local environment (NEVER commit) — keep .env.example
+.env
+.env.*
+!.env.example
+server/.env
+
+# logs
+*.log
+npm-debug.log*
+
+# OS / editor / tooling cruft
+.DS_Store
+Thumbs.db
+.vscode/
+.claude/
+
+# build / preview artifacts
+home-preview.png
+prev-*.png
+preview*.png
+p-*.png
+admin-test.html
+client/admin-test.html
+*.tmp

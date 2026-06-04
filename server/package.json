@@ -1,0 +1,21 @@
+{
+  "name": "fakkir-server",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "start": "node src/server.js",
+    "seed": "node src/seed.js",
+    "dev": "node --watch src/server.js",
+    "seed:supabase": "node src/seed-supabase.js",
+    "build:sql": "node src/build-seed-sql.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.19.2",
+    "pg": "^8.12.0",
+    "@supabase/supabase-js": "^2.45.4"
+  },
+  "devDependencies": {}
+}

@@ -1,0 +1,2620 @@
+{
+  "categories": [
+    {
+      "slug": "geo",
+      "name": "جغرافيا",
+      "color": "blue",
+      "image": "assets/img/categories/geo.png"
+    },
+    {
+      "slug": "history",
+      "name": "تاريخ",
+      "color": "gold",
+      "image": "assets/img/categories/history.png"
+    },
+    {
+      "slug": "palestine",
+      "name": "فلسطين",
+      "color": "green",
+      "image": "assets/img/categories/palestine.png"
+    },
+    {
+      "slug": "seerah",
+      "name": "السيرة النبوية",
+      "color": "teal",
+      "image": "assets/img/categories/seerah.png"
+    },
+    {
+      "slug": "quran",
+      "name": "القرآن الكريم",
+      "color": "green",
+      "image": "assets/img/categories/quran.png"
+    },
+    {
+      "slug": "flags",
+      "name": "أعلام الدول",
+      "color": "red",
+      "image": "assets/img/categories/flags.png"
+    },
+    {
+      "slug": "sports",
+      "name": "الرياضة",
+      "color": "cyan",
+      "image": "assets/img/categories/sports.png"
+    },
+    {
+      "slug": "riddles",
+      "name": "الألغاز",
+      "color": "purple",
+      "image": "assets/img/categories/riddles.png"
+    },
+    {
+      "slug": "football",
+      "name": "كرة القدم",
+      "color": "blue",
+      "image": "assets/img/categories/football.png"
+    },
+    {
+      "slug": "animals",
+      "name": "عالم الحيوان",
+      "color": "gold",
+      "image": "assets/img/categories/animals.png"
+    },
+    {
+      "slug": "tech",
+      "name": "التكنولوجيا",
+      "color": "cyan",
+      "image": "assets/img/categories/tech.png"
+    },
+    {
+      "slug": "science",
+      "name": "العلوم",
+      "color": "teal",
+      "image": "assets/img/categories/science.png"
+    },
+    {
+      "slug": "general",
+      "name": "معلومات عامة",
+      "color": "gold",
+      "image": "assets/img/categories/general.png"
+    },
+    {
+      "slug": "whoami",
+      "name": "احزر ماذا أنا",
+      "color": "purple",
+      "image": "assets/img/categories/whoami.png"
+    },
+    {
+      "slug": "proverbs",
+      "name": "تكملة المثل",
+      "color": "teal",
+      "image": "assets/img/categories/proverbs.png"
+    },
+    {
+      "slug": "math",
+      "name": "الرياضيات والأرقام",
+      "color": "blue",
+      "image": "assets/img/categories/math.png"
+    },
+    {
+      "slug": "dish",
+      "name": "ما هي الأكلة",
+      "color": "red",
+      "image": "assets/img/categories/dish.png"
+    },
+    {
+      "slug": "crime",
+      "name": "الجريمة",
+      "color": "red",
+      "image": "assets/img/categories/crime.png"
+    },
+    {
+      "slug": "rescue",
+      "name": "إنقاذ المتهم",
+      "color": "green",
+      "image": "assets/img/categories/rescue.png"
+    },
+    {
+      "slug": "closest",
+      "name": "الأقرب إلى الرقم",
+      "color": "purple",
+      "image": "assets/img/categories/closest.png"
+    }
+  ],
+  "flags": {
+    "japan": "assets/img/flags/japan.png",
+    "france": "assets/img/flags/france.png",
+    "germany": "assets/img/flags/germany.png",
+    "italy": "assets/img/flags/italy.png",
+    "turkey": "assets/img/flags/turkey.png",
+    "saudi": "assets/img/flags/saudi.png",
+    "palestine": "assets/img/flags/palestine.png",
+    "canada": "assets/img/flags/canada.png",
+    "switzerland": "assets/img/flags/switzerland.png",
+    "sweden": "assets/img/flags/sweden.png",
+    "netherlands": "assets/img/flags/netherlands.png",
+    "bangladesh": "assets/img/flags/bangladesh.png"
+  },
+  "questions": [
+    {
+      "category": "geo",
+      "version": 1,
+      "ord": 0,
+      "value": 200,
+      "type": "normal",
+      "q": "ما أكبر قارة في العالم من حيث المساحة؟",
+      "a": "آسيا",
+      "note": "آسيا الأكبر مساحةً وسكاناً."
+    },
+    {
+      "category": "geo",
+      "version": 1,
+      "ord": 1,
+      "value": 200,
+      "type": "normal",
+      "q": "ما أطول نهر في العالم؟",
+      "a": "نهر النيل",
+      "note": "بطول يقارب 6650 كم."
+    },
+    {
+      "category": "geo",
+      "version": 1,
+      "ord": 2,
+      "value": 400,
+      "type": "normal",
+      "q": "ما أكبر دولة عربية من حيث المساحة؟",
+      "a": "الجزائر",
+      "note": "مساحتها تتجاوز 2.38 مليون كم²."
+    },
+    {
+      "category": "geo",
+      "version": 1,
+      "ord": 3,
+      "value": 400,
+      "type": "normal",
+      "q": "ما أعلى قمة جبلية في العالم؟",
+      "a": "قمة إيفرست",
+      "note": "في جبال الهيمالايا، 8849 متراً."
+    },
+    {
+      "category": "geo",
+      "version": 1,
+      "ord": 4,
+      "value": 600,
+      "type": "normal",
+      "q": "ما أصغر قارة في العالم؟",
+      "a": "أستراليا (أوقيانوسيا)",
+      "note": "أصغر القارات مساحةً."
+    },
+    {
+      "category": "geo",
+      "version": 1,
+      "ord": 5,
+      "value": 600,
+      "type": "normal",
+      "q": "ما أكبر صحراء حارّة في العالم؟",
+      "a": "الصحراء الكبرى",
+      "note": "تمتد في شمال إفريقيا."
+    },
+    {
+      "category": "geo",
+      "version": 2,
+      "ord": 0,
+      "value": 200,
+      "type": "normal",
+      "q": "ما عاصمة فرنسا؟",
+      "a": "باريس"
+    },
+    {
+      "category": "geo",
+      "version": 2,
+      "ord": 1,
+      "value": 200,
+      "type": "normal",
+      "q": "في أي قارة تقع مصر؟",
+      "a": "إفريقيا",
+      "note": "مع امتداد سيناء في آسيا."
+    },
+    {
+      "category": "geo",
+      "version": 2,
+      "ord": 2,
+      "value": 400,
+      "type": "normal",
+      "q": "ما أكبر محيط في العالم؟",
+      "a": "المحيط الهادئ"
+    },
+    {
+      "category": "geo",
+      "version": 2,
+      "ord": 3,
+      "value": 400,
+      "type": "normal",
+      "q": "ما الدولة الأكثر سكاناً في العالم؟",
+      "a": "الهند",
+      "note": "تجاوزت الصين عام 2023."
+    },
+    {
+      "category": "geo",
+      "version": 2,
+      "ord": 4,
+      "value": 600,
+      "type": "normal",
+      "q": "ما أطول سلسلة جبال في العالم؟",
+      "a": "جبال الأنديز",
+      "note": "في أمريكا الجنوبية."
+    },
+    {
+      "category": "geo",
+      "version": 2,
+      "ord": 5,
+      "value": 600,
+      "type": "normal",
+      "q": "ما البحر الذي يفصل بين آسيا وإفريقيا وتطل عليه دول عربية؟",
+      "a": "البحر الأحمر"
+    },
+    {
+      "category": "history",
+      "version": 1,
+      "ord": 0,
+      "value": 200,
+      "type": "normal",
+      "q": "من أول الخلفاء الراشدين؟",
+      "a": "أبو بكر الصدّيق"
+    },
+    {
+      "category": "history",
+      "version": 1,
+      "ord": 1,
+      "value": 200,
+      "type": "normal",
+      "q": "في أي قارة قامت حضارة الفراعنة؟",
+      "a": "إفريقيا",
+      "note": "في مصر على ضفاف النيل."
+    },
+    {
+      "category": "history",
+      "version": 1,
+      "ord": 2,
+      "value": 400,
+      "type": "normal",
+      "q": "من القائد المسلم الذي فتح الأندلس؟",
+      "a": "طارق بن زياد",
+      "note": "سنة 711م."
+    },
+    {
+      "category": "history",
+      "version": 1,
+      "ord": 3,
+      "value": 400,
+      "type": "normal",
+      "q": "ما أول معركة كبرى في الإسلام؟",
+      "a": "غزوة بدر",
+      "note": "في السنة الثانية للهجرة."
+    },
+    {
+      "category": "history",
+      "version": 1,
+      "ord": 4,
+      "value": 600,
+      "type": "normal",
+      "q": "في أي عام كانت الهجرة النبوية (بداية التقويم الهجري)؟",
+      "a": "622م"
+    },
+    {
+      "category": "history",
+      "version": 1,
+      "ord": 5,
+      "value": 600,
+      "type": "normal",
+      "q": "من القائد الذي حرّر بيت المقدس من الصليبيين؟",
+      "a": "صلاح الدين الأيوبي",
+      "note": "بعد معركة حطين 1187م."
+    },
+    {
+      "category": "history",
+      "version": 2,
+      "ord": 0,
+      "value": 200,
+      "type": "normal",
+      "q": "كم عدد الخلفاء الراشدين؟",
+      "a": "أربعة"
+    },
+    {
+      "category": "history",
+      "version": 2,
+      "ord": 1,
+      "value": 200,
+      "type": "normal",
+      "q": "ما الحضارة التي بنت الأهرامات؟",
+      "a": "الفرعونية (المصرية القديمة)"
+    },
+    {
+      "category": "history",
+      "version": 2,
+      "ord": 2,
+      "value": 400,
+      "type": "normal",
+      "q": "ما المعركة التي أوقفت زحف المغول؟",
+      "a": "عين جالوت",
+      "note": "سنة 1260م بقيادة قطز."
+    },
+    {
+      "category": "history",
+      "version": 2,
+      "ord": 3,
+      "value": 400,
+      "type": "normal",
+      "q": "من مؤسّس الدولة العباسية؟",
+      "a": "أبو العباس السفّاح"
+    },
+    {
+      "category": "history",
+      "version": 2,
+      "ord": 4,
+      "value": 600,
+      "type": "normal",
+      "q": "في أي عام سقطت غرناطة آخر معاقل الأندلس؟",
+      "a": "1492م"
+    },
+    {
+      "category": "history",
+      "version": 2,
+      "ord": 5,
+      "value": 600,
+      "type": "normal",
+      "q": "من القائد العثماني الذي فتح القسطنطينية؟",
+      "a": "محمد الفاتح",
+      "note": "سنة 1453م."
+    },
+    {
+      "category": "palestine",
+      "version": 1,
+      "ord": 0,
+      "value": 200,
+      "type": "normal",
+      "q": "ما عاصمة فلسطين؟",
+      "a": "القدس"
+    },
+    {
+      "category": "palestine",
+      "version": 1,
+      "ord": 1,
+      "value": 200,
+      "type": "normal",
+      "q": "ما المسجد الذي يُعدّ أولى القبلتين ويقع في فلسطين؟",
+      "a": "المسجد الأقصى"
+    },
+    {
+      "category": "palestine",
+      "version": 1,
+      "ord": 2,
+      "value": 400,
+      "type": "normal",
+      "q": "ما اسم القبة الذهبية الشهيرة في القدس؟",
+      "a": "قبة الصخرة"
+    },
+    {
+      "category": "palestine",
+      "version": 1,
+      "ord": 3,
+      "value": 400,
+      "type": "normal",
+      "q": "في أي مدينة فلسطينية وُلد المسيح عيسى عليه السلام؟",
+      "a": "بيت لحم"
+    },
+    {
+      "category": "palestine",
+      "version": 1,
+      "ord": 4,
+      "value": 600,
+      "type": "normal",
+      "q": "ما النهر الذي يشكّل الحدود الشرقية لفلسطين؟",
+      "a": "نهر الأردن"
+    },
+    {
+      "category": "palestine",
+      "version": 1,
+      "ord": 5,
+      "value": 600,
+      "type": "normal",
+      "q": "ما المدينة الفلسطينية الساحلية المحاصرة جنوباً؟",
+      "a": "غزة"
+    },
+    {
+      "category": "palestine",
+      "version": 2,
+      "ord": 0,
+      "value": 200,
+      "type": "normal",
+      "q": "ما لون الشريط الأعلى في علم فلسطين؟",
+      "a": "الأسود"
+    },
+    {
+      "category": "palestine",
+      "version": 2,
+      "ord": 1,
+      "value": 200,
+      "type": "normal",
+      "q": "ما البحر الذي تطل عليه مدينة غزة؟",
+      "a": "البحر المتوسط"
+    },
+    {
+      "category": "palestine",
+      "version": 2,
+      "ord": 2,
+      "value": 400,
+      "type": "normal",
+      "q": "ما أكبر مدينة فلسطينية في الضفة الغربية سكاناً؟",
+      "a": "الخليل"
+    },
+    {
+      "category": "palestine",
+      "version": 2,
+      "ord": 3,
+      "value": 400,
+      "type": "normal",
+      "q": "ما البحر المالح المنخفض المشترك بين فلسطين والأردن؟",
+      "a": "البحر الميت"
+    },
+    {
+      "category": "palestine",
+      "version": 2,
+      "ord": 4,
+      "value": 600,
+      "type": "normal",
+      "q": "في أي عام وقعت النكبة الفلسطينية؟",
+      "a": "1948م"
+    },
+    {
+      "category": "palestine",
+      "version": 2,
+      "ord": 5,
+      "value": 600,
+      "type": "normal",
+      "q": "ما المدينة الفلسطينية الساحلية المشهورة ببرتقالها؟",
+      "a": "يافا"
+    },
+    {
+      "category": "seerah",
+      "version": 1,
+      "ord": 0,
+      "value": 200,
+      "type": "normal",
+      "q": "في أي مدينة وُلد النبي محمد ﷺ؟",
+      "a": "مكة المكرمة"
+    },
+    {
+      "category": "seerah",
+      "version": 1,
+      "ord": 1,
+      "value": 200,
+      "type": "normal",
+      "q": "ما اسم والدة النبي ﷺ؟",
+      "a": "آمنة بنت وهب"
+    },
+    {
+      "category": "seerah",
+      "version": 1,
+      "ord": 2,
+      "value": 400,
+      "type": "normal",
+      "q": "من أول من آمن من النساء؟",
+      "a": "خديجة بنت خويلد"
+    },
+    {
+      "category": "seerah",
+      "version": 1,
+      "ord": 3,
+      "value": 400,
+      "type": "normal",
+      "q": "ما اسم الغار الذي نزل فيه الوحي أول مرة؟",
+      "a": "غار حِراء"
+    },
+    {
+      "category": "seerah",
+      "version": 1,
+      "ord": 4,
+      "value": 600,
+      "type": "normal",
+      "q": "كم كان عمر النبي ﷺ عند البعثة؟",
+      "a": "40 عاماً"
+    },
+    {
+      "category": "seerah",
+      "version": 1,
+      "ord": 5,
+      "value": 600,
+      "type": "normal",
+      "q": "ما المدينة التي هاجر إليها النبي ﷺ؟",
+      "a": "المدينة المنورة",
+      "note": "كانت تُسمّى يثرب."
+    },
+    {
+      "category": "seerah",
+      "version": 2,
+      "ord": 0,
+      "value": 200,
+      "type": "normal",
+      "q": "من جدّ النبي ﷺ الذي كفله بعد وفاة أبيه؟",
+      "a": "عبد المطّلب"
+    },
+    {
+      "category": "seerah",
+      "version": 2,
+      "ord": 1,
+      "value": 200,
+      "type": "normal",
+      "q": "من عمّ النبي ﷺ الذي ربّاه ودافع عنه؟",
+      "a": "أبو طالب"
+    },
+    {
+      "category": "seerah",
+      "version": 2,
+      "ord": 2,
+      "value": 400,
+      "type": "normal",
+      "q": "من زوجة النبي ﷺ بنت أبي بكر الملقّبة بأم المؤمنين؟",
+      "a": "عائشة رضي الله عنها"
+    },
+    {
+      "category": "seerah",
+      "version": 2,
+      "ord": 3,
+      "value": 400,
+      "type": "normal",
+      "q": "كم عاماً دعا النبي ﷺ في مكة قبل الهجرة؟",
+      "a": "13 عاماً"
+    },
+    {
+      "category": "seerah",
+      "version": 2,
+      "ord": 4,
+      "value": 600,
+      "type": "normal",
+      "q": "ما أول غزوة قادها النبي ﷺ بنفسه وانتصر فيها؟",
+      "a": "غزوة بدر"
+    },
+    {
+      "category": "seerah",
+      "version": 2,
+      "ord": 5,
+      "value": 600,
+      "type": "normal",
+      "q": "في أي سنة هجرية كان فتح مكة؟",
+      "a": "السنة الثامنة للهجرة"
+    },
+    {
+      "category": "quran",
+      "version": 1,
+      "ord": 0,
+      "value": 200,
+      "type": "normal",
+      "q": "كم عدد سور القرآن الكريم؟",
+      "a": "114 سورة"
+    },
+    {
+      "category": "quran",
+      "version": 1,
+      "ord": 1,
+      "value": 200,
+      "type": "normal",
+      "q": "ما أول سورة في المصحف الشريف؟",
+      "a": "الفاتحة"
+    },
+    {
+      "category": "quran",
+      "version": 1,
+      "ord": 2,
+      "value": 400,
+      "type": "normal",
+      "q": "ما أطول سورة في القرآن؟",
+      "a": "البقرة"
+    },
+    {
+      "category": "quran",
+      "version": 1,
+      "ord": 3,
+      "value": 400,
+      "type": "normal",
+      "q": "كم عدد أجزاء القرآن الكريم؟",
+      "a": "30 جزءاً"
+    },
+    {
+      "category": "quran",
+      "version": 1,
+      "ord": 4,
+      "value": 600,
+      "type": "normal",
+      "q": "ما السورة التي تُسمّى قلب القرآن؟",
+      "a": "يس"
+    },
+    {
+      "category": "quran",
+      "version": 1,
+      "ord": 5,
+      "value": 600,
+      "type": "normal",
+      "q": "ما أقصر سورة في القرآن؟",
+      "a": "الكوثر"
+    },
+    {
+      "category": "quran",
+      "version": 2,
+      "ord": 0,
+      "value": 200,
+      "type": "normal",
+      "q": "ما السورة التي تُقرأ في كل ركعة من الصلاة؟",
+      "a": "الفاتحة"
+    },
+    {
+      "category": "quran",
+      "version": 2,
+      "ord": 1,
+      "value": 200,
+      "type": "normal",
+      "q": "في أي سورة وردت آية الكرسي؟",
+      "a": "البقرة"
+    },
+    {
+      "category": "quran",
+      "version": 2,
+      "ord": 2,
+      "value": 400,
+      "type": "normal",
+      "q": "ما السورة التي تُعادل ثلث القرآن في الأجر؟",
+      "a": "الإخلاص"
+    },
+    {
+      "category": "quran",
+      "version": 2,
+      "ord": 3,
+      "value": 400,
+      "type": "normal",
+      "q": "ما السورة التي بدأت باسم فاكهتين؟",
+      "a": "التين",
+      "note": "«والتين والزيتون»."
+    },
+    {
+      "category": "quran",
+      "version": 2,
+      "ord": 4,
+      "value": 600,
+      "type": "normal",
+      "q": "ما السورة التي ليس في أولها بسملة؟",
+      "a": "التوبة (براءة)"
+    },
+    {
+      "category": "quran",
+      "version": 2,
+      "ord": 5,
+      "value": 600,
+      "type": "normal",
+      "q": "كم مرة ذُكر لفظ الجلالة «الله» في الفاتحة؟",
+      "a": "مرتان",
+      "note": "في البسملة و«الحمد لله»."
+    },
+    {
+      "category": "flags",
+      "version": 1,
+      "ord": 0,
+      "value": 200,
+      "type": "flag",
+      "t": "flag",
+      "flag": "japan",
+      "a": "اليابان",
+      "note": "دائرة حمراء تمثّل الشمس على خلفية بيضاء."
+    },
+    {
+      "category": "flags",
+      "version": 1,
+      "ord": 1,
+      "value": 200,
+      "type": "flag",
+      "t": "flag",
+      "flag": "saudi",
+      "a": "السعودية",
+      "note": "يحمل الشهادة وسيفاً باللون الأبيض."
+    },
+    {
+      "category": "flags",
+      "version": 1,
+      "ord": 2,
+      "value": 400,
+      "type": "flag",
+      "t": "flag",
+      "flag": "france",
+      "a": "فرنسا",
+      "note": "أزرق فأبيض فأحمر عمودياً."
+    },
+    {
+      "category": "flags",
+      "version": 1,
+      "ord": 3,
+      "value": 400,
+      "type": "flag",
+      "t": "flag",
+      "flag": "italy",
+      "a": "إيطاليا",
+      "note": "أخضر فأبيض فأحمر عمودياً."
+    },
+    {
+      "category": "flags",
+      "version": 1,
+      "ord": 4,
+      "value": 600,
+      "type": "flag",
+      "t": "flag",
+      "flag": "germany",
+      "a": "ألمانيا",
+      "note": "أسود فأحمر فذهبي أفقياً."
+    },
+    {
+      "category": "flags",
+      "version": 1,
+      "ord": 5,
+      "value": 600,
+      "type": "flag",
+      "t": "flag",
+      "flag": "turkey",
+      "a": "تركيا",
+      "note": "هلال ونجمة بيضاوان على أحمر."
+    },
+    {
+      "category": "flags",
+      "version": 2,
+      "ord": 0,
+      "value": 200,
+      "type": "flag",
+      "t": "flag",
+      "flag": "canada",
+      "a": "كندا",
+      "note": "ورقة القيقب الحمراء."
+    },
+    {
+      "category": "flags",
+      "version": 2,
+      "ord": 1,
+      "value": 200,
+      "type": "flag",
+      "t": "flag",
+      "flag": "palestine",
+      "a": "فلسطين",
+      "note": "أسود وأبيض وأخضر مع مثلث أحمر."
+    },
+    {
+      "category": "flags",
+      "version": 2,
+      "ord": 2,
+      "value": 400,
+      "type": "flag",
+      "t": "flag",
+      "flag": "netherlands",
+      "a": "هولندا",
+      "note": "أحمر فأبيض فأزرق أفقياً."
+    },
+    {
+      "category": "flags",
+      "version": 2,
+      "ord": 3,
+      "value": 400,
+      "type": "flag",
+      "t": "flag",
+      "flag": "sweden",
+      "a": "السويد",
+      "note": "صليب أصفر على أزرق."
+    },
+    {
+      "category": "flags",
+      "version": 2,
+      "ord": 4,
+      "value": 600,
+      "type": "flag",
+      "t": "flag",
+      "flag": "switzerland",
+      "a": "سويسرا",
+      "note": "صليب أبيض على مربع أحمر."
+    },
+    {
+      "category": "flags",
+      "version": 2,
+      "ord": 5,
+      "value": 600,
+      "type": "flag",
+      "t": "flag",
+      "flag": "bangladesh",
+      "a": "بنغلاديش",
+      "note": "دائرة حمراء على خلفية خضراء."
+    },
+    {
+      "category": "sports",
+      "version": 1,
+      "ord": 0,
+      "value": 200,
+      "type": "normal",
+      "q": "كم عدد لاعبي فريق كرة السلة داخل الملعب؟",
+      "a": "5 لاعبين"
+    },
+    {
+      "category": "sports",
+      "version": 1,
+      "ord": 1,
+      "value": 200,
+      "type": "normal",
+      "q": "كل كم سنة تُقام الألعاب الأولمبية الصيفية؟",
+      "a": "كل 4 سنوات"
+    },
+    {
+      "category": "sports",
+      "version": 1,
+      "ord": 2,
+      "value": 400,
+      "type": "normal",
+      "q": "في أي رياضة اشتهر اللاعب رفائيل نادال؟",
+      "a": "التنس"
+    },
+    {
+      "category": "sports",
+      "version": 1,
+      "ord": 3,
+      "value": 400,
+      "type": "normal",
+      "q": "كم عدد الحلقات في شعار الأولمبياد؟",
+      "a": "5 حلقات"
+    },
+    {
+      "category": "sports",
+      "version": 1,
+      "ord": 4,
+      "value": 600,
+      "type": "normal",
+      "q": "ما الرياضة التي تُلعب على طاولة بمضرب وكرة صغيرة؟",
+      "a": "تنس الطاولة"
+    },
+    {
+      "category": "sports",
+      "version": 1,
+      "ord": 5,
+      "value": 600,
+      "type": "normal",
+      "q": "في أي رياضة يُستخدم تعبير «الضربة القاضية»؟",
+      "a": "الملاكمة"
+    },
+    {
+      "category": "sports",
+      "version": 2,
+      "ord": 0,
+      "value": 200,
+      "type": "normal",
+      "q": "كم عدد لاعبي فريق الكرة الطائرة داخل الملعب؟",
+      "a": "6 لاعبين"
+    },
+    {
+      "category": "sports",
+      "version": 2,
+      "ord": 1,
+      "value": 200,
+      "type": "normal",
+      "q": "ما لون الحزام الذي يدل على الاحتراف في الكاراتيه؟",
+      "a": "الأسود"
+    },
+    {
+      "category": "sports",
+      "version": 2,
+      "ord": 2,
+      "value": 400,
+      "type": "normal",
+      "q": "ما الدولة التي استضافت أولمبياد 2020 (أقيمت 2021)؟",
+      "a": "اليابان (طوكيو)"
+    },
+    {
+      "category": "sports",
+      "version": 2,
+      "ord": 3,
+      "value": 400,
+      "type": "normal",
+      "q": "كم متراً يبلغ سباق العدو القصير الشهير في ألعاب القوى؟",
+      "a": "100 متر"
+    },
+    {
+      "category": "sports",
+      "version": 2,
+      "ord": 4,
+      "value": 600,
+      "type": "normal",
+      "q": "ما اسم أشهر سباق دراجات هوائية في العالم؟",
+      "a": "طواف فرنسا"
+    },
+    {
+      "category": "sports",
+      "version": 2,
+      "ord": 5,
+      "value": 600,
+      "type": "normal",
+      "q": "كم لاعباً في فريق الرغبي (اتحاد الرغبي)؟",
+      "a": "15 لاعباً"
+    },
+    {
+      "category": "riddles",
+      "version": 1,
+      "ord": 0,
+      "value": 200,
+      "type": "normal",
+      "q": "شيءٌ كلّما أخذتَ منه كَبُر، ما هو؟",
+      "a": "الحفرة"
+    },
+    {
+      "category": "riddles",
+      "version": 1,
+      "ord": 1,
+      "value": 200,
+      "type": "normal",
+      "q": "ما الشيء الذي يكتب ولا يقرأ؟",
+      "a": "القلم"
+    },
+    {
+      "category": "riddles",
+      "version": 1,
+      "ord": 2,
+      "value": 400,
+      "type": "normal",
+      "q": "له أوراق وليس بنبات، وله جلد وليس بحيوان، ما هو؟",
+      "a": "الكتاب"
+    },
+    {
+      "category": "riddles",
+      "version": 1,
+      "ord": 3,
+      "value": 400,
+      "type": "normal",
+      "q": "يمشي بلا رِجلين ويبكي بلا عينين، ما هو؟",
+      "a": "السحاب"
+    },
+    {
+      "category": "riddles",
+      "version": 1,
+      "ord": 4,
+      "value": 600,
+      "type": "normal",
+      "q": "ما الشيء الموجود في وسط «باريس»؟",
+      "a": "حرف الراء"
+    },
+    {
+      "category": "riddles",
+      "version": 1,
+      "ord": 5,
+      "value": 600,
+      "type": "normal",
+      "q": "ما الذي إذا نطقت باسمه كسرته؟",
+      "a": "الصمت"
+    },
+    {
+      "category": "riddles",
+      "version": 2,
+      "ord": 0,
+      "value": 200,
+      "type": "normal",
+      "q": "ما الشيء الذي له رقبة بلا رأس؟",
+      "a": "الزجاجة"
+    },
+    {
+      "category": "riddles",
+      "version": 2,
+      "ord": 1,
+      "value": 200,
+      "type": "normal",
+      "q": "ما الشيء الذي كلّما زاد نقص؟",
+      "a": "العُمر"
+    },
+    {
+      "category": "riddles",
+      "version": 2,
+      "ord": 2,
+      "value": 400,
+      "type": "normal",
+      "q": "ما الشيء الذي يسمع بلا أذن ويتكلّم بلا لسان؟",
+      "a": "الهاتف"
+    },
+    {
+      "category": "riddles",
+      "version": 2,
+      "ord": 3,
+      "value": 400,
+      "type": "normal",
+      "q": "أخت خالك وليست خالتك، من تكون؟",
+      "a": "أمّك"
+    },
+    {
+      "category": "riddles",
+      "version": 2,
+      "ord": 4,
+      "value": 600,
+      "type": "normal",
+      "q": "ما الشيء الذي يُرى في الماء ولا يبتلّ؟",
+      "a": "الظل (الانعكاس)"
+    },
+    {
+      "category": "riddles",
+      "version": 2,
+      "ord": 5,
+      "value": 600,
+      "type": "normal",
+      "q": "بيتٌ بلا أبواب ولا نوافذ، ما هو؟",
+      "a": "بيت الشِّعر"
+    },
+    {
+      "category": "football",
+      "version": 1,
+      "ord": 0,
+      "value": 200,
+      "type": "normal",
+      "q": "كم عدد لاعبي فريق كرة القدم داخل الملعب؟",
+      "a": "11 لاعباً"
+    },
+    {
+      "category": "football",
+      "version": 1,
+      "ord": 1,
+      "value": 200,
+      "type": "normal",
+      "q": "كل كم سنة تُقام بطولة كأس العالم؟",
+      "a": "كل 4 سنوات"
+    },
+    {
+      "category": "football",
+      "version": 1,
+      "ord": 2,
+      "value": 400,
+      "type": "normal",
+      "q": "ما المنتخب الأكثر تتويجاً بكأس العالم؟",
+      "a": "البرازيل",
+      "note": "5 مرات."
+    },
+    {
+      "category": "football",
+      "version": 1,
+      "ord": 3,
+      "value": 400,
+      "type": "normal",
+      "q": "في أي دولة أُقيمت كأس العالم 2022؟",
+      "a": "قطر"
+    },
+    {
+      "category": "football",
+      "version": 1,
+      "ord": 4,
+      "value": 600,
+      "type": "normal",
+      "q": "ما النادي الإسباني الملقّب بـ«الملكي»؟",
+      "a": "ريال مدريد"
+    },
+    {
+      "category": "football",
+      "version": 1,
+      "ord": 5,
+      "value": 600,
+      "type": "normal",
+      "q": "من اللاعب الأرجنتيني الذي قاد بلاده للفوز بمونديال 2022؟",
+      "a": "ليونيل ميسي"
+    },
+    {
+      "category": "football",
+      "version": 2,
+      "ord": 0,
+      "value": 200,
+      "type": "normal",
+      "q": "كم عدد أشواط مباراة كرة القدم الأساسية؟",
+      "a": "شوطان"
+    },
+    {
+      "category": "football",
+      "version": 2,
+      "ord": 1,
+      "value": 200,
+      "type": "normal",
+      "q": "ما لون البطاقة التي تعني الطرد؟",
+      "a": "الحمراء"
+    },
+    {
+      "category": "football",
+      "version": 2,
+      "ord": 2,
+      "value": 400,
+      "type": "normal",
+      "q": "ما المنتخب الذي فاز بأول كأس عالم عام 1930؟",
+      "a": "الأوروغواي"
+    },
+    {
+      "category": "football",
+      "version": 2,
+      "ord": 3,
+      "value": 400,
+      "type": "normal",
+      "q": "ما النادي الإنجليزي الذي يلعب على ملعب «أولد ترافورد»؟",
+      "a": "مانشستر يونايتد"
+    },
+    {
+      "category": "football",
+      "version": 2,
+      "ord": 4,
+      "value": 600,
+      "type": "normal",
+      "q": "من النجم البرتغالي حامل الرقم 7 الملقّب بـ«الدون»؟",
+      "a": "كريستيانو رونالدو"
+    },
+    {
+      "category": "football",
+      "version": 2,
+      "ord": 5,
+      "value": 600,
+      "type": "normal",
+      "q": "كم دقيقة يبلغ الزمن الأساسي لمباراة كرة القدم؟",
+      "a": "90 دقيقة"
+    },
+    {
+      "category": "animals",
+      "version": 1,
+      "ord": 0,
+      "value": 200,
+      "type": "normal",
+      "q": "ما أكبر حيوان على وجه الأرض؟",
+      "a": "الحوت الأزرق"
+    },
+    {
+      "category": "animals",
+      "version": 1,
+      "ord": 1,
+      "value": 200,
+      "type": "normal",
+      "q": "ما أسرع حيوان بري في العالم؟",
+      "a": "الفهد"
+    },
+    {
+      "category": "animals",
+      "version": 1,
+      "ord": 2,
+      "value": 400,
+      "type": "normal",
+      "q": "ما الحيوان الملقّب بسفينة الصحراء؟",
+      "a": "الجمل"
+    },
+    {
+      "category": "animals",
+      "version": 1,
+      "ord": 3,
+      "value": 400,
+      "type": "normal",
+      "q": "كم عدد قلوب الأخطبوط؟",
+      "a": "ثلاثة قلوب"
+    },
+    {
+      "category": "animals",
+      "version": 1,
+      "ord": 4,
+      "value": 600,
+      "type": "normal",
+      "q": "ما الطائر الذي لا يطير ويعيش في القطب الجنوبي؟",
+      "a": "البطريق"
+    },
+    {
+      "category": "animals",
+      "version": 1,
+      "ord": 5,
+      "value": 600,
+      "type": "normal",
+      "q": "ما أطول حيوان (رقبةً) في العالم؟",
+      "a": "الزرافة"
+    },
+    {
+      "category": "animals",
+      "version": 2,
+      "ord": 0,
+      "value": 200,
+      "type": "normal",
+      "q": "ما أكبر الطيور في العالم؟",
+      "a": "النعامة"
+    },
+    {
+      "category": "animals",
+      "version": 2,
+      "ord": 1,
+      "value": 200,
+      "type": "normal",
+      "q": "ما الحيوان الملقّب بملك الغابة؟",
+      "a": "الأسد"
+    },
+    {
+      "category": "animals",
+      "version": 2,
+      "ord": 2,
+      "value": 400,
+      "type": "normal",
+      "q": "ما الحشرة التي تنتج العسل؟",
+      "a": "النحلة"
+    },
+    {
+      "category": "animals",
+      "version": 2,
+      "ord": 3,
+      "value": 400,
+      "type": "normal",
+      "q": "ما الحيوان الثديي الوحيد القادر على الطيران؟",
+      "a": "الخفّاش"
+    },
+    {
+      "category": "animals",
+      "version": 2,
+      "ord": 4,
+      "value": 600,
+      "type": "normal",
+      "q": "ما الحيوان الذي يغيّر لون جلده ليتموّه؟",
+      "a": "الحرباء"
+    },
+    {
+      "category": "animals",
+      "version": 2,
+      "ord": 5,
+      "value": 600,
+      "type": "normal",
+      "q": "ما الحيوان الذي يُعدّ أكبر القطط البرية؟",
+      "a": "النمر (الببر)"
+    },
+    {
+      "category": "tech",
+      "version": 1,
+      "ord": 0,
+      "value": 200,
+      "type": "normal",
+      "q": "ماذا تعني الأحرف WWW في عناوين المواقع؟",
+      "a": "الشبكة العنكبوتية العالمية"
+    },
+    {
+      "category": "tech",
+      "version": 1,
+      "ord": 1,
+      "value": 200,
+      "type": "normal",
+      "q": "من المؤسّس المشارك لشركة مايكروسوفت؟",
+      "a": "بيل غيتس"
+    },
+    {
+      "category": "tech",
+      "version": 1,
+      "ord": 2,
+      "value": 400,
+      "type": "normal",
+      "q": "ما الشركة المطوّرة لنظام أندرويد؟",
+      "a": "جوجل"
+    },
+    {
+      "category": "tech",
+      "version": 1,
+      "ord": 3,
+      "value": 400,
+      "type": "normal",
+      "q": "ماذا يعني اختصار CPU؟",
+      "a": "وحدة المعالجة المركزية"
+    },
+    {
+      "category": "tech",
+      "version": 1,
+      "ord": 4,
+      "value": 600,
+      "type": "normal",
+      "q": "في أي عام تأسّست شركة آبل؟",
+      "a": "1976"
+    },
+    {
+      "category": "tech",
+      "version": 1,
+      "ord": 5,
+      "value": 600,
+      "type": "normal",
+      "q": "من مؤسّس شركة فيسبوك (ميتا)؟",
+      "a": "مارك زوكربيرغ"
+    },
+    {
+      "category": "tech",
+      "version": 2,
+      "ord": 0,
+      "value": 200,
+      "type": "normal",
+      "q": "ما الجهاز الذي يُستخدم لطباعة المستندات؟",
+      "a": "الطابعة"
+    },
+    {
+      "category": "tech",
+      "version": 2,
+      "ord": 1,
+      "value": 200,
+      "type": "normal",
+      "q": "ما نظام التشغيل الذي تطوّره آبل لهاتف الآيفون؟",
+      "a": "iOS"
+    },
+    {
+      "category": "tech",
+      "version": 2,
+      "ord": 2,
+      "value": 400,
+      "type": "normal",
+      "q": "ماذا يعني اختصار GPS؟",
+      "a": "نظام تحديد المواقع العالمي"
+    },
+    {
+      "category": "tech",
+      "version": 2,
+      "ord": 3,
+      "value": 400,
+      "type": "normal",
+      "q": "من مؤسّس شركتي تسلا وسبيس إكس؟",
+      "a": "إيلون ماسك"
+    },
+    {
+      "category": "tech",
+      "version": 2,
+      "ord": 4,
+      "value": 600,
+      "type": "normal",
+      "q": "ماذا يعني اختصار AI؟",
+      "a": "الذكاء الاصطناعي"
+    },
+    {
+      "category": "tech",
+      "version": 2,
+      "ord": 5,
+      "value": 600,
+      "type": "normal",
+      "q": "ما الشركة التي تطوّر محرك البحث الأشهر في العالم؟",
+      "a": "جوجل"
+    },
+    {
+      "category": "science",
+      "version": 1,
+      "ord": 0,
+      "value": 200,
+      "type": "normal",
+      "q": "ما الغاز الذي يتنفّسه الإنسان للبقاء حياً؟",
+      "a": "الأكسجين"
+    },
+    {
+      "category": "science",
+      "version": 1,
+      "ord": 1,
+      "value": 200,
+      "type": "normal",
+      "q": "ما أقرب كوكب إلى الشمس؟",
+      "a": "عطارد"
+    },
+    {
+      "category": "science",
+      "version": 1,
+      "ord": 2,
+      "value": 400,
+      "type": "normal",
+      "q": "ما الرمز الكيميائي للماء؟",
+      "a": "H₂O"
+    },
+    {
+      "category": "science",
+      "version": 1,
+      "ord": 3,
+      "value": 400,
+      "type": "normal",
+      "q": "ما الغاز الأكثر وفرة في الغلاف الجوي للأرض؟",
+      "a": "النيتروجين",
+      "note": "نحو 78%."
+    },
+    {
+      "category": "science",
+      "version": 1,
+      "ord": 4,
+      "value": 600,
+      "type": "normal",
+      "q": "كم تبلغ سرعة الضوء تقريباً في الفراغ؟",
+      "a": "300 ألف كم/ث"
+    },
+    {
+      "category": "science",
+      "version": 1,
+      "ord": 5,
+      "value": 600,
+      "type": "normal",
+      "q": "ما العضو المسؤول عن ضخّ الدم في الجسم؟",
+      "a": "القلب"
+    },
+    {
+      "category": "science",
+      "version": 2,
+      "ord": 0,
+      "value": 200,
+      "type": "normal",
+      "q": "ما الكوكب الذي نعيش عليه؟",
+      "a": "الأرض"
+    },
+    {
+      "category": "science",
+      "version": 2,
+      "ord": 1,
+      "value": 200,
+      "type": "normal",
+      "q": "ما الحالة التي يتحوّل إليها الماء عند التجمّد؟",
+      "a": "الحالة الصلبة (الجليد)"
+    },
+    {
+      "category": "science",
+      "version": 2,
+      "ord": 2,
+      "value": 400,
+      "type": "normal",
+      "q": "ما المعدن السائل في درجة حرارة الغرفة؟",
+      "a": "الزئبق"
+    },
+    {
+      "category": "science",
+      "version": 2,
+      "ord": 3,
+      "value": 400,
+      "type": "normal",
+      "q": "من العالِم صاحب قانون الجاذبية؟",
+      "a": "إسحاق نيوتن"
+    },
+    {
+      "category": "science",
+      "version": 2,
+      "ord": 4,
+      "value": 600,
+      "type": "normal",
+      "q": "ما أصلب مادة طبيعية معروفة؟",
+      "a": "الماس"
+    },
+    {
+      "category": "science",
+      "version": 2,
+      "ord": 5,
+      "value": 600,
+      "type": "normal",
+      "q": "ما الوحدة التي تُقاس بها شدة التيار الكهربائي؟",
+      "a": "الأمبير"
+    },
+    {
+      "category": "general",
+      "version": 1,
+      "ord": 0,
+      "value": 200,
+      "type": "normal",
+      "q": "كم عدد أيام السنة الميلادية العادية؟",
+      "a": "365 يوماً"
+    },
+    {
+      "category": "general",
+      "version": 1,
+      "ord": 1,
+      "value": 200,
+      "type": "normal",
+      "q": "ما اللون الناتج عن مزج الأزرق مع الأصفر؟",
+      "a": "الأخضر"
+    },
+    {
+      "category": "general",
+      "version": 1,
+      "ord": 2,
+      "value": 400,
+      "type": "normal",
+      "q": "كم عدد ألوان قوس قزح؟",
+      "a": "7 ألوان"
+    },
+    {
+      "category": "general",
+      "version": 1,
+      "ord": 3,
+      "value": 400,
+      "type": "normal",
+      "q": "ما العملة الرسمية لليابان؟",
+      "a": "الين"
+    },
+    {
+      "category": "general",
+      "version": 1,
+      "ord": 4,
+      "value": 600,
+      "type": "normal",
+      "q": "ما أطول جدار من صنع الإنسان؟",
+      "a": "سور الصين العظيم"
+    },
+    {
+      "category": "general",
+      "version": 1,
+      "ord": 5,
+      "value": 600,
+      "type": "normal",
+      "q": "كم عدد قارات العالم؟",
+      "a": "7 قارات"
+    },
+    {
+      "category": "general",
+      "version": 2,
+      "ord": 0,
+      "value": 200,
+      "type": "normal",
+      "q": "كم عدد أيام الأسبوع؟",
+      "a": "7 أيام"
+    },
+    {
+      "category": "general",
+      "version": 2,
+      "ord": 1,
+      "value": 200,
+      "type": "normal",
+      "q": "كم لوناً في إشارة المرور؟",
+      "a": "3 ألوان"
+    },
+    {
+      "category": "general",
+      "version": 2,
+      "ord": 2,
+      "value": 400,
+      "type": "normal",
+      "q": "ما أكبر كوكب في المجموعة الشمسية؟",
+      "a": "المشتري"
+    },
+    {
+      "category": "general",
+      "version": 2,
+      "ord": 3,
+      "value": 400,
+      "type": "normal",
+      "q": "في أي مدينة يقع برج إيفل؟",
+      "a": "باريس"
+    },
+    {
+      "category": "general",
+      "version": 2,
+      "ord": 4,
+      "value": 600,
+      "type": "normal",
+      "q": "ما العملة الموحّدة لمعظم دول الاتحاد الأوروبي؟",
+      "a": "اليورو"
+    },
+    {
+      "category": "general",
+      "version": 2,
+      "ord": 5,
+      "value": 600,
+      "type": "normal",
+      "q": "ما أعمق نقطة في محيطات العالم؟",
+      "a": "خندق ماريانا"
+    },
+    {
+      "category": "whoami",
+      "version": 1,
+      "ord": 0,
+      "value": 200,
+      "type": "clues",
+      "t": "clues",
+      "clues": [
+        "أعيش في الماء",
+        "لي زعانف",
+        "أتنفّس بالخياشيم",
+        "أتكاثر بالبيض"
+      ],
+      "a": "السمكة"
+    },
+    {
+      "category": "whoami",
+      "version": 1,
+      "ord": 1,
+      "value": 200,
+      "type": "clues",
+      "t": "clues",
+      "clues": [
+        "أطير في السماء",
+        "لي ريش وجناحان",
+        "أبني عشاً",
+        "أبيض في البيض"
+      ],
+      "a": "الطائر"
+    },
+    {
+      "category": "whoami",
+      "version": 1,
+      "ord": 2,
+      "value": 400,
+      "type": "clues",
+      "t": "clues",
+      "clues": [
+        "ضخم الجسم",
+        "لي خرطوم طويل",
+        "آذاني كبيرة",
+        "أكبر حيوان برّي"
+      ],
+      "a": "الفيل"
+    },
+    {
+      "category": "whoami",
+      "version": 1,
+      "ord": 3,
+      "value": 400,
+      "type": "clues",
+      "t": "clues",
+      "clues": [
+        "صغيرة الحجم",
+        "لي أجنحة",
+        "أصنع العسل",
+        "ألسع من يؤذيني"
+      ],
+      "a": "النحلة"
+    },
+    {
+      "category": "whoami",
+      "version": 1,
+      "ord": 4,
+      "value": 600,
+      "type": "clues",
+      "t": "clues",
+      "clues": [
+        "معدن ثمين",
+        "لوني أصفر لامع",
+        "يُصنع منّي الحُليّ",
+        "رمزي Au"
+      ],
+      "a": "الذهب"
+    },
+    {
+      "category": "whoami",
+      "version": 1,
+      "ord": 5,
+      "value": 600,
+      "type": "clues",
+      "t": "clues",
+      "clues": [
+        "كوكب أحمر",
+        "رابع الكواكب من الشمس",
+        "يُلقّب بكوكب الحرب",
+        "يحلم الإنسان بزيارتي"
+      ],
+      "a": "المريخ"
+    },
+    {
+      "category": "whoami",
+      "version": 2,
+      "ord": 0,
+      "value": 200,
+      "type": "clues",
+      "t": "clues",
+      "clues": [
+        "فاكهة صفراء",
+        "طويلة ومنحنية",
+        "يحبّها القرد",
+        "غنية بالبوتاسيوم"
+      ],
+      "a": "الموز"
+    },
+    {
+      "category": "whoami",
+      "version": 2,
+      "ord": 1,
+      "value": 200,
+      "type": "clues",
+      "t": "clues",
+      "clues": [
+        "أضيء في الظلام",
+        "أعتمد على الكهرباء",
+        "أُعلّق في السقف",
+        "أطرد العتمة"
+      ],
+      "a": "المصباح"
+    },
+    {
+      "category": "whoami",
+      "version": 2,
+      "ord": 2,
+      "value": 400,
+      "type": "clues",
+      "t": "clues",
+      "clues": [
+        "سفينة الصحراء",
+        "أتحمّل العطش",
+        "لي سنام",
+        "أحمل الأثقال"
+      ],
+      "a": "الجمل"
+    },
+    {
+      "category": "whoami",
+      "version": 2,
+      "ord": 3,
+      "value": 400,
+      "type": "clues",
+      "t": "clues",
+      "clues": [
+        "أبرد فصول السنة",
+        "ينزل فيّ الثلج",
+        "تكثر فيّ الأمطار",
+        "نلبس فيّ الثقيل"
+      ],
+      "a": "فصل الشتاء"
+    },
+    {
+      "category": "whoami",
+      "version": 2,
+      "ord": 4,
+      "value": 600,
+      "type": "clues",
+      "t": "clues",
+      "clues": [
+        "أكبر عضو في جسم الإنسان",
+        "أغطّي الجسم كلّه",
+        "أحمي ما بداخلي",
+        "ألوّن البشرة"
+      ],
+      "a": "الجلد"
+    },
+    {
+      "category": "whoami",
+      "version": 2,
+      "ord": 5,
+      "value": 600,
+      "type": "clues",
+      "t": "clues",
+      "clues": [
+        "واسع وأزرق",
+        "مالح الماء",
+        "فيّ أسماك وحيتان",
+        "تُبحر فوقي السفن"
+      ],
+      "a": "البحر"
+    },
+    {
+      "category": "proverbs",
+      "version": 1,
+      "ord": 0,
+      "value": 200,
+      "type": "normal",
+      "q": "أكمل المثل: «في التأنّي السلامة وفي العجلة …»",
+      "a": "الندامة"
+    },
+    {
+      "category": "proverbs",
+      "version": 1,
+      "ord": 1,
+      "value": 200,
+      "type": "normal",
+      "q": "أكمل المثل: «من جدّ …»",
+      "a": "وجَد"
+    },
+    {
+      "category": "proverbs",
+      "version": 1,
+      "ord": 2,
+      "value": 400,
+      "type": "normal",
+      "q": "أكمل المثل: «الطيور على أشكالها …»",
+      "a": "تقع"
+    },
+    {
+      "category": "proverbs",
+      "version": 1,
+      "ord": 3,
+      "value": 400,
+      "type": "normal",
+      "q": "أكمل المثل: «خير الكلام ما قلّ …»",
+      "a": "ودلّ"
+    },
+    {
+      "category": "proverbs",
+      "version": 1,
+      "ord": 4,
+      "value": 600,
+      "type": "normal",
+      "q": "أكمل المثل: «الصبر مفتاح …»",
+      "a": "الفرَج"
+    },
+    {
+      "category": "proverbs",
+      "version": 1,
+      "ord": 5,
+      "value": 600,
+      "type": "normal",
+      "q": "أكمل المثل: «الصديق وقت …»",
+      "a": "الضيق"
+    },
+    {
+      "category": "proverbs",
+      "version": 2,
+      "ord": 0,
+      "value": 200,
+      "type": "normal",
+      "q": "أكمل المثل: «القناعة كنزٌ لا …»",
+      "a": "يفنى"
+    },
+    {
+      "category": "proverbs",
+      "version": 2,
+      "ord": 1,
+      "value": 200,
+      "type": "normal",
+      "q": "أكمل المثل: «درهم وقاية خير من قنطار …»",
+      "a": "علاج"
+    },
+    {
+      "category": "proverbs",
+      "version": 2,
+      "ord": 2,
+      "value": 400,
+      "type": "normal",
+      "q": "أكمل المثل: «من شبّ على شيء شاب …»",
+      "a": "عليه"
+    },
+    {
+      "category": "proverbs",
+      "version": 2,
+      "ord": 3,
+      "value": 400,
+      "type": "normal",
+      "q": "أكمل المثل: «إن لم تستحِ فاصنع ما …»",
+      "a": "شئت"
+    },
+    {
+      "category": "proverbs",
+      "version": 2,
+      "ord": 4,
+      "value": 600,
+      "type": "normal",
+      "q": "أكمل المثل: «رُبّ أخٍ لك لم تلده …»",
+      "a": "أمّك"
+    },
+    {
+      "category": "proverbs",
+      "version": 2,
+      "ord": 5,
+      "value": 600,
+      "type": "normal",
+      "q": "أكمل المثل: «الحاجة أمّ …»",
+      "a": "الاختراع"
+    },
+    {
+      "category": "math",
+      "version": 1,
+      "ord": 0,
+      "value": 200,
+      "type": "normal",
+      "q": "كم يساوي حاصل ضرب 7 × 8؟",
+      "a": "56"
+    },
+    {
+      "category": "math",
+      "version": 1,
+      "ord": 1,
+      "value": 200,
+      "type": "normal",
+      "q": "ما العدد الأوّلي الزوجي الوحيد؟",
+      "a": "2"
+    },
+    {
+      "category": "math",
+      "version": 1,
+      "ord": 2,
+      "value": 400,
+      "type": "normal",
+      "q": "كم عدد أضلاع الشكل السداسي؟",
+      "a": "6 أضلاع"
+    },
+    {
+      "category": "math",
+      "version": 1,
+      "ord": 3,
+      "value": 400,
+      "type": "normal",
+      "q": "كم يساوي مجموع زوايا المثلث؟",
+      "a": "180 درجة"
+    },
+    {
+      "category": "math",
+      "version": 1,
+      "ord": 4,
+      "value": 600,
+      "type": "normal",
+      "q": "كم تساوي قيمة الثابت «باي» (π) تقريباً؟",
+      "a": "3.14"
+    },
+    {
+      "category": "math",
+      "version": 1,
+      "ord": 5,
+      "value": 600,
+      "type": "normal",
+      "q": "كم يساوي حاصل ضرب 12 × 12؟",
+      "a": "144"
+    },
+    {
+      "category": "math",
+      "version": 2,
+      "ord": 0,
+      "value": 200,
+      "type": "normal",
+      "q": "كم يساوي 9 + 6؟",
+      "a": "15"
+    },
+    {
+      "category": "math",
+      "version": 2,
+      "ord": 1,
+      "value": 200,
+      "type": "normal",
+      "q": "كم ثانية في الدقيقة الواحدة؟",
+      "a": "60 ثانية"
+    },
+    {
+      "category": "math",
+      "version": 2,
+      "ord": 2,
+      "value": 400,
+      "type": "normal",
+      "q": "كم يساوي 100 ÷ 4؟",
+      "a": "25"
+    },
+    {
+      "category": "math",
+      "version": 2,
+      "ord": 3,
+      "value": 400,
+      "type": "normal",
+      "q": "ما العدد الذي إذا ضربته في أي رقم بقي صفراً؟",
+      "a": "صفر (0)"
+    },
+    {
+      "category": "math",
+      "version": 2,
+      "ord": 4,
+      "value": 600,
+      "type": "normal",
+      "q": "كم يساوي الجذر التربيعي للعدد 81؟",
+      "a": "9"
+    },
+    {
+      "category": "math",
+      "version": 2,
+      "ord": 5,
+      "value": 600,
+      "type": "normal",
+      "q": "كم دقيقة في 6 ساعات؟",
+      "a": "360 دقيقة"
+    },
+    {
+      "category": "dish",
+      "version": 1,
+      "ord": 0,
+      "value": 200,
+      "type": "dish",
+      "t": "dish",
+      "clues": [
+        "أرز",
+        "دجاج",
+        "بهارات",
+        "لوز وزعفران"
+      ],
+      "a": "الكبسة"
+    },
+    {
+      "category": "dish",
+      "version": 1,
+      "ord": 1,
+      "value": 200,
+      "type": "dish",
+      "t": "dish",
+      "clues": [
+        "عجين",
+        "صلصة طماطم",
+        "جبنة",
+        "شرائح خضار"
+      ],
+      "a": "البيتزا"
+    },
+    {
+      "category": "dish",
+      "version": 1,
+      "ord": 2,
+      "value": 400,
+      "type": "dish",
+      "t": "dish",
+      "clues": [
+        "ورق عنب",
+        "أرز",
+        "لحم مفروم",
+        "ليمون"
+      ],
+      "a": "ورق العنب (الدوالي)"
+    },
+    {
+      "category": "dish",
+      "version": 1,
+      "ord": 3,
+      "value": 400,
+      "type": "dish",
+      "t": "dish",
+      "clues": [
+        "حمّص",
+        "طحينة",
+        "ليمون",
+        "ثوم وزيت زيتون"
+      ],
+      "a": "الحمّص"
+    },
+    {
+      "category": "dish",
+      "version": 1,
+      "ord": 4,
+      "value": 600,
+      "type": "dish",
+      "t": "dish",
+      "clues": [
+        "سميد",
+        "قطر (شيرة)",
+        "جبن أو قشطة",
+        "فستق"
+      ],
+      "a": "الكنافة"
+    },
+    {
+      "category": "dish",
+      "version": 1,
+      "ord": 5,
+      "value": 600,
+      "type": "dish",
+      "t": "dish",
+      "clues": [
+        "لحم مشوي رفيع",
+        "خبز",
+        "ثوم وطحينة",
+        "بطاطا"
+      ],
+      "a": "الشاورما"
+    },
+    {
+      "category": "dish",
+      "version": 2,
+      "ord": 0,
+      "value": 200,
+      "type": "dish",
+      "t": "dish",
+      "clues": [
+        "فول مدمّس",
+        "زيت زيتون",
+        "كمّون",
+        "ليمون"
+      ],
+      "a": "الفول"
+    },
+    {
+      "category": "dish",
+      "version": 2,
+      "ord": 1,
+      "value": 200,
+      "type": "dish",
+      "t": "dish",
+      "clues": [
+        "بيض",
+        "مقلي أو مسلوق",
+        "وجبة إفطار",
+        "بروتين"
+      ],
+      "a": "البيض"
+    },
+    {
+      "category": "dish",
+      "version": 2,
+      "ord": 2,
+      "value": 400,
+      "type": "dish",
+      "t": "dish",
+      "clues": [
+        "برغل ناعم",
+        "بقدونس",
+        "طماطم",
+        "نعناع وليمون"
+      ],
+      "a": "التبّولة"
+    },
+    {
+      "category": "dish",
+      "version": 2,
+      "ord": 3,
+      "value": 400,
+      "type": "dish",
+      "t": "dish",
+      "clues": [
+        "حبيبات سميد",
+        "خضار",
+        "لحم",
+        "مرق"
+      ],
+      "a": "الكسكس"
+    },
+    {
+      "category": "dish",
+      "version": 2,
+      "ord": 4,
+      "value": 600,
+      "type": "dish",
+      "t": "dish",
+      "clues": [
+        "أرز",
+        "باذنجان",
+        "لحم أو دجاج",
+        "تُقلب عند التقديم"
+      ],
+      "a": "المقلوبة"
+    },
+    {
+      "category": "dish",
+      "version": 2,
+      "ord": 5,
+      "value": 600,
+      "type": "dish",
+      "t": "dish",
+      "clues": [
+        "عدس",
+        "أرز",
+        "بصل مقلي",
+        "كمّون"
+      ],
+      "a": "المجدّرة"
+    },
+    {
+      "category": "crime",
+      "version": 1,
+      "ord": 0,
+      "value": 200,
+      "type": "crime",
+      "t": "crime",
+      "q": "سُرقت نقود من درج المحل ليلاً. المشتبه بهم: الحارس، البائع، عامل النظافة. الدرج كان مقفلاً ولا أثر للكسر، ووُجدت بصمات تخصّ مالك المفتاح الوحيد.",
+      "suspects": [
+        "الحارس",
+        "البائع",
+        "عامل النظافة"
+      ],
+      "a": "البائع",
+      "evidence": "البائع وحده يملك مفتاح الدرج وبصماته عليه دون أثر كسر."
+    },
+    {
+      "category": "crime",
+      "version": 1,
+      "ord": 1,
+      "value": 200,
+      "type": "crime",
+      "t": "crime",
+      "q": "ادّعى صاحب بيت أن لصاً حطّم نافذته واقتحم المنزل، لكن شظايا الزجاج كانت متناثرة في الخارج لا الداخل.",
+      "suspects": [
+        "صاحب البيت",
+        "الجار",
+        "لصّ مجهول"
+      ],
+      "a": "صاحب البيت",
+      "evidence": "تطاير الزجاج إلى الخارج يعني أن الكسر تمّ من الداخل، فالقصة مفبركة."
+    },
+    {
+      "category": "crime",
+      "version": 1,
+      "ord": 2,
+      "value": 400,
+      "type": "crime",
+      "t": "crime",
+      "q": "سُرقت لوحة من المتحف أثناء انقطاع الكهرباء التام. ثلاثة حُرّاس، وأحدهم قال إنه رأى ملامح السارق بوضوح.",
+      "suspects": [
+        "الحارس الأول",
+        "الحارس الذي ادّعى الرؤية",
+        "الحارس الثالث"
+      ],
+      "a": "الحارس الذي ادّعى الرؤية",
+      "evidence": "لا يمكن رؤية الملامح في ظلام دامس؛ كذبه يكشف تورّطه."
+    },
+    {
+      "category": "crime",
+      "version": 1,
+      "ord": 3,
+      "value": 400,
+      "type": "crime",
+      "t": "crime",
+      "q": "أبلغ رجل عن سرقة سيارته صباحاً لتعويض التأمين، لكن محرّكها كان بارداً والثلج يغطّيها كاملاً كأنها لم تتحرّك.",
+      "suspects": [
+        "صاحب السيارة",
+        "الجار",
+        "عامل المرآب"
+      ],
+      "a": "صاحب السيارة",
+      "evidence": "برودة المحرّك والثلج المتراكم يثبتان أن السيارة لم تتحرّك، فالبلاغ كاذب."
+    },
+    {
+      "category": "crime",
+      "version": 1,
+      "ord": 4,
+      "value": 600,
+      "type": "crime",
+      "t": "crime",
+      "q": "فُتحت خزنة بنك دون أي كسر أو عُنف. الوحيد الذي يعرف الرقم السرّي هو المحاسب الذي ادّعى أنه نسيه.",
+      "suspects": [
+        "الحارس",
+        "المحاسب",
+        "المدير"
+      ],
+      "a": "المحاسب",
+      "evidence": "غياب آثار الكسر يعني أن السارق يعرف الرمز، والمحاسب وحده يعرفه."
+    },
+    {
+      "category": "crime",
+      "version": 1,
+      "ord": 5,
+      "value": 600,
+      "type": "crime",
+      "t": "crime",
+      "q": "سُمّمت قهوة في اجتماع وشرب الجميع من الإبريق نفسه إلا واحداً اعتذر عن الشرب بحجّة واهية.",
+      "suspects": [
+        "من شرب أولاً",
+        "من امتنع عن الشرب",
+        "المضيف"
+      ],
+      "a": "من امتنع عن الشرب",
+      "evidence": "امتناعه الوحيد عن الشرب يدل على علمه بأن القهوة مسمومة."
+    },
+    {
+      "category": "crime",
+      "version": 2,
+      "ord": 0,
+      "value": 200,
+      "type": "crime",
+      "t": "crime",
+      "q": "اختفت علبة حلوى كانت هدية تحت الشجرة، والطفل الصغير فمه ملطّخ بالشوكولاتة.",
+      "suspects": [
+        "الطفل",
+        "الأب",
+        "الضيف"
+      ],
+      "a": "الطفل",
+      "evidence": "آثار الشوكولاتة على فمه دليل على فتحه الهدية."
+    },
+    {
+      "category": "crime",
+      "version": 2,
+      "ord": 1,
+      "value": 200,
+      "type": "crime",
+      "t": "crime",
+      "q": "سُرق هاتف داخل الصف، وأنكر أحد الطلاب، فاتّصل المعلّم بالرقم فرنّ الهاتف من داخل حقيبته.",
+      "suspects": [
+        "الطالب المُنكِر",
+        "الطالب الجالس بجانبه",
+        "المعلّم"
+      ],
+      "a": "الطالب المُنكِر",
+      "evidence": "رنين الهاتف من حقيبته بعد الاتصال يكشفه."
+    },
+    {
+      "category": "crime",
+      "version": 2,
+      "ord": 2,
+      "value": 400,
+      "type": "crime",
+      "t": "crime",
+      "q": "سطا لصّ على بنك وترك قفازاً ممزّقاً، وأحد المشتبهين يده مجروحة بجرح يطابق زجاجاً مكسوراً في الموقع.",
+      "suspects": [
+        "صاحب اليد المجروحة",
+        "الموظف",
+        "العميل"
+      ],
+      "a": "صاحب اليد المجروحة",
+      "evidence": "جرح يده يطابق الزجاج المكسور في مكان الجريمة."
+    },
+    {
+      "category": "crime",
+      "version": 2,
+      "ord": 3,
+      "value": 400,
+      "type": "crime",
+      "t": "crime",
+      "q": "اندلع حريق متعمّد في متجر وفاحت رائحة بنزين، وصوّرت كاميرا الجوار رجلاً يحمل عبوة قبل الحريق بدقائق.",
+      "suspects": [
+        "الرجل صاحب العبوة",
+        "صاحب المتجر",
+        "المارّ"
+      ],
+      "a": "الرجل صاحب العبوة",
+      "evidence": "تصوير الكاميرا له وهو يحمل عبوة البنزين قبل الحريق مباشرة."
+    },
+    {
+      "category": "crime",
+      "version": 2,
+      "ord": 4,
+      "value": 600,
+      "type": "crime",
+      "t": "crime",
+      "q": "قُتل رجل، وادّعى شاهد أنه سمع الضحية يصرخ باسم القاتل قبل موته، لكن الضحية كان أبكم لا ينطق.",
+      "suspects": [
+        "الشاهد",
+        "الجار",
+        "الطبيب"
+      ],
+      "a": "الشاهد",
+      "evidence": "استحالة أن يصرخ الأبكم باسم؛ كذب الشاهد يورّطه في الجريمة."
+    },
+    {
+      "category": "crime",
+      "version": 2,
+      "ord": 5,
+      "value": 600,
+      "type": "crime",
+      "t": "crime",
+      "q": "سُرقت مجوهرات في حفل عشاء، واتّسخت أيدي الجميع بالطعام إلا واحداً بقيت قفازاته نظيفة تماماً.",
+      "suspects": [
+        "صاحب القفازات النظيفة",
+        "المضيف",
+        "النادل"
+      ],
+      "a": "صاحب القفازات النظيفة",
+      "evidence": "نظافة قفازيه وسط اتّساخ الجميع تدل على تخطيطه لتجنّب البصمات."
+    },
+    {
+      "category": "rescue",
+      "version": 1,
+      "ord": 0,
+      "value": 200,
+      "type": "rescue",
+      "t": "rescue",
+      "q": "اتُّهم رجل بسرقة وقعت الساعة 9 مساءً في المدينة، لكنه يقول إنه كان في المستشفى وقتها.",
+      "a": "بريء",
+      "evidence": "سجلّ دخول المستشفى يثبت وجوده بعيداً عن مكان الجريمة وقت وقوعها."
+    },
+    {
+      "category": "rescue",
+      "version": 1,
+      "ord": 1,
+      "value": 200,
+      "type": "rescue",
+      "t": "rescue",
+      "q": "اتُّهمت امرأة قصيرة بكسر زجاج نافذة، لكن موضع الكسر كان عالياً جداً لا تصله بيدها.",
+      "a": "بريئة",
+      "evidence": "ارتفاع موضع الكسر فوق طولها يجعل من المستحيل أن تفعله."
+    },
+    {
+      "category": "rescue",
+      "version": 1,
+      "ord": 2,
+      "value": 400,
+      "type": "rescue",
+      "t": "rescue",
+      "q": "اتُّهم طالب بالغشّ لأن إجابته تطابق زميله، لكن مقعديهما متباعدان والكاميرا تثبت أنه لم يلتفت.",
+      "a": "بريء",
+      "evidence": "تباعد المقاعد وتسجيل الكاميرا ينفيان حدوث الغشّ."
+    },
+    {
+      "category": "rescue",
+      "version": 1,
+      "ord": 3,
+      "value": 400,
+      "type": "rescue",
+      "t": "rescue",
+      "q": "اتُّهم سائق بحادث دهس الساعة الثامنة، لكن سيارته كانت في ورشة التصليح موثّقة بفاتورة بذلك التوقيت.",
+      "a": "بريء",
+      "evidence": "فاتورة الورشة تثبت أن السيارة كانت معطّلة وقت الحادث."
+    },
+    {
+      "category": "rescue",
+      "version": 1,
+      "ord": 4,
+      "value": 600,
+      "type": "rescue",
+      "t": "rescue",
+      "q": "اتُّهم رجل بإطلاق نار، لكن فحص آثار البارود على يديه جاء سلبياً والمسدس لم يُطلق منه.",
+      "a": "بريء",
+      "evidence": "غياب آثار البارود وفحص السلاح ينفيان أنه أطلق النار."
+    },
+    {
+      "category": "rescue",
+      "version": 1,
+      "ord": 5,
+      "value": 600,
+      "type": "rescue",
+      "t": "rescue",
+      "q": "اتُّهم خبّاز بتسميم كعكة، لكن التحليل أثبت أن السمّ أُضيف بعد خروجها من المخبز بساعات.",
+      "a": "بريء",
+      "evidence": "توقيت إضافة السمّ بعد بيع الكعكة يبرّئ الخبّاز."
+    },
+    {
+      "category": "rescue",
+      "version": 2,
+      "ord": 0,
+      "value": 200,
+      "type": "rescue",
+      "t": "rescue",
+      "q": "اتُّهم صبيّ بأكل الحلوى، لكنه كان نائماً طوال فترة اختفائها وأمّه تشهد بذلك.",
+      "a": "بريء",
+      "evidence": "شهادة الأم ونومه طوال الوقت يبرّئانه."
+    },
+    {
+      "category": "rescue",
+      "version": 2,
+      "ord": 1,
+      "value": 200,
+      "type": "rescue",
+      "t": "rescue",
+      "q": "اتُّهم رجل بسرقة في مدينة بعيدة، لكن أختام جواز سفره تثبت أنه كان خارج البلاد ذلك اليوم.",
+      "a": "بريء",
+      "evidence": "أختام جواز السفر تثبت وجوده خارج البلاد وقت السرقة."
+    },
+    {
+      "category": "rescue",
+      "version": 2,
+      "ord": 2,
+      "value": 400,
+      "type": "rescue",
+      "t": "rescue",
+      "q": "اتُّهمت موظفة باختلاس تمّ عبر الإنترنت ليلاً، لكن سجلّ الدخول يُظهر أن حسابها فُتح من جهاز غريب عنها.",
+      "a": "بريئة",
+      "evidence": "دخول الحساب من جهاز غريب يدل على اختراقه لا على تورّطها."
+    },
+    {
+      "category": "rescue",
+      "version": 2,
+      "ord": 3,
+      "value": 400,
+      "type": "rescue",
+      "t": "rescue",
+      "q": "اتُّهم لاعب بإحراز هدف بيده، لكن إعادة الفيديو تُظهر أن الكرة لمست صدره لا يده.",
+      "a": "بريء",
+      "evidence": "إعادة الفيديو تثبت لمس الكرة للصدر لا لليد."
+    },
+    {
+      "category": "rescue",
+      "version": 2,
+      "ord": 4,
+      "value": 600,
+      "type": "rescue",
+      "t": "rescue",
+      "q": "اتُّهم طبيب بخطأ أدّى لوفاة مريض، لكن التقرير أثبت أن المريض تناول دواءً ممنوعاً بنفسه دون علم الطبيب.",
+      "a": "بريء",
+      "evidence": "تناول المريض الدواء الممنوع ذاتياً يرفع المسؤولية عن الطبيب."
+    },
+    {
+      "category": "rescue",
+      "version": 2,
+      "ord": 5,
+      "value": 600,
+      "type": "rescue",
+      "t": "rescue",
+      "q": "اتُّهم حارس بفتح الباب للّصوص، لكن القفل وُجد مكسوراً من الخارج بأداة عنف.",
+      "a": "بريء",
+      "evidence": "كسر القفل من الخارج يثبت الاقتحام وينفي تواطؤ الحارس."
+    },
+    {
+      "category": "closest",
+      "version": 1,
+      "ord": 0,
+      "value": 200,
+      "type": "closest",
+      "t": "closest",
+      "q": "كم عدد لاعبي فريق كرة القدم داخل الملعب؟",
+      "a": "11",
+      "num": 11
+    },
+    {
+      "category": "closest",
+      "version": 1,
+      "ord": 1,
+      "value": 200,
+      "type": "closest",
+      "t": "closest",
+      "q": "كم عدد عظام جسم الإنسان البالغ؟",
+      "a": "206",
+      "num": 206
+    },
+    {
+      "category": "closest",
+      "version": 1,
+      "ord": 2,
+      "value": 400,
+      "type": "closest",
+      "t": "closest",
+      "q": "كم دولة عضو في جامعة الدول العربية؟",
+      "a": "22",
+      "num": 22
+    },
+    {
+      "category": "closest",
+      "version": 1,
+      "ord": 3,
+      "value": 400,
+      "type": "closest",
+      "t": "closest",
+      "q": "كم متراً يبلغ ارتفاع برج إيفل تقريباً؟",
+      "a": "330",
+      "num": 330
+    },
+    {
+      "category": "closest",
+      "version": 1,
+      "ord": 4,
+      "value": 600,
+      "type": "closest",
+      "t": "closest",
+      "q": "كم عدد الدول الأعضاء في الأمم المتحدة؟",
+      "a": "193",
+      "num": 193
+    },
+    {
+      "category": "closest",
+      "version": 1,
+      "ord": 5,
+      "value": 600,
+      "type": "closest",
+      "t": "closest",
+      "q": "كم نبضة في الدقيقة لقلب الإنسان وقت الراحة تقريباً؟",
+      "a": "72",
+      "num": 72
+    },
+    {
+      "category": "closest",
+      "version": 2,
+      "ord": 0,
+      "value": 200,
+      "type": "closest",
+      "t": "closest",
+      "q": "كم عدد أيام السنة الميلادية العادية؟",
+      "a": "365",
+      "num": 365
+    },
+    {
+      "category": "closest",
+      "version": 2,
+      "ord": 1,
+      "value": 200,
+      "type": "closest",
+      "t": "closest",
+      "q": "كم عدد أسنان الإنسان البالغ؟",
+      "a": "32",
+      "num": 32
+    },
+    {
+      "category": "closest",
+      "version": 2,
+      "ord": 2,
+      "value": 400,
+      "type": "closest",
+      "t": "closest",
+      "q": "كم عدد فقرات العمود الفقري للإنسان؟",
+      "a": "33",
+      "num": 33
+    },
+    {
+      "category": "closest",
+      "version": 2,
+      "ord": 3,
+      "value": 400,
+      "type": "closest",
+      "t": "closest",
+      "q": "كم لتراً من الدم في جسم الإنسان البالغ تقريباً؟",
+      "a": "5",
+      "num": 5
+    },
+    {
+      "category": "closest",
+      "version": 2,
+      "ord": 4,
+      "value": 600,
+      "type": "closest",
+      "t": "closest",
+      "q": "كم متراً يبلغ ارتفاع جبل إيفرست تقريباً؟",
+      "a": "8849",
+      "num": 8849
+    },
+    {
+      "category": "closest",
+      "version": 2,
+      "ord": 5,
+      "value": 600,
+      "type": "closest",
+      "t": "closest",
+      "q": "كم عاماً عاش أكبر معمّر موثّق في التاريخ تقريباً؟",
+      "a": "122",
+      "num": 122
+    }
+  ]
+}

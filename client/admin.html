@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex,nofollow">
+  <title>لوحة التحكم | FAKKIR</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css?v=5">
+</head>
+<body data-theme="light">
+  <div class="app-shell">
+    <!-- Login gate -->
+    <section id="adminGate" class="screen active">
+      <div class="page-card admin-gate">
+        <h2>لوحة التحكم</h2>
+        <p>صفحة خاصة بالمشرف. استخدم مفتاح <b>service_role (secret)</b> — يبدأ بـ <code>sb_secret_</code> أو <code>eyJ</code> — <b>وليس</b> المفتاح العام publishable. هذا المفتاح وحده يسمح بالإضافة والتعديل والحذف.<br>تجده في: Supabase → Project Settings → API → service_role.</p>
+        <input id="adminKey" type="password" placeholder="service_role key (sb_secret_… أو eyJ…)" autocomplete="off" spellcheck="false">
+        <label class="admin-remember"><input id="adminRemember" type="checkbox" checked> تذكّرني على هذا الجهاز</label>
+        <button id="adminLogin" class="primary big">دخول</button>
+        <div id="adminError" class="admin-error"></div>
+        <p class="admin-hint">المفتاح يُحفظ في متصفحك فقط ولا يُرسل لأي جهة غير Supabase. استخدمه على جهازك الخاص.</p>
+      </div>
+    </section>
+
+    <!-- Dashboard -->
+    <section id="adminPanel" class="screen">
+      <div class="admin-head">
+        <h2>FAKKIR — لوحة التحكم</h2>
+        <button id="adminLogout">تسجيل الخروج</button>
+      </div>
+      <div id="adminStats" class="admin-stats"></div>
+
+      <div class="admin-tabs">
+        <button class="admin-tab active" data-tab="questions">الأسئلة</button>
+        <button class="admin-tab" data-tab="categories">الفئات</button>
+        <button class="admin-tab" data-tab="matches">النتائج</button>
+      </div>
+
+      <div id="tabQuestions" class="admin-tabpane">
+        <div class="admin-filters">
+          <select id="fVersion" class="version-select"></select>
+          <select id="fCategory" class="version-select"></select>
+          <input id="fSearch" placeholder="بحث في السؤال/الإجابة/القصة…">
+          <button id="fApply" class="primary">عرض</button>
+          <button id="addNew">+ سؤال جديد</button>
+        </div>
+        <div id="qCount" class="admin-count"></div>
+        <div class="admin-table-wrap"><table id="qTable" class="admin-table"></table></div>
+      </div>
+
+      <div id="tabCategories" class="admin-tabpane hidden">
+        <div class="admin-filters"><button id="addCat" class="primary">+ فئة جديدة</button></div>
+        <div class="admin-table-wrap"><table id="cTable" class="admin-table"></table></div>
+      </div>
+
+      <div id="tabMatches" class="admin-tabpane hidden">
+        <div class="admin-table-wrap"><table id="mTable" class="admin-table"></table></div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Edit / Add modal -->
+  <div id="editModal" class="admin-modal hidden">
+    <div class="admin-modal-card">
+      <h3 id="emTitle">تعديل السؤال</h3>
+      <div class="em-grid">
+        <label>الفئة<select id="eCategory"></select></label>
+        <label>النسخة<input id="eVersion" type="number" min="1"></label>
+        <label>الترتيب (ord)<input id="eOrd" type="number" min="0"></label>
+        <label>القيمة<input id="eValue" type="number"></label>
+        <label>النوع<input id="eType" placeholder="normal / flag"></label>
+        <label>العلم (flag)<input id="eFlag" placeholder="رمز الدولة، مثل sa"></label>
+      </div>
+      <label class="em-full">السؤال<textarea id="eQ" rows="2"></textarea></label>
+      <label class="em-full">الإجابة<input id="eA"></label>
+      <label class="em-full">ملاحظة / قصة<textarea id="eNote" rows="3"></textarea></label>
+      <div class="modal-actions"><button id="eSave" class="primary">حفظ</button><button id="eCancel">إلغاء</button></div>
+      <div id="emError" class="admin-error"></div>
+    </div>
+  </div>
+
+  <!-- Category add / edit modal -->
+  <div id="catModal" class="admin-modal hidden">
+    <div class="admin-modal-card">
+      <h3 id="cmTitle">فئة جديدة</h3>
+      <div class="em-grid">
+        <label>المعرّف (slug)<input id="cSlug" placeholder="history" spellcheck="false"></label>
+        <label>اللون<input id="cColor" placeholder="blue / gold / green / red / cyan / purple"></label>
+        <label>الترتيب<input id="cSort" type="number"></label>
+      </div>
+      <label class="em-full">الاسم<input id="cName"></label>
+      <label class="em-full">الصورة — رابط/مسار (اختياري)<input id="cImage" placeholder="assets/img/categories/slug.png أو رابط"></label>
+      <label class="em-full">أو ارفع صورة من جهازك<input id="cFile" type="file" accept="image/*"></label>
+      <img id="cPreview" class="cat-preview" alt="معاينة">
+      <div class="modal-actions"><button id="cSave" class="primary">حفظ</button><button id="cCancel">إلغاء</button></div>
+      <div id="cmError" class="admin-error"></div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+  <script src="assets/js/config.js?v=5"></script>
+  <script src="assets/js/admin.js?v=5"></script>
+</body>
+</html>

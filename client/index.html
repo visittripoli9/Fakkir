@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f3f5f8">
+  <title>فكّر | FAKKIR</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css?v=14">
+</head>
+<body data-theme="light">
+  <div class="app-shell">
+    <header class="app-header">
+      <button class="brand" data-screen="home" aria-label="الرئيسية">
+        <img class="brand-logo logo-light" src="assets/img/ui/logo-light.png" alt="فكّر FAKKIR" onerror="this.onerror=null;this.src='assets/img/ui/logo.png'">
+        <img class="brand-logo logo-dark" src="assets/img/ui/logo-dark.png" alt="فكّر FAKKIR" onerror="this.onerror=null;this.src='assets/img/ui/logo.png'">
+      </button>
+      <nav class="main-nav" id="mainNav">
+        <button class="nav-link" data-screen="home">الرئيسية</button>
+        <button class="nav-link" data-screen="rules">القواعد</button>
+        <button class="nav-link" data-screen="leaderboard">المتصدرون</button>
+        <button class="nav-link" data-screen="settings">الإعدادات</button>
+      </nav>
+      <div class="header-actions">
+        <button id="navToggle" class="nav-toggle" aria-label="القائمة" aria-expanded="false"><span></span><span></span><span></span></button>
+        <button id="themeToggle" class="icon-btn" title="تبديل الوضع" aria-label="تبديل الوضع">
+          <svg class="ico ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.4 1.4M17.6 17.6 19 19M19 5l-1.4 1.4M6.4 17.6 5 19"/></svg>
+          <svg class="ico ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8Z"/></svg>
+          <span id="themeLabel">الوضع</span>
+        </button>
+        <button id="soundToggle" class="icon-btn" title="الصوت" aria-label="تشغيل/كتم الصوت">
+          <svg class="ico ico-snd-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18 6a9 9 0 0 1 0 12"/></svg>
+          <svg class="ico ico-snd-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="m16 9 5 5M21 9l-5 5"/></svg>
+          <span id="soundLabel">الصوت</span>
+        </button>
+      </div>
+    </header>
+
+    <main>
+      <div id="dbStatus" class="db-status" data-kind="warn">جاري تحميل البيانات...</div>
+      <section id="home" class="screen active home">
+        <div class="hero">
+          <h1 class="hero-title">فكّر<span>FAKKIR</span></h1>
+          <p class="hero-sub">تحدٍّ جماعي بين فريقين على طريقة المسابقات الكبرى. اختر فئاتك، اضغط على النقاط، وأجب بسرعة لتجمع أعلى رصيد. أكثر من ٢٠٠٠ سؤال موزّعة على ٢٤ فئة و١٥ نسخة كاملة.</p>
+          <div id="resumeBar" class="resume-bar hidden">
+            <span class="resume-text">لديك مباراة قيد التقدّم — هل تريد متابعتها؟</span>
+            <div class="resume-actions">
+              <button id="continueMatchBtn" class="primary big">متابعة المباراة</button>
+              <button id="newMatchBtn" class="ghost-btn big">مباراة جديدة</button>
+            </div>
+          </div>
+          <div class="hero-cta">
+            <button id="startBtn" class="primary big">ابدأ اللعبة</button>
+            <button data-screen="rules" class="ghost-btn big">كيف نلعب؟</button>
+          </div>
+          <div class="hero-stats">
+            <div class="stat"><b>٢٤</b><span>فئة متنوعة</span></div>
+            <div class="stat"><b>٢١٥٠+</b><span>سؤال</span></div>
+            <div class="stat"><b>١٥</b><span>نسخة (A–O)</span></div>
+            <div class="stat"><b>٢</b><span>فريقان</span></div>
+          </div>
+        </div>
+
+        <div class="section-title">
+          <h2>جهّز الفريقين</h2>
+          <p>اكتب اسم كل فريق قبل أن تبدأ التحدي</p>
+        </div>
+        <div class="teams-setup">
+          <div class="setup-team blue">
+            <img src="assets/img/ui/team-blue.png" alt="شعار الفريق الأزرق">
+            <label for="blueName">الفريق الأول</label>
+            <input id="blueName" value="الفريق الأزرق" maxlength="20" aria-label="اسم الفريق الأول">
+          </div>
+          <div class="vs-badge" aria-hidden="true">VS</div>
+          <div class="setup-team red">
+            <img src="assets/img/ui/team-red.png" alt="شعار الفريق الأحمر">
+            <label for="redName">الفريق الثاني</label>
+            <input id="redName" value="الفريق الأحمر" maxlength="20" aria-label="اسم الفريق الثاني">
+          </div>
+        </div>
+
+        <div class="section-title">
+          <h2>كيف تلعب؟</h2>
+          <p>ثلاث خطوات بسيطة</p>
+        </div>
+        <div class="steps">
+          <article class="step">
+            <div class="step-num">١</div>
+            <img src="assets/img/ui/book.png" alt="">
+            <h3>اختر ٦ فئات</h3>
+            <p>انتقِ ست فئات من أصل ٢٤، واختر النسخة المفضّلة من الإعدادات.</p>
+          </article>
+          <article class="step">
+            <div class="step-num">٢</div>
+            <img src="assets/img/ui/settings.png" alt="">
+            <h3>أجب واكسب النقاط</h3>
+            <p>اضغط على قيمة السؤال، أجب قبل انتهاء الوقت، وتبادلوا الأدوار بين الفريقين.</p>
+          </article>
+          <article class="step">
+            <div class="step-num">٣</div>
+            <img src="assets/img/ui/cup.png" alt="">
+            <h3>توّج الفائز</h3>
+            <p>الفريق صاحب أعلى رصيد يفوز، وتُحفظ النتيجة في لوحة المتصدرين.</p>
+          </article>
+        </div>
+
+        <div class="home-footer">
+          <div class="quick-links">
+            <button data-screen="rules">قواعد اللعبة</button>
+            <button data-screen="leaderboard">المتصدرين</button>
+            <button data-screen="settings">الإعدادات</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="category" class="screen">
+        <div class="section-head">
+          <h2>اختر النسخة و٦ فئات</h2>
+          <p id="catCount">اختر 0 من 6</p>
+        </div>
+        <div class="version-pick">
+          <span class="vp-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 2 7l10 5 10-5-10-5Z"/><path d="m2 17 10 5 10-5"/><path d="m2 12 10 5 10-5"/></svg></span>
+          <span class="vp-text"><b>اختر النسخة</b><small>مجموعة الأسئلة · A إلى O</small></span>
+          <div class="vp-dd" id="versionDD">
+            <button type="button" class="vp-dd-btn" id="versionDDBtn" aria-haspopup="listbox" aria-expanded="false"><span class="vp-dd-current">النسخة A</span><svg class="vp-dd-arrow" viewBox="0 0 14 9" fill="none" stroke="#d7a018" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l6 6 6-6"/></svg></button>
+            <ul class="vp-dd-list" id="versionDDList" role="listbox"></ul>
+          </div>
+        </div>
+        <div class="tools-row">
+          <button id="randomCats">اختيار عشوائي</button>
+          <button id="clearCats">مسح الاختيار</button>
+        </div>
+        <div id="categoriesGrid" class="categories-grid"></div>
+        <div class="bottom-actions"><button data-screen="home">رجوع</button><button id="goBoard" class="primary">ابدأ اللوحة</button></div>
+      </section>
+
+      <section id="board" class="screen">
+        <div class="score-row">
+          <div class="score-chip blue"><span id="blueBoardName">الفريق الأزرق</span><strong id="blueScore">0</strong><small class="skip-tag" id="blueSkips"></small></div>
+          <div class="round-pill">الدور: <b id="turnLabel">الفريق الأزرق</b></div>
+          <div class="score-chip red"><span id="redBoardName">الفريق الأحمر</span><strong id="redScore">0</strong><small class="skip-tag" id="redSkips"></small></div>
+        </div>
+        <div id="boardGrid" class="board-grid"></div>
+        <div class="bottom-actions"><button data-screen="category">تغيير الفئات</button><button id="finishGame" class="danger">إنهاء الجولة</button></div>
+      </section>
+
+      <section id="question" class="screen">
+        <div class="question-shell">
+          <aside class="side-score blue"><img src="assets/img/ui/team-blue.png" alt=""><span id="qBlueName"></span><strong id="qBlueScore"></strong></aside>
+          <article class="question-card">
+            <div class="question-meta"><span id="qCat"></span><b id="qValue"></b><span id="qGolden" class="golden-badge hidden">⭐ ذهبي ×٢</span><span id="timer">15</span></div>
+            <div id="qTurn" class="q-turn"></div>
+            <div id="qStory" class="q-story hidden"></div>
+            <h2 id="qText"></h2>
+            <div id="qVisual" class="question-visual"></div>
+            <div id="answerBox" class="answer-box hidden"></div>
+            <div class="question-actions">
+              <button id="correctBtn" class="success">إجابة صحيحة</button>
+              <button id="wrongBtn" class="danger">إجابة خاطئة</button>
+              <button id="passBtn">تخطي</button>
+              <button id="showAnswerBtn">عرض الإجابة</button>
+              <button id="tbBlueBtn" class="success hidden">صحّ: الأزرق</button>
+              <button id="tbRedBtn" class="danger hidden">صحّ: الأحمر</button>
+            </div>
+          </article>
+          <aside class="side-score red"><img src="assets/img/ui/team-red.png" alt=""><span id="qRedName"></span><strong id="qRedScore"></strong></aside>
+        </div>
+        <div class="bottom-actions"><button data-screen="board">العودة للوحة</button></div>
+      </section>
+
+      <section id="result" class="screen">
+        <div class="result-card">
+          <h2 id="resultTitle">النتيجة</h2>
+          <div id="resultVisual" class="question-visual"></div>
+          <p id="resultAnswer"></p>
+          <p id="resultNote"></p>
+          <div id="goldenReveal" class="golden-reveal hidden"></div>
+          <div id="decisionEdit" class="decision-edit hidden">
+            <span class="de-label">تعديل قرار <b id="deTeam"></b> إن وقع بالخطأ:</span>
+            <div class="de-btns">
+              <button data-award="correct" class="success">صحيحة (+<b class="de-val-correct"></b>)</button>
+              <button data-award="wrong" class="danger">خاطئة (−<b class="de-val-wrong"></b>)</button>
+              <button data-award="none">بدون نقاط</button>
+            </div>
+          </div>
+          <div class="bottom-actions"><button id="nextBtn" class="primary">السؤال التالي</button><button data-screen="board">لوحة الفئات</button></div>
+        </div>
+      </section>
+
+      <section id="leaderboard" class="screen"><div class="page-card"><h2>المتصدرين</h2><div id="leaderRows"></div><button data-screen="home">الرئيسية</button></div></section>
+      <section id="rules" class="screen"><div class="page-card"><h2>قواعد اللعبة</h2><ol>
+        <li>اختر ٦ فئات للعب، وكل فئة تحتوي على ٦ أسئلة بدرجات مختلفة؛ وكلّما زاد السؤال صعوبةً زادت نقاطه.</li>
+        <li>يتناوب الفريقان على اختيار الفئات والأسئلة والإجابة عليها، ويكون الدور أولًا للفريق صاحب الاختيار.</li>
+        <li>الإجابة الصحيحة تمنح الفريق نقاط السؤال كاملة.</li>
+        <li>الإجابة الخاطئة تُخصم منها نقاط السؤال من رصيد الفريق، ثم ينتقل الدور إلى الفريق الآخر لمحاولة السرقة.</li>
+        <li>إذا انتهى الوقت دون إجابة، يُعتبر السؤال غير مُجاب بلا خصم، وتنتقل الفرصة إلى الفريق الآخر لمحاولة السرقة.</li>
+        <li>لكل فريق ٣ تخطيات في المباراة. التخطي وهناك رصيد متبقٍّ لا يُخصم منه نقاط، ثم يحصل الفريق الآخر على فرصة السرقة.</li>
+        <li>محاولة التخطي بدون رصيد تخطيات تُحتسب إجابة خاطئة: تُخصم نقاط السؤال وينتقل الدور إلى الفريق الآخر.</li>
+        <li>السرقة الصحيحة تمنح النقاط كاملة، والسرقة الخاطئة تُخصم منها نقاط السؤال أيضًا.</li>
+        <li>بعد عرض الإجابة يمكن تعديل قرار «صحيح/خطأ» إن وقع بالخطأ، وتُحدَّث النقاط تلقائيًا دون تكرار أو خصم خاطئ.</li>
+        <li>توجد أسئلة ذهبية عشوائية لا تظهر مسبقًا؛ يبدو السؤال عاديًا، وبعد الإجابة يُكشف أنه ذهبي: تُضاعَف نقاطه عند الإجابة الصحيحة، وتُطبَّق قاعدة الخطأ المعتادة عند الإجابة الخاطئة.</li>
+        <li>في نهاية المباراة يحصل الفريق المتأخر على جولة تحدٍّ للعودة عبر سؤال عالي النقاط.</li>
+        <li>عند التعادل يُطرح سؤال فاصل، والفريق الذي يجيب صحيحًا أولًا يفوز.</li>
+        <li>الفريق صاحب أعلى رصيد في النهاية هو الفائز. والهدف: التفكير والتحدي والتعاون والاستمتاع بالمنافسة.</li>
+      </ol><button data-screen="home">الرئيسية</button></div></section>
+      <section id="settings" class="screen"><div class="page-card settings-card"><h2>الإعدادات</h2>
+        <div class="settings-list">
+          <div class="setting-row">
+            <span class="setting-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 9.5V13l2.5 2.5M9 2h6"/></svg></span>
+            <span class="setting-text"><b>مدة السؤال</b><small>الوقت المتاح للإجابة على كل سؤال</small></span>
+            <select id="timerSetting" class="setting-select" aria-label="مدة السؤال"><option value="10">10 ثواني</option><option value="15" selected>15 ثانية</option><option value="20">20 ثانية</option><option value="30">30 ثانية</option><option value="45">45 ثانية</option><option value="60">دقيقة كاملة</option><option value="120">دقيقتان</option><option value="180">3 دقائق</option></select>
+          </div>
+          <div class="setting-row">
+            <span class="setting-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 3 8l9 5 9-5-9-5Z"/><path d="M3 13l9 5 9-5M3 17.5l9 5 9-5"/></svg></span>
+            <span class="setting-text"><b>النسخة</b><small>مجموعة الأسئلة المعروضة على اللوحة</small></span>
+            <select id="versionSetting" class="version-select setting-select" aria-label="النسخة"></select>
+          </div>
+        </div>
+        <div class="settings-actions">
+          <button data-screen="home" class="primary">الرئيسية</button>
+          <button id="resetLocal" class="danger btn-ghost">مسح النتائج المحلية</button>
+        </div>
+      </div></section>
+    </main>
+  </div>
+  <div id="toast" class="toast"></div>
+  <script src="assets/js/config.js?v=14"></script>
+  <script type="module" src="assets/js/app.js?v=14"></script>
+</body>
+</html>

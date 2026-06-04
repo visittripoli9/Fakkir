@@ -1,0 +1,22 @@
+# Render Blueprint — deploys the FAKKIR Express server (serves the client + /api).
+# In Render: New + → Blueprint → connect this repo → Apply.
+services:
+  - type: web
+    name: fakkir
+    runtime: node
+    plan: free
+    rootDir: server
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /
+    autoDeploy: true
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
+      - key: NODE_ENV
+        value: "production"   # masks error details + production-safe behavior
+      # The client reads game data directly from Supabase (public anon key in
+      # client/assets/js/config.js), so no secrets are required here.
+      # Optional: set DATABASE_URL to enable the Node /api/* PostgreSQL routes.
+      # Optional: set CLIENT_ORIGIN (comma-separated) ONLY if a different origin
+      # must call /api/*. Same-origin (client served here) needs nothing.
