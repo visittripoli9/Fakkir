@@ -391,9 +391,17 @@ body[data-theme="dark"] .icon-btn .ico-moon{display:none}
 .decision-edit .de-btns{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
 .decision-edit button{min-height:46px;border-radius:14px}
 .decision-edit button.active{outline:3px solid var(--gold);outline-offset:2px}
+.decision-edit .de-title{font-weight:900;color:var(--text);margin-bottom:12px;text-align:center}
+.decision-edit .de-row{margin-bottom:12px}
+.decision-edit .de-row:last-child{margin-bottom:0}
+.decision-edit .de-row .de-label{margin-bottom:8px}
 @media(max-width:680px){.decision-edit .de-btns{grid-template-columns:1fr}}
 .golden-reveal{margin:12px auto;padding:12px 18px;max-width:560px;border:1px solid var(--gold);border-radius:16px;background:color-mix(in srgb,var(--gold) 18%,var(--panel2));color:var(--text);font-weight:900;font-size:20px;animation:in .25s ease both}
 #passBtn.no-skips{background:var(--red);color:#fff;border-color:#b92734}
 .resume-bar{margin:0 auto 18px;max-width:680px;padding:16px 20px;border:2px solid var(--gold);border-radius:22px;background:color-mix(in srgb,var(--gold) 14%,var(--panel));box-shadow:var(--shadow);display:flex;flex-direction:column;gap:12px;align-items:center;animation:in .25s ease both}
+/* .resume-bar's display:flex is defined after the global .hidden{display:none} and has
+   equal specificity, so it would otherwise win and the bar could never be hidden.
+   This rule is more specific (two classes) so the hidden state always takes effect. */
+.resume-bar.hidden{display:none}
 .resume-bar .resume-text{font-weight:900;font-size:18px;color:var(--text)}
 .resume-bar .resume-actions{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}

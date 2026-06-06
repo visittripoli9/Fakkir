@@ -177,14 +177,8 @@
           <p id="resultAnswer"></p>
           <p id="resultNote"></p>
           <div id="goldenReveal" class="golden-reveal hidden"></div>
-          <div id="decisionEdit" class="decision-edit hidden">
-            <span class="de-label">تعديل قرار <b id="deTeam"></b> إن وقع بالخطأ:</span>
-            <div class="de-btns">
-              <button data-award="correct" class="success">صحيحة (+<b class="de-val-correct"></b>)</button>
-              <button data-award="wrong" class="danger">خاطئة (−<b class="de-val-wrong"></b>)</button>
-              <button data-award="none">بدون نقاط</button>
-            </div>
-          </div>
+          <!-- per-team verdict editor; contents are built by setupDecisionEditor() -->
+          <div id="decisionEdit" class="decision-edit hidden"></div>
           <div class="bottom-actions"><button id="nextBtn" class="primary">السؤال التالي</button><button data-screen="board">لوحة الفئات</button></div>
         </div>
       </section>

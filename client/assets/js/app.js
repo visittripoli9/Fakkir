@@ -13,7 +13,8 @@ const state = {
   teams: { blue: { name: 'الفريق الأزرق', score: 0, skips: SKIPS_PER_TEAM }, red: { name: 'الفريق الأحمر', score: 0, skips: SKIPS_PER_TEAM } },
   settings: { timer: 15, sound: true, version: 1 },
   events: [],
-  lastAward: null,     // { team, points, baseValue, key } — for editing the last decision
+  awards: {},          // { blue?:{state,base,golden,key}, red?:{...} } — per-team verdict for the current question (editable on the result screen)
+  lastQ: null,         // { base, golden, key } — meta of the just-finished question, so any team's verdict can be re-scored
   challengeDone: false,// end-game comeback round used?
   special: null,       // null | 'challenge' | 'tiebreak'
   screen: 'home',      // last active screen (for restore-after-reload)
@@ -180,6 +181,7 @@ async function loadData(){
   for(const [source, fn] of attempts){
     try{
       DATA = await fn();
+      localizeFlags(DATA); // always serve flags from the app project folder, not a remote CDN
       DATA_SOURCE = source;
       setStatus('', 'ok'); // hide the technical data-source banner from players
       return;
@@ -188,6 +190,16 @@ async function loadData(){
     }
   }
   throw new Error('No data source available');
+}
+
+// Force every flag to its bundled local image (assets/img/flags/<code>.png) no
+// matter what the data source returned. This keeps all flags inside the app
+// project folder so they can never break (remote CDN down / blocked by CSP).
+function localizeFlags(data){
+  if(!data || !data.flags || typeof data.flags !== 'object') return;
+  for(const code of Object.keys(data.flags)){
+    data.flags[code] = `assets/img/flags/${code}.png`;
+  }
 }
 
 function saveLocal(){
@@ -224,6 +236,8 @@ function sanitizeState(){
   if(typeof state.timerEndsAt !== 'number') state.timerEndsAt = null;
   if(!state.settings || typeof state.settings !== 'object') state.settings = { timer:15, sound:true, version:1 };
   if(!Array.isArray(state.events)) state.events = [];
+  if(!state.awards || typeof state.awards !== 'object' || Array.isArray(state.awards)) state.awards = {};
+  if(state.lastQ != null && typeof state.lastQ !== 'object') state.lastQ = null;
 }
 
 function loadLocalState(){
@@ -240,8 +254,18 @@ function loadLocalState(){
   sanitizeState(); // always clamp/repair, even for accepted saves
 }
 
-// a match is "active" once 6 categories are locked in and it hasn't been concluded
-function hasActiveMatch(){ return Array.isArray(state.selected) && state.selected.length === 6 && !state.finished; }
+// A match is "active" (resumable) when there is a real, unfinished game to
+// return to: 6 categories locked in, the match not concluded, and either a
+// question open right now OR questions still left to play on the board. This
+// shows the "continue match?" prompt whenever a genuine match is in progress,
+// while keeping it hidden on a fresh visit (no categories) or a finished /
+// fully-played board.
+function hasActiveMatch(){
+  if(!Array.isArray(state.selected) || state.selected.length !== 6 || state.finished) return false;
+  if(isValidCurrent(state.current)) return true;     // a question is open right now -> definitely resumable
+  if(!DATA) return true;                             // data not loaded yet: trust the validated saved shape
+  return remainingQuestions().length > 0;            // still questions left to play -> match is in progress
+}
 
 function askConfirm(msg){
   try{ return window.confirm(msg); }catch(e){ return true; }
@@ -268,6 +292,24 @@ function continueMatch(){
     state.current = null;                    // drop any malformed current and fall back safely
     show('board');                           // the board is the live hub
   }
+}
+
+// On reload, restore the screen the player was last on instead of always
+// dropping them on the home page. Live-gameplay screens are only restored when
+// there is a genuine match to resume; transient screens fall back sensibly.
+function restoreScreen(){
+  const saved = state.screen || 'home';
+  // mid-game board/question: rebuild the board, or resume the open question + its timer
+  if(hasActiveMatch() && (saved === 'board' || saved === 'question')){
+    return continueMatch();
+  }
+  // these screens only make sense with live state we no longer have after a reload
+  if(saved === 'board' || saved === 'question' || saved === 'result'){
+    return show(hasActiveMatch() ? 'board' : 'home');
+  }
+  // otherwise return to exactly where they were (settings, rules, leaderboard, category, home)
+  const known = ['home', 'category', 'leaderboard', 'rules', 'settings'];
+  show(known.includes(saved) ? saved : 'home');
 }
 
 // clear the saved match and start a fresh one (with confirmation if a match is in progress)
@@ -328,7 +370,8 @@ function startFlow(){
   state.used={};
   state.selected=[];
   state.events=[];
-  state.lastAward=null;
+  state.awards={};
+  state.lastQ=null;
   state.challengeDone=false;
   state.special=null;
   state.current=null;
@@ -399,6 +442,7 @@ function openQuestion(slug, ord, opts={}){
   if(!q || state.used[key]) return; // already used -> can't be answered/scored twice
   const mode = opts.mode || 'normal';
   const answerer = opts.answerer || state.turn;
+  state.awards = {};         // fresh question -> no verdicts recorded yet
   state.current = { q, c, key, picker: answerer, answerer, phase:'initial', shown:false, mode };
   renderCurrentQuestion();   // builds the question screen from state.current (also starts a fresh timer)
   saveLocal();               // persist immediately: a question was opened
@@ -489,7 +533,7 @@ function timeoutPass(){
     return;
   }
   // the stealing team also ran out of time — end as unanswered, no points changed
-  state.lastAward = { team: cur.answerer, state: 'none', base: cur.q.value, golden: cur.golden, key: cur.key };
+  setAward(cur.answerer, 'none');
   toast('⏰ انتهى الوقت — لم يُجب أي فريق');
   finishQuestion('انتهى الوقت — بدون إجابة', null);
 }
@@ -546,17 +590,31 @@ function updateSkipButton(){
   }
 }
 
-// golden doubles ONLY a correct answer; a wrong answer always uses the normal base value
-const correctPointsOf = cur => cur.q.value * (cur.golden ? 2 : 1);
-// signed points currently applied for a recorded verdict
-const awardDelta = la => la.state==='correct' ? la.base * (la.golden ? 2 : 1) : (la.state==='wrong' ? -la.base : 0);
+// signed points currently applied for a recorded verdict (golden doubles ONLY a correct answer)
+const awardDelta = a => a.state==='correct' ? a.base * (a.golden ? 2 : 1) : (a.state==='wrong' ? -a.base : 0);
+
+// Record (or change) a team's verdict for the current question and adjust its
+// score by exactly the difference. Works live (state.current set) and while
+// editing on the result screen (state.current null -> falls back to state.lastQ),
+// so every team's correct/wrong/none decision is fully correctable afterwards.
+function setAward(team, verdict){
+  const meta = state.current
+    ? { base: state.current.q.value, golden: !!state.current.golden, key: state.current.key }
+    : (state.lastQ || { base: 0, golden: false, key: null });
+  const prev = state.awards[team];
+  if(prev) state.teams[team].score -= awardDelta(prev);          // undo what's applied now
+  const next = { team, state: verdict, base: meta.base, golden: meta.golden, key: meta.key };
+  state.teams[team].score += awardDelta(next);                    // apply the new verdict once
+  state.teams[team].score = clampScore(state.teams[team].score);
+  state.awards[team] = next;
+  return next;
+}
 
 function correctAnswer(){
   const cur = state.current; if(!cur) return;
   beep(880,0.16,'sine');
   if(cur.mode==='challenge') return finishChallenge(true);
-  state.teams[cur.answerer].score += correctPointsOf(cur);
-  state.lastAward = { team: cur.answerer, state: 'correct', base: cur.q.value, golden: cur.golden, key: cur.key };
+  setAward(cur.answerer, 'correct');
   finishQuestion(cur.phase==='steal' ? 'سرقة ناجحة' : 'إجابة صحيحة', cur.answerer);
 }
 
@@ -564,7 +622,7 @@ function wrongAnswer(reason){
   const cur = state.current; if(!cur) return;
   beep(170,0.3,'square');
   if(cur.mode==='challenge') return finishChallenge(false); // comeback round stays a bonus: no deduction
-  state.teams[cur.answerer].score -= cur.q.value; // wrong answer = normal base deduction (golden never penalizes extra)
+  setAward(cur.answerer, 'wrong'); // wrong answer = normal base deduction (golden never penalizes extra)
   const lead = reason ? (reason + ' — ') : '';
   if(cur.phase==='initial'){
     // deducted from the team on turn — now hand the question to the other team to steal
@@ -580,8 +638,7 @@ function wrongAnswer(reason){
     saveLocal();
     return;
   }
-  // stealing team also wrong — deduction already applied to it
-  state.lastAward = { team: cur.answerer, state: 'wrong', base: cur.q.value, golden: cur.golden, key: cur.key };
+  // stealing team also wrong — setAward above already recorded its deduction
   if(reason) toast(lead + 'إجابة خاطئة (−' + cur.q.value + ')');
   finishQuestion('إجابة خاطئة', cur.answerer);
 }
@@ -608,16 +665,18 @@ function passQuestion(){
     return;
   }
   // the stealing team declines the steal — no points, no token spent
-  state.lastAward = { team: cur.answerer, state: 'none', base: cur.q.value, golden: cur.golden, key: cur.key };
+  setAward(cur.answerer, 'none');
   finishQuestion('تخطي', null);
 }
 
 // reveal (only on the result screen) whether the question was secretly golden
-function renderGoldenReveal(la){
+function renderGoldenReveal(){
   const gr = $('#goldenReveal'); if(!gr) return;
-  const isGolden = !!(la && la.golden);
+  const isGolden = !!(state.lastQ && state.lastQ.golden);
   gr.classList.toggle('hidden', !isGolden);
-  if(isGolden) gr.textContent = la.state==='correct'
+  if(!isGolden) return;
+  const anyCorrect = Object.values(state.awards || {}).some(a => a && a.state === 'correct');
+  gr.textContent = anyCorrect
     ? '⭐ مفاجأة! كان سؤالًا ذهبيًا — تمت مضاعفة النقاط (×٢)'
     : '⭐ مفاجأة! كان هذا سؤالًا ذهبيًا';
 }
@@ -627,12 +686,13 @@ function finishQuestion(title, team){
   state.timerEndsAt = null; // no live timer on the result screen
   const cur = state.current; if(!cur) return;
   state.used[cur.key] = true;
+  state.lastQ = { base: cur.q.value, golden: !!cur.golden, key: cur.key }; // remember meta so any team's verdict stays editable
   state.events.unshift({ title, team, at: new Date().toISOString(), question: cur.q.q || questionTitle(cur.q.type) });
   $('#resultTitle').textContent = title;
   $('#resultAnswer').textContent = answerText(cur.q);
   $('#resultNote').textContent = (cur.q.category==='crime'||cur.q.category==='rescue') ? '' : (cur.q.note || cur.q.evidence || '');
   renderVisual(cur.q,cur.c,'#resultVisual');
-  renderGoldenReveal(state.lastAward);
+  renderGoldenReveal();
   state.turn = other(cur.picker); // next pick alternates from who picked this one
   state.current = null;
   setupDecisionEditor();
@@ -640,34 +700,48 @@ function finishQuestion(title, team){
   show('result');
 }
 
-// let the host fix a mis-clicked verdict (correct/wrong/none) for the team that answered
+// Let the host fix a mis-clicked verdict for EITHER team. A single question can
+// score both teams (e.g. picker wrong -> other team steals), so the result
+// screen offers an independent correct/wrong/none control per team.
 function setupDecisionEditor(){
   const box = $('#decisionEdit'); if(!box) return;
-  const la = state.lastAward;
-  if(!la || !la.team){ box.classList.add('hidden'); return; }
+  if(state.special){ box.classList.add('hidden'); box.innerHTML = ''; return; } // challenge/tiebreak score separately
+  const base = state.lastQ ? state.lastQ.base : 0;
+  const golden = !!(state.lastQ && state.lastQ.golden);
+  const correctVal = base * (golden ? 2 : 1);
+  const row = team => {
+    const verdict = state.awards[team] ? state.awards[team].state : 'none';
+    const act = v => v === verdict ? ' active' : '';
+    return `<div class="de-row">
+      <span class="de-label">قرار ${safe(state.teams[team].name)}:</span>
+      <div class="de-btns">
+        <button data-team="${team}" data-award="correct" class="success${act('correct')}">صحيحة (+${correctVal})</button>
+        <button data-team="${team}" data-award="wrong" class="danger${act('wrong')}">خاطئة (−${base})</button>
+        <button data-team="${team}" data-award="none"${act('none')}>بدون نقاط</button>
+      </div>
+    </div>`;
+  };
   box.classList.remove('hidden');
-  const tn = box.querySelector('#deTeam'); if(tn) tn.textContent = state.teams[la.team].name;
-  const cv = box.querySelector('.de-val-correct'); if(cv) cv.textContent = la.base * (la.golden ? 2 : 1);
-  const wv = box.querySelector('.de-val-wrong'); if(wv) wv.textContent = la.base;
-  box.querySelectorAll('button[data-award]').forEach(b=> b.classList.toggle('active', b.dataset.award===la.state));
+  box.innerHTML = `<div class="de-title">تعديل القرارات إن وقع خطأ:</div>` + row('blue') + row('red');
+  box.querySelectorAll('button[data-award]').forEach(b => b.onclick = () => editDecision(b.dataset.team, b.dataset.award));
 }
 
-function editDecision(target){ // 'correct' | 'wrong' | 'none'
-  const la = state.lastAward; if(!la || !la.team || target===la.state) return;
-  state.teams[la.team].score -= awardDelta(la); // revert exactly what is applied now
-  la.state = target;
-  state.teams[la.team].score += awardDelta(la); // apply the new verdict once
-  const nm = state.teams[la.team].name;
-  $('#resultTitle').textContent = target==='correct' ? ('صحيحة لـ '+nm) : target==='wrong' ? ('خاطئة لـ '+nm) : 'بدون نقاط';
+function editDecision(team, target){ // team: 'blue'|'red'; target: 'correct'|'wrong'|'none'
+  if(team !== 'blue' && team !== 'red') return;
+  const current = state.awards[team] ? state.awards[team].state : 'none';
+  if(target === current) return;
+  setAward(team, target);
   setupDecisionEditor();
-  renderGoldenReveal(la);
+  renderGoldenReveal();
+  refreshQScores();
   saveLocal();
   toast(`النتيجة: ${state.teams.blue.name} ${state.teams.blue.score} — ${state.teams.red.name} ${state.teams.red.score}`);
 }
 
 function next(){
-  state.lastAward = null;
-  const de=$('#decisionEdit'); if(de) de.classList.add('hidden');
+  state.awards = {};
+  state.lastQ = null;
+  const de=$('#decisionEdit'); if(de){ de.classList.add('hidden'); de.innerHTML=''; }
   const gr=$('#goldenReveal'); if(gr) gr.classList.add('hidden');
   if(!remainingQuestions().length) return finishGame(); // board exhausted -> wrap up
   buildBoard();
@@ -830,13 +904,13 @@ function bind(){
   $('#goBoard').onclick=()=>{ buildBoard(); show('board'); };
   $('#finishGame').onclick=finishGame;
   $('#correctBtn').onclick=correctAnswer;
-  $('#wrongBtn').onclick=wrongAnswer;
+  $('#wrongBtn').onclick=()=>wrongAnswer(); // no reason: don't pass the click event as a toast string
   $('#passBtn').onclick=passQuestion;
   $('#showAnswerBtn').onclick=showAnswer;
   $('#nextBtn').onclick=next;
   const tbB=$('#tbBlueBtn'); if(tbB) tbB.onclick=()=>tiebreakWinner('blue');
   const tbR=$('#tbRedBtn'); if(tbR) tbR.onclick=()=>tiebreakWinner('red');
-  const de=$('#decisionEdit'); if(de) de.querySelectorAll('button[data-award]').forEach(b=> b.onclick=()=>editDecision(b.dataset.award));
+  // decision-editor buttons are rebuilt per result by setupDecisionEditor(), which wires their clicks
   $('#themeToggle').onclick=()=>{
     const n=document.body.dataset.theme==='dark'?'light':'dark';
     document.body.dataset.theme=n;
@@ -907,13 +981,9 @@ try{
   populateVersions();
   renderHeader();
   renderLeaderboard();
-  // restore an in-progress match after a reload
+  // after a reload, return the player to the screen they were on (not always home)
   updateResumeUI();
-  if(hasActiveMatch() && (state.screen === 'board' || state.screen === 'question')){
-    continueMatch();          // refresh during play -> drop straight back in
-  } else if(hasActiveMatch()){
-    show('home');             // left the game screen -> offer "continue match" on home
-  }
+  restoreScreen();
   // safe recovery notice if a corrupt/outdated save was discarded on load
   if(recoveredCorruptState) setTimeout(()=>toast('تعذّرت استعادة الحفظ السابق (بيانات تالفة) — بدأنا من جديد بأمان.'), 400);
 }catch(e){
