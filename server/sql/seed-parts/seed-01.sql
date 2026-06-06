@@ -2,6 +2,9 @@
 -- Run server/sql/schema.sql once, then paste these part files into the Supabase SQL Editor in order (01, 02, ...).
 begin;
 
+-- ensure the per-question image column exists (players photos etc.)
+alter table questions add column if not exists image text;
+
 -- Replace all game content: versions A–O fully replace any previous data.
 delete from questions;
 delete from flags;
