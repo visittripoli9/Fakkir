@@ -143,6 +143,12 @@
       "name": "الترتيب الصحيح",
       "color": "cyan",
       "image": "assets/img/categories/ordering.png"
+    },
+    {
+      "slug": "players",
+      "name": "احزر اللاعب",
+      "color": "cyan",
+      "image": "assets/img/categories/players.png"
     }
   ],
   "flags": {
@@ -20486,6 +20492,906 @@
       "q": "دور القاضي؟",
       "a": "الحياد",
       "note": "اتهام ياسين بسرقة متجر. سيارته وجدت في الموقع، لكنه يدعي سرقتها."
+    },
+    {
+      "category": "players",
+      "version": 1,
+      "ord": 0,
+      "value": 200,
+      "type": "normal",
+      "q": "نجم أرجنتيني وأحد أعظم اللاعبين في التاريخ، فاز بالكرة الذهبية ثماني مرات وبكأس العالم 2022. من هذا اللاعب؟",
+      "a": "ليونيل ميسي",
+      "image": "assets/img/players/messi.jpg"
+    },
+    {
+      "category": "players",
+      "version": 1,
+      "ord": 1,
+      "value": 200,
+      "type": "normal",
+      "q": "أسطورة برتغالية ومن أكثر الهدافين تسجيلًا في التاريخ، لعب لمانشستر يونايتد وريال مدريد. من هذا اللاعب؟",
+      "a": "كريستيانو رونالدو",
+      "image": "assets/img/players/ronaldo-cr7.jpg"
+    },
+    {
+      "category": "players",
+      "version": 1,
+      "ord": 2,
+      "value": 400,
+      "type": "normal",
+      "q": "مهاجم فرنسي، من نجوم منتخب فرنسا بطل العالم 2018. من هذا اللاعب؟",
+      "a": "أنطوان غريزمان",
+      "image": "assets/img/players/griezmann.jpg"
+    },
+    {
+      "category": "players",
+      "version": 1,
+      "ord": 3,
+      "value": 400,
+      "type": "normal",
+      "q": "لاعب وسط فرنسي قوي، بطل العالم 2018 ولعب لمانشستر يونايتد ويوفنتوس. من هذا اللاعب؟",
+      "a": "بول بوغبا",
+      "image": "assets/img/players/pogba.jpg"
+    },
+    {
+      "category": "players",
+      "version": 1,
+      "ord": 4,
+      "value": 600,
+      "type": "normal",
+      "q": "ظهير أيمن برازيلي، القائد الذي رفع كأس العالم في ثلاث نهائيات متتالية. من هذا اللاعب؟",
+      "a": "كافو",
+      "image": "assets/img/players/cafu.jpg"
+    },
+    {
+      "category": "players",
+      "version": 1,
+      "ord": 5,
+      "value": 600,
+      "type": "normal",
+      "q": "ظهير أيسر برازيلي، اشتهر بركلاته الحرة الصاروخية. من هذا اللاعب؟",
+      "a": "روبرتو كارلوس",
+      "image": "assets/img/players/robertocarlos.jpg"
+    },
+    {
+      "category": "players",
+      "version": 2,
+      "ord": 0,
+      "value": 200,
+      "type": "normal",
+      "q": "جناح برازيلي مهاري، انتقل من برشلونة إلى باريس سان جيرمان بصفقة قياسية عام 2017. من هذا اللاعب؟",
+      "a": "نيمار",
+      "image": "assets/img/players/neymar.jpg"
+    },
+    {
+      "category": "players",
+      "version": 2,
+      "ord": 1,
+      "value": 200,
+      "type": "normal",
+      "q": "مهاجم فرنسي سريع، توّج بكأس العالم 2018 وهو في سن المراهقة. من هذا اللاعب؟",
+      "a": "كيليان مبابي",
+      "image": "assets/img/players/mbappe.jpg"
+    },
+    {
+      "category": "players",
+      "version": 2,
+      "ord": 2,
+      "value": 400,
+      "type": "normal",
+      "q": "جناح كوري جنوبي وقائد توتنهام، من أبرز نجوم آسيا. من هذا اللاعب؟",
+      "a": "سون هيونغ مين",
+      "image": "assets/img/players/son.jpg"
+    },
+    {
+      "category": "players",
+      "version": 2,
+      "ord": 3,
+      "value": 400,
+      "type": "normal",
+      "q": "جناح سنغالي سريع، تألق مع ليفربول وفاز بكأس أمم أفريقيا. من هذا اللاعب؟",
+      "a": "ساديو ماني",
+      "image": "assets/img/players/mane.jpg"
+    },
+    {
+      "category": "players",
+      "version": 2,
+      "ord": 4,
+      "value": 600,
+      "type": "normal",
+      "q": "صانع ألعاب إيطالي، أهدر ركلة الترجيح الحاسمة في نهائي 1994. من هذا اللاعب؟",
+      "a": "روبرتو باجو",
+      "image": "assets/img/players/baggio.jpg"
+    },
+    {
+      "category": "players",
+      "version": 2,
+      "ord": 5,
+      "value": 600,
+      "type": "normal",
+      "q": "مدافع إيطالي أسطوري، أمضى مسيرته كلها مع ميلان. من هذا اللاعب؟",
+      "a": "باولو مالديني",
+      "image": "assets/img/players/maldini.jpg"
+    },
+    {
+      "category": "players",
+      "version": 3,
+      "ord": 0,
+      "value": 200,
+      "type": "normal",
+      "q": "أسطورة برازيلية، اللاعب الوحيد الذي فاز بثلاث بطولات كأس عالم. من هذا اللاعب؟",
+      "a": "بيليه",
+      "image": "assets/img/players/pele.jpg"
+    },
+    {
+      "category": "players",
+      "version": 3,
+      "ord": 1,
+      "value": 200,
+      "type": "normal",
+      "q": "أسطورة أرجنتينية، صاحب هدف القرن وهدف اليد في مونديال 1986. من هذا اللاعب؟",
+      "a": "دييغو مارادونا",
+      "image": "assets/img/players/maradona.jpg"
+    },
+    {
+      "category": "players",
+      "version": 3,
+      "ord": 2,
+      "value": 400,
+      "type": "normal",
+      "q": "جناح جزائري ماهر، قاد بلاده للقب أمم أفريقيا 2019 ولعب لمانشستر سيتي. من هذا اللاعب؟",
+      "a": "رياض محرز",
+      "image": "assets/img/players/mahrez.jpg"
+    },
+    {
+      "category": "players",
+      "version": 3,
+      "ord": 3,
+      "value": 400,
+      "type": "normal",
+      "q": "لاعب وسط فرنسي دؤوب، بطل العالم 2018 وأحد أفضل المدافعين المتوسطين. من هذا اللاعب؟",
+      "a": "نغولو كانتي",
+      "image": "assets/img/players/kante.jpg"
+    },
+    {
+      "category": "players",
+      "version": 3,
+      "ord": 4,
+      "value": 600,
+      "type": "normal",
+      "q": "مدافع إيطالي وقائد ميلان التاريخي في الثمانينيات والتسعينيات. من هذا اللاعب؟",
+      "a": "فرانكو باريزي",
+      "image": "assets/img/players/baresi.jpg"
+    },
+    {
+      "category": "players",
+      "version": 3,
+      "ord": 5,
+      "value": 600,
+      "type": "normal",
+      "q": "صانع ألعاب روماني موهوب، لُقّب بمارادونا الكاربات. من هذا اللاعب؟",
+      "a": "جورجي هاجي",
+      "image": "assets/img/players/hagi.jpg"
+    },
+    {
+      "category": "players",
+      "version": 4,
+      "ord": 0,
+      "value": 200,
+      "type": "normal",
+      "q": "نجم فرنسي وصانع ألعاب، سجّل هدفين في نهائي كأس العالم 1998. من هذا اللاعب؟",
+      "a": "زين الدين زيدان",
+      "image": "assets/img/players/zidane.jpg"
+    },
+    {
+      "category": "players",
+      "version": 4,
+      "ord": 1,
+      "value": 200,
+      "type": "normal",
+      "q": "ساحر برازيلي، فاز بالكرة الذهبية 2005 وأمتع الجماهير مع برشلونة. من هذا اللاعب؟",
+      "a": "رونالدينيو",
+      "image": "assets/img/players/ronaldinho.jpg"
+    },
+    {
+      "category": "players",
+      "version": 4,
+      "ord": 2,
+      "value": 400,
+      "type": "normal",
+      "q": "حارس مرمى ألماني، اشتهر بأسلوب الحارس المكتسح وتوّج بكأس العالم 2014. من هذا اللاعب؟",
+      "a": "مانويل نوير",
+      "image": "assets/img/players/neuer.jpg"
+    },
+    {
+      "category": "players",
+      "version": 4,
+      "ord": 3,
+      "value": 400,
+      "type": "normal",
+      "q": "حارس مرمى بلجيكي، تألق في نهائي دوري الأبطال 2022 مع ريال مدريد. من هذا اللاعب؟",
+      "a": "تيبو كورتوا",
+      "image": "assets/img/players/courtois.jpg"
+    },
+    {
+      "category": "players",
+      "version": 4,
+      "ord": 4,
+      "value": 600,
+      "type": "normal",
+      "q": "مهاجم ليبيري، اللاعب الأفريقي الفائز بالكرة الذهبية، وصار رئيسًا لبلاده. من هذا اللاعب؟",
+      "a": "جورج وياه",
+      "image": "assets/img/players/weah.jpg"
+    },
+    {
+      "category": "players",
+      "version": 4,
+      "ord": 5,
+      "value": 600,
+      "type": "normal",
+      "q": "مهاجم بلغاري، هداف كأس العالم 1994 والفائز بالكرة الذهبية. من هذا اللاعب؟",
+      "a": "هريستو ستويتشكوف",
+      "image": "assets/img/players/stoichkov.jpg"
+    },
+    {
+      "category": "players",
+      "version": 5,
+      "ord": 0,
+      "value": 200,
+      "type": "normal",
+      "q": "الظاهرة البرازيلية، مهاجم فتّاك توّج هدافًا لكأس العالم 2002. من هذا اللاعب؟",
+      "a": "رونالدو البرازيلي",
+      "image": "assets/img/players/ronaldo-r9.jpg"
+    },
+    {
+      "category": "players",
+      "version": 5,
+      "ord": 1,
+      "value": 200,
+      "type": "normal",
+      "q": "نجم مصري وجناح ليفربول، يُلقّب بالملك ومن أبرز هدافي الدوري الإنجليزي. من هذا اللاعب؟",
+      "a": "محمد صلاح",
+      "image": "assets/img/players/salah.jpg"
+    },
+    {
+      "category": "players",
+      "version": 5,
+      "ord": 2,
+      "value": 400,
+      "type": "normal",
+      "q": "مهاجم وصانع ألعاب ألماني ذكي، أسطورة بايرن ميونخ وبطل العالم 2014. من هذا اللاعب؟",
+      "a": "توماس مولر",
+      "image": "assets/img/players/muller.jpg"
+    },
+    {
+      "category": "players",
+      "version": 5,
+      "ord": 3,
+      "value": 400,
+      "type": "normal",
+      "q": "لاعب وسط ألماني دقيق التمرير، بطل العالم 2014 ونجم ريال مدريد. من هذا اللاعب؟",
+      "a": "توني كروس",
+      "image": "assets/img/players/kroos.jpg"
+    },
+    {
+      "category": "players",
+      "version": 5,
+      "ord": 4,
+      "value": 600,
+      "type": "normal",
+      "q": "مهاجم كرواتي، هداف كأس العالم 1998. من هذا اللاعب؟",
+      "a": "دافور شوكر",
+      "image": "assets/img/players/suker.jpg"
+    },
+    {
+      "category": "players",
+      "version": 5,
+      "ord": 5,
+      "value": 600,
+      "type": "normal",
+      "q": "صانع ألعاب برازيلي، فاز بالكرة الذهبية 1999 وبكأس العالم 2002. من هذا اللاعب؟",
+      "a": "ريفالدو",
+      "image": "assets/img/players/rivaldo.jpg"
+    },
+    {
+      "category": "players",
+      "version": 6,
+      "ord": 0,
+      "value": 200,
+      "type": "normal",
+      "q": "مهاجم فرنسي، قاد ريال مدريد للقب دوري الأبطال 2022 وفاز بالكرة الذهبية. من هذا اللاعب؟",
+      "a": "كريم بنزيمة",
+      "image": "assets/img/players/benzema.jpg"
+    },
+    {
+      "category": "players",
+      "version": 6,
+      "ord": 1,
+      "value": 200,
+      "type": "normal",
+      "q": "مهاجم نرويجي هدّاف، حطّم أرقامًا تهديفية مع مانشستر سيتي. من هذا اللاعب؟",
+      "a": "إيرلينغ هالاند",
+      "image": "assets/img/players/haaland.jpg"
+    },
+    {
+      "category": "players",
+      "version": 6,
+      "ord": 2,
+      "value": 400,
+      "type": "normal",
+      "q": "مهاجم أرجنتيني، سجّل هدف لقب الدوري الإنجليزي الشهير لمانشستر سيتي 2012. من هذا اللاعب؟",
+      "a": "سيرخيو أغويرو",
+      "image": "assets/img/players/aguero.jpg"
+    },
+    {
+      "category": "players",
+      "version": 6,
+      "ord": 3,
+      "value": 400,
+      "type": "normal",
+      "q": "مهاجم أوروغوياني هدّاف، الهداف التاريخي لباريس سان جيرمان. من هذا اللاعب؟",
+      "a": "إدينسون كافاني",
+      "image": "assets/img/players/cavani.jpg"
+    },
+    {
+      "category": "players",
+      "version": 6,
+      "ord": 4,
+      "value": 600,
+      "type": "normal",
+      "q": "مهاجم برازيلي قصير وفتّاك، نجم تتويج 1994. من هذا اللاعب؟",
+      "a": "روماريو",
+      "image": "assets/img/players/romario.jpg"
+    },
+    {
+      "category": "players",
+      "version": 6,
+      "ord": 5,
+      "value": 600,
+      "type": "normal",
+      "q": "مهاجم برازيلي، اشتهر باحتفال هزّ المهد في مونديال 1994. من هذا اللاعب؟",
+      "a": "بيبيتو",
+      "image": "assets/img/players/bebeto.jpg"
+    },
+    {
+      "category": "players",
+      "version": 7,
+      "ord": 0,
+      "value": 200,
+      "type": "normal",
+      "q": "مهاجم بولندي صريح، تألق طويلًا مع بايرن ميونخ ثم برشلونة. من هذا اللاعب؟",
+      "a": "روبرت ليفاندوفسكي",
+      "image": "assets/img/players/lewandowski.jpg"
+    },
+    {
+      "category": "players",
+      "version": 7,
+      "ord": 1,
+      "value": 200,
+      "type": "normal",
+      "q": "صانع ألعاب كرواتي، فاز بالكرة الذهبية 2018 بعد مونديال روسيا. من هذا اللاعب؟",
+      "a": "لوكا مودريتش",
+      "image": "assets/img/players/modric.jpg"
+    },
+    {
+      "category": "players",
+      "version": 7,
+      "ord": 2,
+      "value": 400,
+      "type": "normal",
+      "q": "جناح أرجنتيني، سجّل في نهائي كأس العالم 2022. من هذا اللاعب؟",
+      "a": "أنخيل دي ماريا",
+      "image": "assets/img/players/dimaria.jpg"
+    },
+    {
+      "category": "players",
+      "version": 7,
+      "ord": 3,
+      "value": 400,
+      "type": "normal",
+      "q": "مهاجم أرجنتيني، لعب لريال مدريد ونابولي ويوفنتوس. من هذا اللاعب؟",
+      "a": "غونزالو هيغواين",
+      "image": "assets/img/players/higuain.jpg"
+    },
+    {
+      "category": "players",
+      "version": 7,
+      "ord": 4,
+      "value": 600,
+      "type": "normal",
+      "q": "لاعب وسط هولندي، فاز بدوري الأبطال مع ثلاثة أندية مختلفة. من هذا اللاعب؟",
+      "a": "كلارنس سيدورف",
+      "image": "assets/img/players/seedorf.jpg"
+    },
+    {
+      "category": "players",
+      "version": 7,
+      "ord": 5,
+      "value": 600,
+      "type": "normal",
+      "q": "لاعب وسط فرنسي قوي، قائد أرسنال وبطل العالم 1998. من هذا اللاعب؟",
+      "a": "باتريك فييرا",
+      "image": "assets/img/players/vieira.jpg"
+    },
+    {
+      "category": "players",
+      "version": 8,
+      "ord": 0,
+      "value": 200,
+      "type": "normal",
+      "q": "صانع ألعاب بلجيكي، من أفضل الممررين في العالم مع مانشستر سيتي. من هذا اللاعب؟",
+      "a": "كيفن دي بروين",
+      "image": "assets/img/players/debruyne.jpg"
+    },
+    {
+      "category": "players",
+      "version": 8,
+      "ord": 1,
+      "value": 200,
+      "type": "normal",
+      "q": "مهاجم إنجليزي وهدّاف منتخب بلاده التاريخي، انتقل إلى بايرن ميونخ. من هذا اللاعب؟",
+      "a": "هاري كين",
+      "image": "assets/img/players/kane.jpg"
+    },
+    {
+      "category": "players",
+      "version": 8,
+      "ord": 2,
+      "value": 400,
+      "type": "normal",
+      "q": "حارس مرمى برازيلي، حارس ليفربول ومنتخب البرازيل. من هذا اللاعب؟",
+      "a": "أليسون بيكر",
+      "image": "assets/img/players/alisson.jpg"
+    },
+    {
+      "category": "players",
+      "version": 8,
+      "ord": 3,
+      "value": 400,
+      "type": "normal",
+      "q": "مدافع هولندي قوي وقائد، أحد أفضل المدافعين مع ليفربول. من هذا اللاعب؟",
+      "a": "فيرجيل فان دايك",
+      "image": "assets/img/players/vandijk.jpg"
+    },
+    {
+      "category": "players",
+      "version": 8,
+      "ord": 4,
+      "value": 600,
+      "type": "normal",
+      "q": "مدافع إيطالي، فاز بالكرة الذهبية 2006 بعد قيادته إيطاليا للقب العالم. من هذا اللاعب؟",
+      "a": "فابيو كانافارو",
+      "image": "assets/img/players/cannavaro.jpg"
+    },
+    {
+      "category": "players",
+      "version": 8,
+      "ord": 5,
+      "value": 600,
+      "type": "normal",
+      "q": "مهاجم وصانع ألعاب إيطالي، أسطورة يوفنتوس. من هذا اللاعب؟",
+      "a": "أليساندرو ديل بييرو",
+      "image": "assets/img/players/delpiero.jpg"
+    },
+    {
+      "category": "players",
+      "version": 9,
+      "ord": 0,
+      "value": 200,
+      "type": "normal",
+      "q": "نجم إسباني، سجّل هدف التتويج بكأس العالم 2010. من هذا اللاعب؟",
+      "a": "أندريس إنييستا",
+      "image": "assets/img/players/iniesta.jpg"
+    },
+    {
+      "category": "players",
+      "version": 9,
+      "ord": 1,
+      "value": 200,
+      "type": "normal",
+      "q": "صانع ألعاب إسباني وأسطورة برشلونة، درّب الفريق لاحقًا. من هذا اللاعب؟",
+      "a": "تشافي هيرنانديز",
+      "image": "assets/img/players/xavi.jpg"
+    },
+    {
+      "category": "players",
+      "version": 9,
+      "ord": 2,
+      "value": 400,
+      "type": "normal",
+      "q": "جناح إنجليزي سريع، لعب لمانشستر سيتي وتشيلسي. من هذا اللاعب؟",
+      "a": "رحيم سترلينغ",
+      "image": "assets/img/players/sterling.jpg"
+    },
+    {
+      "category": "players",
+      "version": 9,
+      "ord": 3,
+      "value": 400,
+      "type": "normal",
+      "q": "جناح برازيلي مهاري، سجّل هدف نهائي دوري الأبطال 2022 لريال مدريد. من هذا اللاعب؟",
+      "a": "فينيسيوس جونيور",
+      "image": "assets/img/players/vinicius.jpg"
+    },
+    {
+      "category": "players",
+      "version": 9,
+      "ord": 4,
+      "value": 600,
+      "type": "normal",
+      "q": "صانع ألعاب إيطالي، أسطورة نادي روما الذي لعب له طوال مسيرته. من هذا اللاعب؟",
+      "a": "فرانشيسكو توتي",
+      "image": "assets/img/players/totti.jpg"
+    },
+    {
+      "category": "players",
+      "version": 9,
+      "ord": 5,
+      "value": 600,
+      "type": "normal",
+      "q": "مهاجم إسباني، الهداف التاريخي السابق لريال مدريد. من هذا اللاعب؟",
+      "a": "راؤول غونزاليس",
+      "image": "assets/img/players/raul.jpg"
+    },
+    {
+      "category": "players",
+      "version": 10,
+      "ord": 0,
+      "value": 200,
+      "type": "normal",
+      "q": "نجم إنجليزي اشتهر بركلاته الحرة، لعب لمانشستر يونايتد وريال مدريد. من هذا اللاعب؟",
+      "a": "ديفيد بيكهام",
+      "image": "assets/img/players/beckham.jpg"
+    },
+    {
+      "category": "players",
+      "version": 10,
+      "ord": 1,
+      "value": 200,
+      "type": "normal",
+      "q": "مهاجم سويدي طويل القامة وصاحب شخصية قوية، لعب لأندية كبيرة عدة. من هذا اللاعب؟",
+      "a": "زلاتان إبراهيموفيتش",
+      "image": "assets/img/players/ibrahimovic.jpg"
+    },
+    {
+      "category": "players",
+      "version": 10,
+      "ord": 2,
+      "value": 400,
+      "type": "normal",
+      "q": "موهبة إسبانية في خط الوسط، من نجوم برشلونة. من هذا اللاعب؟",
+      "a": "بيدري",
+      "image": "assets/img/players/pedri.jpg"
+    },
+    {
+      "category": "players",
+      "version": 10,
+      "ord": 3,
+      "value": 400,
+      "type": "normal",
+      "q": "لاعب وسط هجومي إنجليزي، خرّيج أكاديمية مانشستر سيتي. من هذا اللاعب؟",
+      "a": "فيل فودين",
+      "image": "assets/img/players/foden.jpg"
+    },
+    {
+      "category": "players",
+      "version": 10,
+      "ord": 4,
+      "value": 600,
+      "type": "normal",
+      "q": "مهاجم إسباني، سجّل هدف نهائي يورو 2008. من هذا اللاعب؟",
+      "a": "فيرناندو توريس",
+      "image": "assets/img/players/torres.jpg"
+    },
+    {
+      "category": "players",
+      "version": 10,
+      "ord": 5,
+      "value": 600,
+      "type": "normal",
+      "q": "مهاجم إسباني، الهداف التاريخي لمنتخب إسبانيا. من هذا اللاعب؟",
+      "a": "دافيد فيا",
+      "image": "assets/img/players/villa.jpg"
+    },
+    {
+      "category": "players",
+      "version": 11,
+      "ord": 0,
+      "value": 200,
+      "type": "normal",
+      "q": "مهاجم فرنسي والهداف التاريخي لنادي أرسنال. من هذا اللاعب؟",
+      "a": "تييري هنري",
+      "image": "assets/img/players/henry.jpg"
+    },
+    {
+      "category": "players",
+      "version": 11,
+      "ord": 1,
+      "value": 200,
+      "type": "normal",
+      "q": "مهاجم إنجليزي والهداف التاريخي السابق لمانشستر يونايتد ومنتخب إنجلترا. من هذا اللاعب؟",
+      "a": "واين روني",
+      "image": "assets/img/players/rooney.jpg"
+    },
+    {
+      "category": "players",
+      "version": 11,
+      "ord": 2,
+      "value": 400,
+      "type": "normal",
+      "q": "مهاجم وجناح إنجليزي، خرّيج أكاديمية مانشستر يونايتد. من هذا اللاعب؟",
+      "a": "ماركوس راشفورد",
+      "image": "assets/img/players/rashford.jpg"
+    },
+    {
+      "category": "players",
+      "version": 11,
+      "ord": 3,
+      "value": 400,
+      "type": "normal",
+      "q": "جناح إنجليزي شاب، من نجوم نادي أرسنال. من هذا اللاعب؟",
+      "a": "بوكايو ساكا",
+      "image": "assets/img/players/saka.jpg"
+    },
+    {
+      "category": "players",
+      "version": 11,
+      "ord": 4,
+      "value": 600,
+      "type": "normal",
+      "q": "مدافع إسباني صلب وقائد برشلونة، بطل العالم 2010. من هذا اللاعب؟",
+      "a": "كارليس بويول",
+      "image": "assets/img/players/puyol.jpg"
+    },
+    {
+      "category": "players",
+      "version": 11,
+      "ord": 5,
+      "value": 600,
+      "type": "normal",
+      "q": "ظهير أيمن برازيلي، من أكثر اللاعبين تتويجًا بالألقاب في التاريخ. من هذا اللاعب؟",
+      "a": "داني ألفيش",
+      "image": "assets/img/players/danialves.jpg"
+    },
+    {
+      "category": "players",
+      "version": 12,
+      "ord": 0,
+      "value": 200,
+      "type": "normal",
+      "q": "مدافع إسباني صلب وقائد، اشتهر بأهدافه الحاسمة مع ريال مدريد. من هذا اللاعب؟",
+      "a": "سيرخيو راموس",
+      "image": "assets/img/players/ramos.jpg"
+    },
+    {
+      "category": "players",
+      "version": 12,
+      "ord": 1,
+      "value": 200,
+      "type": "normal",
+      "q": "مهاجم أوروغوياني، تألق مع ليفربول وبرشلونة بثلاثية هجومية شهيرة. من هذا اللاعب؟",
+      "a": "لويس سواريز",
+      "image": "assets/img/players/suarez.jpg"
+    },
+    {
+      "category": "players",
+      "version": 12,
+      "ord": 2,
+      "value": 400,
+      "type": "normal",
+      "q": "مهاجم أرجنتيني، قائد إنتر ميلان وبطل العالم 2022. من هذا اللاعب؟",
+      "a": "لاوتارو مارتينيز",
+      "image": "assets/img/players/lautaro.jpg"
+    },
+    {
+      "category": "players",
+      "version": 12,
+      "ord": 3,
+      "value": 400,
+      "type": "normal",
+      "q": "مهاجم نيجيري هدّاف، قاد نابولي للقب الدوري الإيطالي 2023. من هذا اللاعب؟",
+      "a": "فيكتور أوسيمين",
+      "image": "assets/img/players/osimhen.jpg"
+    },
+    {
+      "category": "players",
+      "version": 12,
+      "ord": 4,
+      "value": 600,
+      "type": "normal",
+      "q": "مهاجم أوكراني، فاز بالكرة الذهبية 2004 مع ميلان. من هذا اللاعب؟",
+      "a": "أندريه شيفتشينكو",
+      "image": "assets/img/players/shevchenko.png"
+    },
+    {
+      "category": "players",
+      "version": 12,
+      "ord": 5,
+      "value": 600,
+      "type": "normal",
+      "q": "لاعب وسط تشيكي مجتهد، فاز بالكرة الذهبية 2003. من هذا اللاعب؟",
+      "a": "بافيل نيدفيد",
+      "image": "assets/img/players/nedved.jpg"
+    },
+    {
+      "category": "players",
+      "version": 13,
+      "ord": 0,
+      "value": 200,
+      "type": "normal",
+      "q": "صانع ألعاب برازيلي، فاز بالكرة الذهبية 2007 مع ميلان. من هذا اللاعب؟",
+      "a": "كاكا",
+      "image": "assets/img/players/kaka.jpg"
+    },
+    {
+      "category": "players",
+      "version": 13,
+      "ord": 1,
+      "value": 200,
+      "type": "normal",
+      "q": "حارس مرمى إيطالي أسطوري، توّج بكأس العالم 2006. من هذا اللاعب؟",
+      "a": "جانلويجي بوفون",
+      "image": "assets/img/players/buffon.jpg"
+    },
+    {
+      "category": "players",
+      "version": 13,
+      "ord": 2,
+      "value": 400,
+      "type": "normal",
+      "q": "صانع ألعاب كولومبي، هداف كأس العالم 2014. من هذا اللاعب؟",
+      "a": "خاميس رودريغيز",
+      "image": "assets/img/players/james.jpg"
+    },
+    {
+      "category": "players",
+      "version": 13,
+      "ord": 3,
+      "value": 400,
+      "type": "normal",
+      "q": "مهاجم كولومبي هدّاف، لُقّب بالنمر. من هذا اللاعب؟",
+      "a": "راداميل فالكاو",
+      "image": "assets/img/players/falcao.jpg"
+    },
+    {
+      "category": "players",
+      "version": 13,
+      "ord": 4,
+      "value": 600,
+      "type": "normal",
+      "q": "جناح برتغالي، اشتهر بانتقاله المثير من برشلونة إلى ريال مدريد عام 2000. من هذا اللاعب؟",
+      "a": "لويس فيغو",
+      "image": "assets/img/players/figo.jpg"
+    },
+    {
+      "category": "players",
+      "version": 13,
+      "ord": 5,
+      "value": 600,
+      "type": "normal",
+      "q": "مهاجم كاميروني هدّاف، فاز بثلاثيات تاريخية مع برشلونة وإنتر. من هذا اللاعب؟",
+      "a": "صامويل إيتو",
+      "image": "assets/img/players/etoo.jpg"
+    },
+    {
+      "category": "players",
+      "version": 14,
+      "ord": 0,
+      "value": 200,
+      "type": "normal",
+      "q": "حارس مرمى إسباني وقائد، رفع كأس العالم 2010. من هذا اللاعب؟",
+      "a": "إيكر كاسياس",
+      "image": "assets/img/players/casillas.jpg"
+    },
+    {
+      "category": "players",
+      "version": 14,
+      "ord": 1,
+      "value": 200,
+      "type": "normal",
+      "q": "صانع ألعاب إيطالي أنيق، أحد أفضل الممررين في جيله. من هذا اللاعب؟",
+      "a": "أندريا بيرلو",
+      "image": "assets/img/players/pirlo.jpg"
+    },
+    {
+      "category": "players",
+      "version": 14,
+      "ord": 2,
+      "value": 400,
+      "type": "normal",
+      "q": "صانع ألعاب برازيلي، اشتهر بأهدافه من خارج المنطقة مع ليفربول. من هذا اللاعب؟",
+      "a": "فيليبي كوتينيو",
+      "image": "assets/img/players/coutinho.jpg"
+    },
+    {
+      "category": "players",
+      "version": 14,
+      "ord": 3,
+      "value": 400,
+      "type": "normal",
+      "q": "مهاجم أرجنتيني ماهر، لعب ليوفنتوس وروما. من هذا اللاعب؟",
+      "a": "باولو ديبالا",
+      "image": "assets/img/players/dybala.jpg"
+    },
+    {
+      "category": "players",
+      "version": 14,
+      "ord": 4,
+      "value": 600,
+      "type": "normal",
+      "q": "قائد ليفربول التاريخي، قاد ريمونتادا إسطنبول 2005. من هذا اللاعب؟",
+      "a": "ستيفن جيرارد",
+      "image": "assets/img/players/gerrard.jpg"
+    },
+    {
+      "category": "players",
+      "version": 14,
+      "ord": 5,
+      "value": 600,
+      "type": "normal",
+      "q": "لاعب وسط إنجليزي، الهداف التاريخي لنادي تشيلسي. من هذا اللاعب؟",
+      "a": "فرانك لامبارد",
+      "image": "assets/img/players/lampard.jpg"
+    },
+    {
+      "category": "players",
+      "version": 15,
+      "ord": 0,
+      "value": 200,
+      "type": "normal",
+      "q": "مهاجم إيفواري قوي، أسطورة تشيلسي وصاحب هدف نهائي دوري الأبطال 2012. من هذا اللاعب؟",
+      "a": "ديدييه دروغبا",
+      "image": "assets/img/players/drogba.jpg"
+    },
+    {
+      "category": "players",
+      "version": 15,
+      "ord": 1,
+      "value": 200,
+      "type": "normal",
+      "q": "جناح ويلزي سريع، سجّل أهدافًا خارقة مع ريال مدريد. من هذا اللاعب؟",
+      "a": "غاريث بيل",
+      "image": "assets/img/players/bale.jpg"
+    },
+    {
+      "category": "players",
+      "version": 15,
+      "ord": 2,
+      "value": 400,
+      "type": "normal",
+      "q": "لاعب وسط إنجليزي شاب، انتقل إلى ريال مدريد وتألق سريعًا. من هذا اللاعب؟",
+      "a": "جود بيلينغهام",
+      "image": "assets/img/players/bellingham.jpg"
+    },
+    {
+      "category": "players",
+      "version": 15,
+      "ord": 3,
+      "value": 400,
+      "type": "normal",
+      "q": "لاعب وسط ارتكاز برازيلي، فاز بدوري الأبطال مرات عدة مع ريال مدريد. من هذا اللاعب؟",
+      "a": "كاسيميرو",
+      "image": "assets/img/players/casemiro.jpg"
+    },
+    {
+      "category": "players",
+      "version": 15,
+      "ord": 4,
+      "value": 600,
+      "type": "normal",
+      "q": "جناح ويلزي، أمضى مسيرته كلها مع مانشستر يونايتد بأرقام قياسية. من هذا اللاعب؟",
+      "a": "رايان غيغز",
+      "image": "assets/img/players/giggs.jpg"
+    },
+    {
+      "category": "players",
+      "version": 15,
+      "ord": 5,
+      "value": 600,
+      "type": "normal",
+      "q": "مهاجم إنجليزي سريع، فاز بالكرة الذهبية 2001. من هذا اللاعب؟",
+      "a": "مايكل أوين",
+      "image": "assets/img/players/owen.jpg"
     }
   ]
 }

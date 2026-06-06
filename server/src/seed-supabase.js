@@ -36,7 +36,8 @@ async function main(){
     clues:q.clues || null,
     num:q.num ?? null,
     evidence:q.evidence || null,
-    suspects:q.suspects || null
+    suspects:q.suspects || null,
+    image:q.image || null
   }));
 
   // clean replace so renamed/removed rows don't linger (questions first: FK to flags)

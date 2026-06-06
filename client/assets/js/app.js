@@ -111,6 +111,7 @@ function normalizeQuestion(row){
     a: row.a || '',
     note: row.note || '',
     flag: row.flag || '',
+    image: row.image || '',
     clues: Array.isArray(row.clues) ? row.clues : (row.clues ? JSON.parse(row.clues) : null),
     num: row.num == null ? null : Number(row.num),
     evidence: row.evidence || '',
@@ -120,7 +121,7 @@ function normalizeQuestion(row){
 
 // PostgREST caps a response at 1000 rows, so page through all questions.
 async function loadAllQuestions(sb){
-  const cols = 'category,version,ord,value,type,q,a,note,flag,clues,num,evidence,suspects';
+  const cols = 'category,version,ord,value,type,q,a,note,flag,clues,num,evidence,suspects,image';
   const pageSize = 1000;
   let from = 0, all = [];
   for(;;){
@@ -181,7 +182,8 @@ async function loadData(){
   for(const [source, fn] of attempts){
     try{
       DATA = await fn();
-      localizeFlags(DATA); // always serve flags from the app project folder, not a remote CDN
+      localizeFlags(DATA);          // always serve flags from the app project folder, not a remote CDN
+      await mergeLocalOnlyCategories(source); // surface bundled categories (e.g. players) missing from the source
       DATA_SOURCE = source;
       setStatus('', 'ok'); // hide the technical data-source banner from players
       return;
@@ -190,6 +192,25 @@ async function loadData(){
     }
   }
   throw new Error('No data source available');
+}
+
+// Some categories live only in the bundled local data (e.g. a newly added
+// "احزر اللاعب" not yet seeded into Supabase). Merge any such category — with
+// its questions and any extra flag images — from assets/data.json so it always
+// shows, no matter which source loaded. No-op when local is already the source.
+async function mergeLocalOnlyCategories(source){
+  if(source === 'local' || !DATA || !Array.isArray(DATA.categories)) return;
+  try{
+    const local = await loadLocal();
+    const have = new Set(DATA.categories.map(c => c.slug));
+    const missing = (local.categories || []).filter(c => !have.has(c.slug));
+    if(!missing.length) return;
+    const slugs = new Set(missing.map(c => c.slug));
+    DATA.categories = DATA.categories.concat(missing);
+    DATA.questions = DATA.questions.concat((local.questions || []).filter(q => slugs.has(q.category)));
+    DATA.flags = Object.assign({}, local.flags, DATA.flags); // keep source flags, add any local-only ones
+    localizeFlags(DATA);
+  }catch(e){ console.warn('local category merge skipped', e); }
 }
 
 // Force every flag to its bundled local image (assets/img/flags/<code>.png) no
@@ -494,8 +515,9 @@ function renderVisual(q,c,target){
   const box = $(target);
   box.innerHTML='';
   const img = document.createElement('img');
-  img.src = (q.type === 'flag' && q.flag && DATA.flags[q.flag]) ? DATA.flags[q.flag] : c.image;
-  img.alt = c.name;
+  // per-question image (e.g. a player photo) wins; then flag image; else the category icon
+  img.src = q.image ? q.image : ((q.type === 'flag' && q.flag && DATA.flags[q.flag]) ? DATA.flags[q.flag] : c.image);
+  img.alt = c.name; // keep the category name (never the answer) as alt text
   box.appendChild(img);
   if(q.clues){
     const list=document.createElement('div'); list.className = 'clue-list';

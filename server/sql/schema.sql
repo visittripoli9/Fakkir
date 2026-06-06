@@ -26,8 +26,12 @@ create table if not exists questions (
   num numeric,
   evidence text,
   suspects jsonb,
+  image text,
   unique(category, version, ord)
 );
+
+-- migration for databases created before the per-question image column existed
+alter table questions add column if not exists image text;
 
 create table if not exists matches (
   id bigserial primary key,

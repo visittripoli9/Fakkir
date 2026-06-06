@@ -42,7 +42,7 @@ const flagTuples = Object.entries(data.flags || {}).map(([key, image]) => `(${q(
 const qTuples = data.questions.map((it) =>
   `(${q(it.category)},${num(it.version) || 1},${num(it.ord) || 0},${num(it.value) || 0},` +
   `${q(it.type || 'normal')},${q(it.q)},${q(it.a)},${q(it.note)},${q(it.flag)},` +
-  `${jsonb(it.clues)},${num(it.num)},${q(it.evidence)},${jsonb(it.suspects)})`
+  `${jsonb(it.clues)},${num(it.num)},${q(it.evidence)},${jsonb(it.suspects)},${q(it.image)})`
 );
 
 // --- multi-row upsert statements ---
@@ -50,10 +50,10 @@ const CAT_HEAD = 'insert into categories(slug,name,color,image,sort_order) value
 const CAT_TAIL = 'on conflict(slug) do update set name=excluded.name,color=excluded.color,image=excluded.image,sort_order=excluded.sort_order;';
 const FLAG_HEAD = 'insert into flags(key,image) values';
 const FLAG_TAIL = 'on conflict(key) do update set image=excluded.image;';
-const Q_HEAD = 'insert into questions(category,version,ord,value,type,q,a,note,flag,clues,num,evidence,suspects) values';
+const Q_HEAD = 'insert into questions(category,version,ord,value,type,q,a,note,flag,clues,num,evidence,suspects,image) values';
 const Q_TAIL = 'on conflict(category,version,ord) do update set value=excluded.value,type=excluded.type,' +
   'q=excluded.q,a=excluded.a,note=excluded.note,flag=excluded.flag,clues=excluded.clues,' +
-  'num=excluded.num,evidence=excluded.evidence,suspects=excluded.suspects;';
+  'num=excluded.num,evidence=excluded.evidence,suspects=excluded.suspects,image=excluded.image;';
 
 const upsert = (head, tuples, tail) => head + '\n' + tuples.join(',\n') + '\n' + tail;
 

@@ -16,10 +16,10 @@ async function main(){
     await pool.query(`insert into flags(key,image) values($1,$2) on conflict(key) do update set image=excluded.image`, [key,image]);
   }
   for(const q of data.questions){
-    await pool.query(`insert into questions(category,version,ord,value,type,q,a,note,flag,clues,num,evidence,suspects)
-      values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13)
-      on conflict(category,version,ord) do update set value=excluded.value,type=excluded.type,q=excluded.q,a=excluded.a,note=excluded.note,flag=excluded.flag,clues=excluded.clues,num=excluded.num,evidence=excluded.evidence,suspects=excluded.suspects`,
-      [q.category,q.version,q.ord,q.value,q.type||'normal',q.q||null,q.a,q.note||null,q.flag||null,q.clues?JSON.stringify(q.clues):null,q.num||null,q.evidence||null,q.suspects?JSON.stringify(q.suspects):null]);
+    await pool.query(`insert into questions(category,version,ord,value,type,q,a,note,flag,clues,num,evidence,suspects,image)
+      values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14)
+      on conflict(category,version,ord) do update set value=excluded.value,type=excluded.type,q=excluded.q,a=excluded.a,note=excluded.note,flag=excluded.flag,clues=excluded.clues,num=excluded.num,evidence=excluded.evidence,suspects=excluded.suspects,image=excluded.image`,
+      [q.category,q.version,q.ord,q.value,q.type||'normal',q.q||null,q.a,q.note||null,q.flag||null,q.clues?JSON.stringify(q.clues):null,q.num||null,q.evidence||null,q.suspects?JSON.stringify(q.suspects):null,q.image||null]);
   }
   console.log(`Seeded ${data.categories.length} categories, ${Object.keys(data.flags||{}).length} flags, ${data.questions.length} questions.`);
 }
