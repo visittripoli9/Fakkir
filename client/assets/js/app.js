@@ -511,12 +511,17 @@ function renderCurrentQuestion(opts={}){
   show('question');
 }
 
-function renderVisual(q,c,target){
+function renderVisual(q,c,target,opts={}){
   const box = $(target);
   box.innerHTML='';
   const img = document.createElement('img');
-  // per-question image (e.g. a player photo) wins; then flag image; else the category icon
-  img.src = q.image ? q.image : ((q.type === 'flag' && q.flag && DATA.flags[q.flag]) ? DATA.flags[q.flag] : c.image);
+  // q.image is an ANSWER reveal (e.g. a player photo) — show it only in answer
+  // context (result screen / after "show answer"), never in the live question,
+  // or it would give the answer away. Flag images ARE the question, so they
+  // always show. Everything else falls back to the category icon.
+  const reveal = !!opts.reveal;
+  const flagSrc = (q.type === 'flag' && q.flag && DATA.flags[q.flag]) ? DATA.flags[q.flag] : null;
+  img.src = (q.image && reveal) ? q.image : (flagSrc || c.image);
   img.alt = c.name; // keep the category name (never the answer) as alt text
   box.appendChild(img);
   if(q.clues){
@@ -582,11 +587,12 @@ function answerText(q){
   return `الإجابة: ${q.a}`;
 }
 function showAnswer(){
-  const q=state.current.q;
+  const cur=state.current; const q=cur.q;
   const box=$('#answerBox');
   const scenario = q.category==='crime' || q.category==='rescue'; // note holds the case story, already shown
   box.textContent = answerText(q) + (!scenario && q.note?` — ${q.note}`:'') + (q.evidence?` — ${q.evidence}`:'');
   box.classList.remove('hidden');
+  if(q.image) renderVisual(q, cur.c, '#qVisual', {reveal:true}); // revealing the answer reveals the player photo too
 }
 function updateQTurn(){
   const cur = state.current; const el = $('#qTurn'); if(!el || !cur) return;
@@ -713,7 +719,7 @@ function finishQuestion(title, team){
   $('#resultTitle').textContent = title;
   $('#resultAnswer').textContent = answerText(cur.q);
   $('#resultNote').textContent = (cur.q.category==='crime'||cur.q.category==='rescue') ? '' : (cur.q.note || cur.q.evidence || '');
-  renderVisual(cur.q,cur.c,'#resultVisual');
+  renderVisual(cur.q,cur.c,'#resultVisual',{reveal:true}); // answer screen: reveal player photo etc.
   renderGoldenReveal();
   state.turn = other(cur.picker); // next pick alternates from who picked this one
   state.current = null;
