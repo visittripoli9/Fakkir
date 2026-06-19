@@ -84,6 +84,8 @@ function show(id){
   if(id === 'board') buildBoard();
   if(id === 'leaderboard') renderLeaderboard();
   if(id === 'achievements') renderAchievements();
+  if(id === 'profile') renderProfile();
+  if(id === 'settings') syncSettingsControls();
   if(id === 'home') updateResumeUI();
   state.screen = id;          // remember where we are so a reload can restore it
   saveLocal();
@@ -1093,9 +1095,18 @@ function bind(){
   // auth: form submit, sign-in/up toggle, settings account button
   const af=$('#authForm'); if(af) af.onsubmit=submitAuth;
   const atb=$('#authToggleBtn'); if(atb) atb.onclick=()=>setAuthMode(authMode==='signup'?'signin':'signup');
-  const acb=$('#accountBtn'); if(acb) acb.onclick=accountAction;
+  const acr=$('#accountRow'); if(acr) acr.onclick=accountAction;
   const ha=$('#haAction'); if(ha) ha.onclick=accountAction;
   const al=$('#adminLink'); if(al) al.onclick=()=>{ location.href='admin.html'; };
+  // profile screen actions
+  const plb=$('#profileLoginBtn'); if(plb) plb.onclick=()=>openAuth('سجّل الدخول لعرض ملفّك.');
+  const psn=$('#profileSaveName'); if(psn) psn.onclick=saveProfileName;
+  const psp=$('#profileSavePass'); if(psp) psp.onclick=saveProfilePass;
+  const pso=$('#profileSignout'); if(pso) pso.onclick=async()=>{ await signOut(); show('home'); };
+  // settings controls: theme, sound, haptics
+  const th=$('#themeSetting'); if(th) th.onchange=e=>setThemePref(e.target.value);
+  const sd=$('#soundSetting'); if(sd) sd.onchange=e=>{ state.settings.sound=!!e.target.checked; saveLocal(); updateSoundIcon(); if(state.settings.sound) sfx('select'); };
+  const hp=$('#hapticSetting'); if(hp) hp.onchange=e=>{ state.settings.haptics=!!e.target.checked; saveLocal(); if(state.settings.haptics) fxHaptic(20); };
   // leaderboard tabs
   $$('.lb-tab').forEach(b=> b.onclick=()=>showLbTab(b.dataset.lb));
   // follow the device theme live until the player makes an explicit choice
@@ -1133,7 +1144,7 @@ function sfx(name, vibe){
   if(window.FX) window.FX.sound(name);
   if(vibe) fxHaptic(vibe);
 }
-function fxHaptic(pattern){ if(window.FX) window.FX.haptic(pattern); }
+function fxHaptic(pattern){ if(window.FX && state.settings && state.settings.haptics !== false) window.FX.haptic(pattern); }
 function updateSoundIcon(){
   if(window.FX) window.FX.setEnabled(!!state.settings.sound); // keep the FX mixer in sync with the toggle
   const b = $('#soundToggle'); if(!b) return;
@@ -1191,12 +1202,26 @@ async function refreshSession(){
   updateAuthUI();
 }
 
-// reflect login state in the settings "account" row + the home chip
+// initials + a stable color for an avatar from a name
+function avatarText(name){ return (String(name||'?').trim().slice(0,2) || '?'); }
+function avatarColor(seed){
+  let h = 0; for(const c of String(seed||'x')) h = (h*31 + c.charCodeAt(0)) >>> 0;
+  return `linear-gradient(180deg,hsl(${h%360} 70% 52%),hsl(${(h%360+24)%360} 70% 42%))`;
+}
+
+// reflect login state in the settings "account" row, profile nav, and home chip
 function updateAuthUI(){
+  const inOk = isLoggedIn();
   const nameEl = $('#accountName'), subEl = $('#accountSub'), btn = $('#accountBtn');
-  if(nameEl) nameEl.textContent = isLoggedIn() ? userName() : 'زائر';
-  if(subEl) subEl.textContent = isLoggedIn() ? (USER.email || 'مسجّل الدخول') : 'غير مسجّل الدخول';
-  if(btn) btn.textContent = isLoggedIn() ? 'تسجيل الخروج' : 'تسجيل الدخول';
+  if(nameEl) nameEl.textContent = inOk ? userName() : 'زائر';
+  if(subEl) subEl.textContent = inOk ? (USER.email || 'مسجّل الدخول') : 'غير مسجّل الدخول';
+  if(btn) btn.textContent = inOk ? 'الملف الشخصي ›' : 'تسجيل الدخول';
+  const av = $('#accountAvatar');
+  if(av){
+    if(inOk){ av.textContent = avatarText(userName()); av.style.background = avatarColor(userName()); av.style.color = '#fff'; av.classList.add('has-initials'); }
+    else { av.classList.remove('has-initials'); av.style.background = ''; av.style.color = ''; }
+  }
+  const np = $('#navProfile'); if(np) np.classList.toggle('hidden', !inOk); // profile nav only when logged in
   const al = $('#adminLink'); if(al) al.classList.toggle('hidden', !isAdmin()); // admin entry point in settings
   refreshHomeChip();
 }
@@ -1214,7 +1239,7 @@ async function refreshHomeChip(){
   }
   box.dataset.state = 'in';
   if(nameEl) nameEl.textContent = userName();
-  if(act) act.textContent = 'تسجيل الخروج';
+  if(act) act.textContent = 'ملفّي';
   const best = Number(loadStats().blitzBest) || 0;
   if(subEl) subEl.textContent = best ? ('أفضل نتيجة: ' + best) : 'العب أول تحدٍّ سريع!';
   // enrich with the player's live global rank when the leaderboard is reachable
@@ -1316,7 +1341,78 @@ async function signOut(){
 }
 
 // settings "account" button: log in or out depending on state
-function accountAction(){ if(isLoggedIn()) signOut(); else openAuth('سجّل الدخول لحفظ نتائجك في لوحة المتصدرين.'); }
+// account chip / settings row: open the profile when logged in, else the login screen
+function accountAction(){ if(isLoggedIn()) show('profile'); else openAuth('سجّل الدخول لحفظ نتائجك في لوحة المتصدرين.'); }
+
+/* ===================== Profile ===================== */
+async function renderProfile(){
+  const guest = $('#profileGuest'), body = $('#profileBody');
+  if(!guest || !body) return;
+  const inOk = isLoggedIn();
+  guest.classList.toggle('hidden', inOk);
+  body.classList.toggle('hidden', !inOk);
+  if(!inOk) return;
+  const name = userName();
+  $('#profileName').textContent = name;
+  $('#profileEmail').textContent = USER.email || '';
+  const av = $('#profileAvatar'); av.textContent = avatarText(name); av.style.background = avatarColor(name);
+  $('#profileNameInput').value = name;
+  $('#profileNameMsg').textContent = ''; $('#profilePassMsg').textContent = ''; $('#profilePass').value = '';
+  // lifetime stats + achievements
+  const s = loadStats(), ach = unlockedSet().size;
+  const stat = (v, l) => `<div class="pstat"><b>${safe(v)}</b><span>${safe(l)}</span></div>`;
+  $('#profileStats').innerHTML =
+    stat(Number(s.blitzBest)||0, 'أفضل نتيجة سريعة') +
+    stat(Number(s.bestStreak)||0, 'أطول سلسلة') +
+    stat(Number(s.matchWins)||0, 'انتصارات') +
+    stat(Number(s.matchesPlayed)||0, 'مباريات') +
+    stat(Number(s.blitzGames)||0, 'تحديات سريعة') +
+    stat(ach + '/' + ACHIEVEMENTS.length, 'إنجازات');
+  // live global Blitz rank
+  const re = $('#profileRank'); re.classList.add('hidden');
+  const r = await myBlitzRank();
+  if(r){ re.textContent = `🏆 المركز #${r.pos} من ${r.total} عالمياً`; re.classList.remove('hidden'); }
+}
+
+async function saveProfileName(){
+  const msg = $('#profileNameMsg'); const name = sanitizeName($('#profileNameInput').value, '');
+  if(!name){ msg.textContent = 'أدخل اسماً صحيحاً.'; return; }
+  if(!SUPABASE || !isLoggedIn()){ msg.textContent = 'يجب تسجيل الدخول.'; return; }
+  msg.textContent = 'جارٍ الحفظ…';
+  try{
+    const { data, error } = await SUPABASE.auth.updateUser({ data:{ name } });
+    if(error){ msg.textContent = 'تعذّر الحفظ: ' + error.message; return; }
+    USER = data.user; updateAuthUI(); renderProfile();
+    msg.textContent = 'تم الحفظ ✓'; sfx('correct');
+  }catch(e){ msg.textContent = 'خطأ، حاول مجدداً.'; }
+}
+
+async function saveProfilePass(){
+  const msg = $('#profilePassMsg'); const p = $('#profilePass').value || '';
+  if(p.length < 6){ msg.textContent = 'كلمة المرور ٦ أحرف على الأقل.'; return; }
+  if(!SUPABASE){ msg.textContent = 'غير متاح الآن.'; return; }
+  msg.textContent = 'جارٍ التحديث…';
+  try{
+    const { error } = await SUPABASE.auth.updateUser({ password: p });
+    if(error){ msg.textContent = 'تعذّر: ' + error.message; return; }
+    $('#profilePass').value = ''; msg.textContent = 'تم تحديث كلمة المرور ✓'; sfx('correct');
+  }catch(e){ msg.textContent = 'خطأ، حاول مجدداً.'; }
+}
+
+/* ===================== Settings controls ===================== */
+const currentThemePref = () => { const s = localStorage.getItem('theme'); return (s==='light'||s==='dark') ? s : 'auto'; };
+function setThemePref(v){
+  if(v==='light'||v==='dark') localStorage.setItem('theme', v);
+  else { try{ localStorage.removeItem('theme'); }catch(e){} } // auto = follow device
+  renderHeader();
+}
+// reflect current preferences in the Settings controls when the screen opens
+function syncSettingsControls(){
+  const ts = $('#timerSetting'); if(ts) ts.value = String(state.settings.timer || 15);
+  const th = $('#themeSetting'); if(th) th.value = currentThemePref();
+  const sd = $('#soundSetting'); if(sd) sd.checked = state.settings.sound !== false;
+  const hp = $('#hapticSetting'); if(hp) hp.checked = state.settings.haptics !== false;
+}
 
 /* ===================== Solo Blitz mode (isolated from the team engine) ===================== */
 const BLITZ_SECONDS = 60;

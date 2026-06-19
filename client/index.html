@@ -14,10 +14,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/styles.css?v=26">
+  <link rel="stylesheet" href="assets/css/styles.css?v=27">
 </head>
 <body data-theme="light">
-  <script src="assets/js/theme-init.js?v=26"></script>
+  <script src="assets/js/theme-init.js?v=27"></script>
   <div class="app-shell">
     <header class="app-header">
       <button class="brand" data-screen="home" aria-label="الرئيسية">
@@ -27,6 +27,7 @@
       <nav class="main-nav" id="mainNav">
         <button class="nav-link" data-screen="home">الرئيسية</button>
         <button type="button" class="nav-link js-blitz">تحدٍّ سريع</button>
+        <button type="button" class="nav-link hidden" id="navProfile" data-screen="profile">ملفّي</button>
         <button class="nav-link" data-screen="achievements">إنجازاتي</button>
         <button class="nav-link" data-screen="rules">القواعد</button>
         <button class="nav-link" data-screen="leaderboard">المتصدرون</button>
@@ -231,11 +232,11 @@
       </ol><button data-screen="home">الرئيسية</button></div></section>
       <section id="settings" class="screen"><div class="page-card settings-card"><h2>الإعدادات</h2>
         <div class="settings-list">
-          <div class="setting-row" id="accountRow">
-            <span class="setting-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></span>
+          <button type="button" class="setting-row account-row" id="accountRow">
+            <span class="setting-ico" id="accountAvatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></span>
             <span class="setting-text"><b id="accountName">زائر</b><small id="accountSub">غير مسجّل الدخول</small></span>
-            <button type="button" id="accountBtn" class="setting-select account-btn">تسجيل الدخول</button>
-          </div>
+            <span class="account-cta" id="accountBtn">تسجيل الدخول</span>
+          </button>
           <div class="setting-row">
             <span class="setting-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 9.5V13l2.5 2.5M9 2h6"/></svg></span>
             <span class="setting-text"><b>مدة السؤال</b><small>الوقت المتاح للإجابة على كل سؤال</small></span>
@@ -246,12 +247,69 @@
             <span class="setting-text"><b>النسخة</b><small>مجموعة الأسئلة المعروضة على اللوحة</small></span>
             <select id="versionSetting" class="version-select setting-select" aria-label="النسخة"></select>
           </div>
+          <div class="setting-row">
+            <span class="setting-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.4 1.4M17.6 17.6 19 19M19 5l-1.4 1.4M6.4 17.6 5 19"/></svg></span>
+            <span class="setting-text"><b>المظهر</b><small>فاتح، داكن، أو حسب الجهاز</small></span>
+            <select id="themeSetting" class="setting-select" aria-label="المظهر"><option value="auto">حسب الجهاز</option><option value="light">فاتح</option><option value="dark">داكن</option></select>
+          </div>
+          <div class="setting-row">
+            <span class="setting-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18 6a9 9 0 0 1 0 12"/></svg></span>
+            <span class="setting-text"><b>المؤثرات الصوتية</b><small>أصوات الأزرار والإجابات والفوز</small></span>
+            <label class="switch"><input type="checkbox" id="soundSetting" aria-label="المؤثرات الصوتية"><span class="switch-track"></span></label>
+          </div>
+          <div class="setting-row">
+            <span class="setting-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg></span>
+            <span class="setting-text"><b>الاهتزاز</b><small>اهتزاز خفيف على الهاتف عند اللمس</small></span>
+            <label class="switch"><input type="checkbox" id="hapticSetting" aria-label="الاهتزاز"><span class="switch-track"></span></label>
+          </div>
         </div>
         <div class="settings-actions">
           <button data-screen="home" class="primary">الرئيسية</button>
           <button type="button" id="adminLink" class="ghost-btn hidden">🛠️ لوحة التحكم</button>
           <button id="resetLocal" class="danger btn-ghost">مسح النتائج المحلية</button>
         </div>
+      </div></section>
+
+      <section id="profile" class="screen"><div class="page-card profile-card">
+        <div id="profileGuest" class="profile-guest hidden">
+          <div class="auth-icon">👤</div>
+          <h2>الملف الشخصي</h2>
+          <p class="auth-intro">سجّل الدخول لعرض ملفّك وإحصاءاتك وترتيبك في لوحة المتصدرين.</p>
+          <button type="button" id="profileLoginBtn" class="primary big">تسجيل الدخول</button>
+        </div>
+        <div id="profileBody" class="profile-body hidden">
+          <div class="profile-head">
+            <div id="profileAvatar" class="profile-avatar">—</div>
+            <div class="profile-id">
+              <h2 id="profileName">—</h2>
+              <p id="profileEmail" class="profile-email">—</p>
+              <span id="profileRank" class="profile-rank hidden"></span>
+            </div>
+          </div>
+          <div id="profileStats" class="profile-stats"></div>
+          <div class="profile-section">
+            <h3>الاسم الظاهر</h3>
+            <div class="profile-row">
+              <input id="profileNameInput" type="text" maxlength="40" placeholder="اسمك في لوحة المتصدرين" autocomplete="nickname">
+              <button type="button" id="profileSaveName" class="primary">حفظ</button>
+            </div>
+            <div id="profileNameMsg" class="profile-msg"></div>
+          </div>
+          <div class="profile-section">
+            <h3>تغيير كلمة المرور</h3>
+            <div class="profile-row">
+              <input id="profilePass" type="password" minlength="6" placeholder="كلمة مرور جديدة (٦ أحرف على الأقل)" autocomplete="new-password">
+              <button type="button" id="profileSavePass" class="primary">تحديث</button>
+            </div>
+            <div id="profilePassMsg" class="profile-msg"></div>
+          </div>
+          <div class="profile-actions">
+            <button type="button" data-screen="achievements" class="ghost-btn">🏅 إنجازاتي</button>
+            <button type="button" data-screen="leaderboard" class="ghost-btn">🏆 المتصدرون</button>
+            <button type="button" id="profileSignout" class="danger btn-ghost">تسجيل الخروج</button>
+          </div>
+        </div>
+        <div class="bottom-actions"><button type="button" data-screen="settings" class="ghost-btn">الإعدادات</button><button type="button" data-screen="home" class="ghost-btn">الرئيسية</button></div>
       </div></section>
 
       <section id="blitz" class="screen">
@@ -330,9 +388,9 @@
     </main>
   </div>
   <div id="toast" class="toast"></div>
-  <script src="assets/js/config.js?v=26"></script>
-  <script src="assets/js/fx.js?v=26"></script>
-  <script type="module" src="assets/js/app.js?v=26"></script>
-  <script src="assets/js/sw-register.js?v=26"></script>
+  <script src="assets/js/config.js?v=27"></script>
+  <script src="assets/js/fx.js?v=27"></script>
+  <script type="module" src="assets/js/app.js?v=27"></script>
+  <script src="assets/js/sw-register.js?v=27"></script>
 </body>
 </html>

@@ -5,17 +5,17 @@
  *   - images: stale-while-revalidate (instant from cache, but refresh in the
  *     background so updated category art replaces old copies on the next view)
  */
-const CACHE = 'fakkir-v26';
+const CACHE = 'fakkir-v27';
 const SHELL = [
   './',
   './index.html',
   './manifest.webmanifest',
-  './assets/css/styles.css?v=26',
-  './assets/js/theme-init.js?v=26',
-  './assets/js/config.js?v=26',
-  './assets/js/fx.js?v=26',
-  './assets/js/app.js?v=26',
-  './assets/js/sw-register.js?v=26',
+  './assets/css/styles.css?v=27',
+  './assets/js/theme-init.js?v=27',
+  './assets/js/config.js?v=27',
+  './assets/js/fx.js?v=27',
+  './assets/js/app.js?v=27',
+  './assets/js/sw-register.js?v=27',
   './assets/data.json'
 ];
 
