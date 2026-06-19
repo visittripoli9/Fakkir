@@ -296,8 +296,8 @@ html,body{max-width:100%;overflow-x:hidden}
 .setting-select:hover{border-color:var(--gold);background-color:var(--panel2)}
 .setting-select:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 4px color-mix(in srgb,var(--gold) 22%,transparent)}
 .settings-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:8px}
-.btn-ghost{background:transparent;color:var(--red);border-color:color-mix(in srgb,var(--red) 45%,var(--line))}
-.btn-ghost:hover{background:color-mix(in srgb,var(--red) 12%,transparent);filter:none}
+.btn-ghost{background:linear-gradient(180deg,#e44a55,var(--red));color:#fff;border-color:#b92734;box-shadow:0 8px 22px color-mix(in srgb,var(--red) 38%,transparent)}
+.btn-ghost:hover{filter:brightness(1.06)}
 @media(max-width:560px){.setting-row{flex-wrap:wrap;text-align:center}.setting-text{flex:1 1 100%;order:-1;align-items:center}.setting-ico{margin:auto}.setting-select{flex:1 1 100%;width:100%}}
 .vp-dd-opt[aria-selected="true"]{background:color-mix(in srgb,var(--gold) 20%,var(--panel2));box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--gold) 50%,var(--line))}
 @media(max-width:560px){.vp-dd{flex:1 1 100%}.vp-dd-btn{width:100%}}
