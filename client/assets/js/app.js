@@ -415,6 +415,7 @@ function toggleCategory(slug){
 
 function startFlow(){
   sfx('start', 20);
+  toast('🎯 اختر النسخة و٦ فئات');
   state.teams.blue.name = sanitizeName($('#blueName').value, 'الفريق الأزرق');
   state.teams.red.name = sanitizeName($('#redName').value, 'الفريق الأحمر');
   state.teams.blue.score = 0;
@@ -438,8 +439,8 @@ function startFlow(){
   renderCategories();
   show('category');
 }
-function randomCats(){ state.selected = [...DATA.categories].sort(()=>Math.random()-.5).slice(0,6).map(c=>c.slug); saveLocal(); renderCategories(); }
-function clearCats(){ state.selected=[]; saveLocal(); renderCategories(); }
+function randomCats(){ state.selected = [...DATA.categories].sort(()=>Math.random()-.5).slice(0,6).map(c=>c.slug); saveLocal(); renderCategories(); toast('🎲 تم اختيار ٦ فئات عشوائياً'); }
+function clearCats(){ state.selected=[]; saveLocal(); renderCategories(); toast('تم مسح الاختيار'); }
 function qList(slug){ return DATA.questions.filter(q=>q.category===slug && q.version===state.settings.version).sort((a,b)=>a.ord-b.ord); }
 function cat(slug){ return DATA.categories.find(c=>c.slug===slug); }
 
@@ -1061,7 +1062,7 @@ function bind(){
   const nmb=$('#newMatchBtn'); if(nmb) nmb.onclick=startNewMatch;
   $('#randomCats').onclick=randomCats;
   $('#clearCats').onclick=clearCats;
-  $('#goBoard').onclick=()=>{ buildBoard(); show('board'); };
+  $('#goBoard').onclick=()=>{ buildBoard(); show('board'); toast('🎮 بدأت اللوحة — بالتوفيق!'); };
   $('#finishGame').onclick=finishGame;
   $('#correctBtn').onclick=correctAnswer;
   $('#wrongBtn').onclick=()=>wrongAnswer(); // no reason: don't pass the click event as a toast string
@@ -1076,25 +1077,26 @@ function bind(){
     document.body.dataset.theme=n;
     localStorage.setItem('theme',n);
     renderHeader();
+    toast(n==='dark'?'🌙 تم تفعيل الوضع الليلي':'☀️ تم تفعيل الوضع النهاري');
   };
   $('#resetLocal').onclick=resetLocal;
-  $('#timerSetting').onchange=e=>{ state.settings.timer = Number(e.target.value); saveLocal(); };
+  $('#timerSetting').onchange=e=>{ state.settings.timer = Number(e.target.value); saveLocal(); toast('⏱️ مدة السؤال: '+e.target.options[e.target.selectedIndex].text); };
   const navToggle=$('#navToggle'), mainNav=$('#mainNav');
   if(navToggle && mainNav) navToggle.onclick=()=>{ const open=mainNav.classList.toggle('open'); navToggle.classList.toggle('open',open); navToggle.setAttribute('aria-expanded',String(open)); };
   const ddBtn=$('#versionDDBtn');
   if(ddBtn) ddBtn.onclick=e=>{ e.stopPropagation(); const dd=$('#versionDD'); const open=dd.classList.toggle('open'); ddBtn.setAttribute('aria-expanded',String(open)); };
   document.addEventListener('click', e=>{ const dd=$('#versionDD'); if(dd && dd.classList.contains('open') && !dd.contains(e.target)) closeVersionDD(); });
   const soundToggle=$('#soundToggle');
-  if(soundToggle){ updateSoundIcon(); soundToggle.onclick=()=>{ state.settings.sound=!state.settings.sound; saveLocal(); updateSoundIcon(); if(state.settings.sound) sfx('select'); }; }
-  // solo Blitz mode + achievements
+  if(soundToggle){ updateSoundIcon(); soundToggle.onclick=()=>{ state.settings.sound=!state.settings.sound; saveLocal(); updateSoundIcon(); if(state.settings.sound) sfx('select'); toast(state.settings.sound?'🔊 تم تشغيل الصوت':'🔇 تم كتم الصوت'); }; }
+  // solo Blitz mode (auto-graded multiple choice) + achievements
   $$('.js-blitz').forEach(b=> b.onclick = startBlitz);
-  const bR=$('#blitzReveal'); if(bR) bR.onclick=blitzReveal;
-  const bG=$('#blitzGood'); if(bG) bG.onclick=()=>blitzMark(true);
-  const bB=$('#blitzBad'); if(bB) bB.onclick=()=>blitzMark(false);
-  const bQ=$('#blitzQuit'); if(bQ) bQ.onclick=quitBlitz;
+  const bQ=$('#blitzQuit'); if(bQ) bQ.onclick=()=>{ quitBlitz(); toast('تم إنهاء التحدي'); };
   // auth: form submit, sign-in/up toggle, settings account button
   const af=$('#authForm'); if(af) af.onsubmit=submitAuth;
   const atb=$('#authToggleBtn'); if(atb) atb.onclick=()=>setAuthMode(authMode==='signup'?'signin':'signup');
+  // live password-criteria checklists
+  const ap=$('#authPass'); if(ap) ap.addEventListener('input', ()=>{ if(authMode==='signup') updatePwReqs($('#authPwReqs'), ap.value); });
+  const pp=$('#profilePass'); if(pp) pp.addEventListener('input', ()=>updatePwReqs($('#profilePwReqs'), pp.value));
   const acr=$('#accountRow'); if(acr) acr.onclick=accountAction;
   const ha=$('#haAction'); if(ha) ha.onclick=accountAction;
   const al=$('#adminLink'); if(al) al.onclick=()=>{ location.href='admin.html'; };
@@ -1104,9 +1106,9 @@ function bind(){
   const psp=$('#profileSavePass'); if(psp) psp.onclick=saveProfilePass;
   const pso=$('#profileSignout'); if(pso) pso.onclick=async()=>{ await signOut(); show('home'); };
   // settings controls: theme, sound, haptics
-  const th=$('#themeSetting'); if(th) th.onchange=e=>setThemePref(e.target.value);
-  const sd=$('#soundSetting'); if(sd) sd.onchange=e=>{ state.settings.sound=!!e.target.checked; saveLocal(); updateSoundIcon(); if(state.settings.sound) sfx('select'); };
-  const hp=$('#hapticSetting'); if(hp) hp.onchange=e=>{ state.settings.haptics=!!e.target.checked; saveLocal(); if(state.settings.haptics) fxHaptic(20); };
+  const th=$('#themeSetting'); if(th) th.onchange=e=>{ setThemePref(e.target.value); toast('🎨 المظهر: '+e.target.options[e.target.selectedIndex].text); };
+  const sd=$('#soundSetting'); if(sd) sd.onchange=e=>{ state.settings.sound=!!e.target.checked; saveLocal(); updateSoundIcon(); if(state.settings.sound) sfx('select'); toast(state.settings.sound?'🔊 تم تشغيل الصوت':'🔇 تم كتم الصوت'); };
+  const hp=$('#hapticSetting'); if(hp) hp.onchange=e=>{ state.settings.haptics=!!e.target.checked; saveLocal(); if(state.settings.haptics) fxHaptic(20); toast(state.settings.haptics?'📳 تم تفعيل الاهتزاز':'تم إيقاف الاهتزاز'); };
   // leaderboard tabs
   $$('.lb-tab').forEach(b=> b.onclick=()=>showLbTab(b.dataset.lb));
   // universal button feel: ripple + haptic on every press, soft click on UI buttons
@@ -1173,7 +1175,7 @@ function spawnRipple(btn, e){
   }catch(_){}
 }
 // buttons that already emit their own purposeful sound (skip the generic UI click)
-const OWN_SOUND_SEL = '#correctBtn,#wrongBtn,#passBtn,#showAnswerBtn,#nextBtn,#startBtn,#blitzReveal,#blitzGood,#blitzBad,#tbBlueBtn,#tbRedBtn,#soundToggle,.cat-card,.point-btn,.js-blitz';
+const OWN_SOUND_SEL = '#correctBtn,#wrongBtn,#passBtn,#showAnswerBtn,#nextBtn,#startBtn,#tbBlueBtn,#tbRedBtn,#soundToggle,.cat-card,.point-btn,.blitz-opt,.js-blitz';
 function updateSoundIcon(){
   if(window.FX) window.FX.setEnabled(!!state.settings.sound); // keep the FX mixer in sync with the toggle
   const b = $('#soundToggle'); if(!b) return;
@@ -1188,6 +1190,7 @@ function setVersion(v){
   const cur = $('#versionDDBtn .vp-dd-current'); if(cur) cur.textContent = 'النسخة ' + verLetter(state.settings.version);
   $$('#versionDDList .vp-dd-opt').forEach(li=> li.setAttribute('aria-selected', String(Number(li.dataset.v) === state.settings.version)));
   renderCategories();
+  toast('📚 تم اختيار النسخة ' + verLetter(state.settings.version));
 }
 function closeVersionDD(){ const dd=$('#versionDD'); if(dd) dd.classList.remove('open'); const b=$('#versionDDBtn'); if(b) b.setAttribute('aria-expanded','false'); }
 
@@ -1299,12 +1302,32 @@ function openAuth(intro, after){
 }
 
 // toggle the form between sign-in and sign-up
+// ---- password policy (mirror this in Supabase Auth settings for real enforcement) ----
+function passwordChecks(pw){
+  pw = String(pw || '');
+  return {
+    len: pw.length >= 8,
+    upper: /[A-Z]/.test(pw),
+    lower: /[a-z]/.test(pw),
+    digit: /[0-9]/.test(pw),
+    special: /[^A-Za-z0-9]/.test(pw)
+  };
+}
+function passwordOk(pw){ const c = passwordChecks(pw); return c.len && c.upper && c.lower && c.digit && c.special; }
+// live checklist: mark each requirement met/unmet as the user types
+function updatePwReqs(listEl, pw){
+  if(!listEl) return;
+  const c = passwordChecks(pw);
+  listEl.querySelectorAll('li').forEach(li => li.classList.toggle('met', !!c[li.dataset.k]));
+}
+
 function setAuthMode(mode){
   authMode = mode === 'signup' ? 'signup' : 'signin';
   const signup = authMode === 'signup';
   const t = $('#authTitle'); if(t) t.textContent = signup ? 'إنشاء حساب' : 'تسجيل الدخول';
   const sub = $('#authSubmit'); if(sub) sub.textContent = signup ? 'إنشاء حساب' : 'دخول';
   const nameWrap = $('#authNameWrap'); if(nameWrap) nameWrap.classList.toggle('hidden', !signup);
+  const reqs = $('#authPwReqs'); if(reqs){ reqs.classList.toggle('hidden', !signup); updatePwReqs(reqs, $('#authPass') ? $('#authPass').value : ''); }
   const tg = $('#authToggleText'); if(tg) tg.textContent = signup ? 'لديك حساب بالفعل؟' : 'ليس لديك حساب؟';
   const tb = $('#authToggleBtn'); if(tb) tb.textContent = signup ? 'سجّل الدخول' : 'أنشئ حساباً';
   const pass = $('#authPass'); if(pass) pass.setAttribute('autocomplete', signup ? 'new-password' : 'current-password');
@@ -1320,7 +1343,10 @@ async function submitAuth(e){
   const email = ($('#authEmail').value || '').trim();
   const pass = $('#authPass').value || '';
   const name = sanitizeName($('#authName').value, '') || (email ? email.split('@')[0] : '');
-  if(!email || pass.length < 6) return authError('أدخل بريداً صحيحاً وكلمة مرور من ٦ أحرف على الأقل.');
+  if(!email) return authError('أدخل بريداً إلكترونياً صحيحاً.');
+  // enforce the strong-password policy on sign-up; sign-in just needs the existing password
+  if(authMode === 'signup' && !passwordOk(pass)) return authError('كلمة المرور يجب أن تحقّق كل الشروط: ٨ أحرف، حرف كبير وصغير، رقم، ورمز خاص.');
+  if(authMode === 'signin' && !pass) return authError('أدخل كلمة المرور.');
   const btn = $('#authSubmit'); if(btn){ btn.disabled = true; btn.textContent = '...'; }
   try{
     if(authMode === 'signup'){
@@ -1412,19 +1438,20 @@ async function saveProfileName(){
     const { data, error } = await SUPABASE.auth.updateUser({ data:{ name } });
     if(error){ msg.textContent = 'تعذّر الحفظ: ' + error.message; return; }
     USER = data.user; updateAuthUI(); renderProfile();
-    msg.textContent = 'تم الحفظ ✓'; sfx('correct');
+    msg.textContent = 'تم الحفظ ✓'; sfx('correct'); toast('✓ تم تحديث اسمك');
   }catch(e){ msg.textContent = 'خطأ، حاول مجدداً.'; }
 }
 
 async function saveProfilePass(){
   const msg = $('#profilePassMsg'); const p = $('#profilePass').value || '';
-  if(p.length < 6){ msg.textContent = 'كلمة المرور ٦ أحرف على الأقل.'; return; }
+  if(!passwordOk(p)){ msg.textContent = 'كلمة المرور يجب أن تحقّق كل الشروط أدناه.'; sfx('wrong'); return; }
   if(!SUPABASE){ msg.textContent = 'غير متاح الآن.'; return; }
   msg.textContent = 'جارٍ التحديث…';
   try{
     const { error } = await SUPABASE.auth.updateUser({ password: p });
     if(error){ msg.textContent = 'تعذّر: ' + error.message; return; }
-    $('#profilePass').value = ''; msg.textContent = 'تم تحديث كلمة المرور ✓'; sfx('correct');
+    $('#profilePass').value = ''; updatePwReqs($('#profilePwReqs'), '');
+    msg.textContent = 'تم تحديث كلمة المرور ✓'; sfx('correct'); toast('🔑 تم تحديث كلمة المرور');
   }catch(e){ msg.textContent = 'خطأ، حاول مجدداً.'; }
 }
 
@@ -1466,7 +1493,7 @@ function startBlitz(){
   // progress from easiest to hardest: sort by point value ascending, random within each tier
   blitz.qs = pool.slice().sort((a,b)=> (Number(a.value)||0) - (Number(b.value)||0) || (Math.random()-0.5));
   blitz.active = true; blitz.score = 0; blitz.streak = 0; blitz.maxStreak = 0;
-  blitz.i = 0; blitz.answered = 0; blitz.correct = 0; blitz.revealed = false;
+  blitz.i = 0; blitz.answered = 0; blitz.correct = 0; blitz.locked = false;
   blitz.endsAt = Date.now() + BLITZ_SECONDS*1000;
   sfx('start', 20);
   renderBlitzQuestion();
@@ -1487,10 +1514,42 @@ function startBlitzTimer(){
   }, 200);
 }
 
+// normalize for comparing/deduping answer strings
+function blitzNorm(s){ return String(s || '').trim().replace(/\s+/g, ' ').toLowerCase(); }
+function shuffleArr(a){ a = a.slice(); for(let i=a.length-1;i>0;i--){ const j=(Math.random()*(i+1))|0; [a[i],a[j]]=[a[j],a[i]]; } return a; }
+// distinct answers from a pool, excluding the correct one
+function distinctAnswers(pool, correct){
+  const seen = new Set([blitzNorm(correct)]); const out = [];
+  for(const x of pool){ const a = String(x.a || '').trim(); const n = blitzNorm(a); if(a && a.length <= 60 && !seen.has(n)){ seen.add(n); out.push(a); } }
+  return out;
+}
+// Build 4 multiple-choice options (1 correct + up to 3 plausible distractors).
+// Auto-grading removes the old self-marking exploit. Returns null if it can't.
+function buildBlitzOptions(q){
+  const correct = String(q.a || '').trim();
+  if(!correct || correct.length > 60) return null;
+  let distractors;
+  if(q.category === 'rescue'){
+    distractors = ['بريء', 'مذنب'].filter(o => blitzNorm(o) !== blitzNorm(correct));
+  } else if(Array.isArray(q.suspects) && q.suspects.length){
+    distractors = q.suspects.map(s => String(s).trim()).filter(o => o && blitzNorm(o) !== blitzNorm(correct));
+  } else {
+    let pool = DATA.questions.filter(x => x.category === q.category && x.a);
+    let opts = distinctAnswers(pool, correct);
+    if(opts.length < 3) opts = distinctAnswers(DATA.questions.filter(x => x.a), correct); // widen to all categories
+    distractors = opts;
+  }
+  distractors = shuffleArr(distractors).slice(0, 3);
+  if(!distractors.length) return null;
+  return shuffleArr([{ text: correct, correct: true }, ...distractors.map(d => ({ text: d, correct: false }))]);
+}
+
 function renderBlitzQuestion(){
   if(blitz.i >= blitz.qs.length) return endBlitz(); // exhausted the pool before the clock
-  blitz.revealed = false;
   const q = blitz.qs[blitz.i];
+  const opts = buildBlitzOptions(q);
+  if(!opts){ blitz.i++; return renderBlitzQuestion(); } // skip a question we can't build choices for
+  blitz.locked = false;
   const c = cat(q.category) || { name:'', image:'' };
   $('#blitzScore').textContent = blitz.score;
   $('#blitzStreak').textContent = blitz.streak;
@@ -1499,46 +1558,38 @@ function renderBlitzQuestion(){
   const story = (q.category==='crime' || q.category==='rescue') ? (q.note||'') : '';
   const bs = $('#blitzStory'); if(bs){ bs.textContent = story; bs.classList.toggle('hidden', !story); }
   renderVisual(q, c, '#blitzVisual');
-  const ab = $('#blitzAnswer'); ab.classList.add('hidden'); ab.textContent = '';
-  $('#blitzReveal').classList.remove('hidden');
-  $('#blitzGood').classList.add('hidden');
-  $('#blitzBad').classList.add('hidden');
+  const box = $('#blitzOptions');
+  box.innerHTML = opts.map((o,i)=>`<button type="button" class="blitz-opt" data-i="${i}" data-correct="${o.correct?1:0}">${safe(o.text)}</button>`).join('');
+  box.querySelectorAll('.blitz-opt').forEach(b => b.onclick = () => answerBlitz(b));
 }
 
-function blitzReveal(){
-  const q = blitz.qs[blitz.i];
-  if(!q || blitz.revealed || !blitz.active) return;
-  blitz.revealed = true;
-  const c = cat(q.category) || { name:'', image:'' };
-  const scenario = q.category==='crime' || q.category==='rescue';
-  $('#blitzAnswer').textContent = answerText(q) + (!scenario && q.note ? ` — ${q.note}` : '');
-  $('#blitzAnswer').classList.remove('hidden');
-  if(q.image) renderVisual(q, c, '#blitzVisual', { reveal:true });
-  $('#blitzReveal').classList.add('hidden');
-  $('#blitzGood').classList.remove('hidden');
-  $('#blitzBad').classList.remove('hidden');
-  sfx('click');
-}
-
-function blitzMark(ok){
-  if(!blitz.active) return;
+// the system decides correctness (not the player) → no way to claim a wrong answer is right
+function answerBlitz(btn){
+  if(!blitz.active || blitz.locked) return;
+  blitz.locked = true;
+  const ok = btn.dataset.correct === '1';
+  $('#blitzOptions').querySelectorAll('.blitz-opt').forEach(b=>{
+    b.classList.add('disabled');
+    if(b.dataset.correct === '1') b.classList.add('correct'); // always reveal the right answer
+  });
+  if(!ok) btn.classList.add('wrong');
   blitz.answered++;
   if(ok){
     blitz.correct++;
     blitz.streak++; blitz.maxStreak = Math.max(blitz.maxStreak, blitz.streak);
     const pts = 100 + (blitz.streak-1)*25; // streak combo bonus
     blitz.score += pts;
-    sfx('correct', 20);
+    sfx('correct', 20); fxHaptic(25);
     toast(`+${pts}${blitz.streak>=3 ? `  🔥 ×${blitz.streak}` : ''}`);
   } else {
     blitz.streak = 0;
-    sfx('wrong', [30,30]);
+    sfx('wrong', [30,30]); fxHaptic([40,40]);
   }
   $('#blitzScore').textContent = blitz.score;
   $('#blitzStreak').textContent = blitz.streak;
   if(window.FX) window.FX.pop($('#blitzScore'));
   blitz.i++;
-  if(blitz.active && Date.now() < blitz.endsAt) renderBlitzQuestion(); // else the timer's endBlitz wraps up
+  setTimeout(()=>{ if(blitz.active && Date.now() < blitz.endsAt) renderBlitzQuestion(); }, ok ? 430 : 780);
 }
 
 function endBlitz(){

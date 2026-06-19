@@ -14,10 +14,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/styles.css?v=29">
+  <link rel="stylesheet" href="assets/css/styles.css?v=32">
 </head>
 <body data-theme="light">
-  <script src="assets/js/theme-init.js?v=29"></script>
+  <script src="assets/js/theme-init.js?v=32"></script>
   <div class="app-shell">
     <header class="app-header">
       <button class="brand" data-screen="home" aria-label="الرئيسية">
@@ -298,9 +298,16 @@
           <div class="profile-section">
             <h3>تغيير كلمة المرور</h3>
             <div class="profile-row">
-              <input id="profilePass" type="password" minlength="6" placeholder="كلمة مرور جديدة (٦ أحرف على الأقل)" autocomplete="new-password">
+              <input id="profilePass" type="password" minlength="8" placeholder="كلمة مرور جديدة" autocomplete="new-password">
               <button type="button" id="profileSavePass" class="primary">تحديث</button>
             </div>
+            <ul id="profilePwReqs" class="pw-reqs" aria-live="polite">
+              <li data-k="len">٨ أحرف على الأقل</li>
+              <li data-k="upper">حرف إنجليزي كبير (A‑Z)</li>
+              <li data-k="lower">حرف إنجليزي صغير (a‑z)</li>
+              <li data-k="digit">رقم (0‑9)</li>
+              <li data-k="special">رمز خاص (‎!@#$…‎)</li>
+            </ul>
             <div id="profilePassMsg" class="profile-msg"></div>
           </div>
           <div class="profile-actions">
@@ -323,12 +330,7 @@
           <div id="blitzStory" class="q-story hidden"></div>
           <h2 id="blitzQ"></h2>
           <div id="blitzVisual" class="question-visual"></div>
-          <div id="blitzAnswer" class="answer-box hidden"></div>
-          <div class="question-actions blitz-actions">
-            <button type="button" id="blitzReveal" class="primary">أظهر الإجابة</button>
-            <button type="button" id="blitzGood" class="success hidden">صحيحة ✓</button>
-            <button type="button" id="blitzBad" class="danger hidden">تخطٍّ / خطأ ✗</button>
-          </div>
+          <div id="blitzOptions" class="blitz-options"></div>
         </article>
         <div class="bottom-actions"><button type="button" id="blitzQuit">إنهاء التحدي</button></div>
       </section>
@@ -374,8 +376,15 @@
           </label>
           <label class="auth-field">
             <span>كلمة المرور</span>
-            <input id="authPass" type="password" required minlength="6" placeholder="٦ أحرف على الأقل" autocomplete="current-password">
+            <input id="authPass" type="password" required minlength="8" placeholder="كلمة المرور" autocomplete="current-password">
           </label>
+          <ul id="authPwReqs" class="pw-reqs hidden" aria-live="polite">
+            <li data-k="len">٨ أحرف على الأقل</li>
+            <li data-k="upper">حرف إنجليزي كبير (A‑Z)</li>
+            <li data-k="lower">حرف إنجليزي صغير (a‑z)</li>
+            <li data-k="digit">رقم (0‑9)</li>
+            <li data-k="special">رمز خاص (‎!@#$…‎)</li>
+          </ul>
           <div id="authError" class="auth-error" role="alert"></div>
           <button type="submit" id="authSubmit" class="primary big">دخول</button>
         </form>
@@ -388,9 +397,9 @@
     </main>
   </div>
   <div id="toast" class="toast"></div>
-  <script src="assets/js/config.js?v=29"></script>
-  <script src="assets/js/fx.js?v=29"></script>
-  <script type="module" src="assets/js/app.js?v=29"></script>
-  <script src="assets/js/sw-register.js?v=29"></script>
+  <script src="assets/js/config.js?v=32"></script>
+  <script src="assets/js/fx.js?v=32"></script>
+  <script type="module" src="assets/js/app.js?v=32"></script>
+  <script src="assets/js/sw-register.js?v=32"></script>
 </body>
 </html>

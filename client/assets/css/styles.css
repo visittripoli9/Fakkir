@@ -607,6 +607,14 @@ button:active{transform:translateY(1px) scale(.985)}
 .blitz-card{max-width:820px;margin:0 auto}
 .blitz-actions{grid-template-columns:1fr 1fr;max-width:560px;margin:0 auto}
 .blitz-actions #blitzReveal{grid-column:1/-1}
+/* auto-graded multiple-choice options */
+.blitz-options{display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:640px;margin:10px auto 0}
+.blitz-opt{min-height:60px;font-size:18px;font-weight:900;border-radius:16px;background:var(--panel2);border:2px solid var(--line);color:var(--text);padding:12px 16px;overflow-wrap:anywhere}
+.blitz-opt:hover:not(.disabled){border-color:var(--gold);transform:translateY(-2px)}
+.blitz-opt.disabled{pointer-events:none;opacity:.85}
+.blitz-opt.correct{background:linear-gradient(180deg,#34b86c,var(--green));color:#fff;border-color:#17783b;opacity:1;box-shadow:0 8px 22px color-mix(in srgb,var(--green) 40%,transparent)}
+.blitz-opt.wrong{background:linear-gradient(180deg,#e44a55,var(--red));color:#fff;border-color:#b92734;opacity:1}
+@media(max-width:560px){.blitz-options{grid-template-columns:1fr}}
 .blitz-final{margin:14px auto;display:flex;flex-direction:column;align-items:center;line-height:1}
 .blitz-final b{font-size:clamp(56px,12vw,96px);font-weight:900;color:var(--gold);
   background:linear-gradient(180deg,#f5c645,var(--gold));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
@@ -739,6 +747,15 @@ button:active{transform:translateY(1px) scale(.985)}
 .auth-toggle{margin-top:16px;color:var(--muted);font-weight:800}
 .link-btn{background:none;border:0;color:var(--gold);font-weight:900;cursor:pointer;padding:4px 6px;min-height:auto;text-decoration:underline}
 .account-btn{min-width:120px}
+
+/* password-criteria checklist */
+.pw-reqs{list-style:none;margin:4px 0 2px;padding:10px 14px;display:grid;gap:6px;
+  background:var(--panel2);border:1px solid var(--line);border-radius:14px;text-align:start}
+.pw-reqs.hidden{display:none}
+.pw-reqs li{display:flex;align-items:center;gap:8px;font-weight:800;font-size:13px;color:var(--muted);transition:color .15s ease}
+.pw-reqs li::before{content:"○";font-size:14px;color:var(--muted);width:16px;text-align:center}
+.pw-reqs li.met{color:var(--green)}
+.pw-reqs li.met::before{content:"✓";color:var(--green)}
 
 /* --- admin visitor-analytics breakdown cards --- */
 .v-break{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin:8px 0 18px}
