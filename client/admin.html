@@ -7,7 +7,7 @@
   <title>لوحة التحكم | FAKKIR</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/styles.css?v=5">
+  <link rel="stylesheet" href="assets/css/styles.css?v=26">
 </head>
 <body data-theme="light">
   <div class="app-shell">
@@ -15,12 +15,18 @@
     <section id="adminGate" class="screen active">
       <div class="page-card admin-gate">
         <h2>لوحة التحكم</h2>
-        <p>صفحة خاصة بالمشرف. استخدم مفتاح <b>service_role (secret)</b> — يبدأ بـ <code>sb_secret_</code> أو <code>eyJ</code> — <b>وليس</b> المفتاح العام publishable. هذا المفتاح وحده يسمح بالإضافة والتعديل والحذف.<br>تجده في: Supabase → Project Settings → API → service_role.</p>
-        <input id="adminKey" type="password" placeholder="service_role key (sb_secret_… أو eyJ…)" autocomplete="off" spellcheck="false">
-        <label class="admin-remember"><input id="adminRemember" type="checkbox" checked> تذكّرني على هذا الجهاز</label>
-        <button id="adminLogin" class="primary big">دخول</button>
+        <p class="admin-hint">سجّل الدخول بحساب المشرف (نفس البريد وكلمة المرور المستخدمين في اللعبة).</p>
+        <input id="adminEmail" type="email" placeholder="البريد الإلكتروني" autocomplete="username">
+        <input id="adminPass" type="password" placeholder="كلمة المرور" autocomplete="current-password">
+        <button id="adminSignin" type="button" class="primary big">دخول</button>
         <div id="adminError" class="admin-error"></div>
-        <p class="admin-hint">المفتاح يُحفظ في متصفحك فقط ولا يُرسل لأي جهة غير Supabase. استخدمه على جهازك الخاص.</p>
+        <details class="admin-altkey">
+          <summary>دخول بمفتاح service_role (متقدّم)</summary>
+          <p class="admin-hint">للطوارئ فقط — مفتاح <b>service_role (secret)</b> (يبدأ بـ <code>sb_secret_</code> أو <code>eyJ</code>). يُحفظ في متصفحك فقط. استخدمه على جهازك الخاص.</p>
+          <input id="adminKey" type="password" placeholder="service_role key" autocomplete="off" spellcheck="false">
+          <label class="admin-remember"><input id="adminRemember" type="checkbox" checked> تذكّرني على هذا الجهاز</label>
+          <button id="adminLogin" type="button">دخول بالمفتاح</button>
+        </details>
       </div>
     </section>
 
@@ -33,18 +39,36 @@
       <div id="adminStats" class="admin-stats"></div>
 
       <div class="admin-tabs">
-        <button class="admin-tab active" data-tab="questions">الأسئلة</button>
-        <button class="admin-tab" data-tab="categories">الفئات</button>
-        <button class="admin-tab" data-tab="matches">النتائج</button>
+        <button type="button" class="admin-tab active" data-tab="visitors">الزوّار</button>
+        <button type="button" class="admin-tab" data-tab="questions">الأسئلة</button>
+        <button type="button" class="admin-tab" data-tab="categories">الفئات</button>
+        <button type="button" class="admin-tab" data-tab="blitz">تحدٍّ سريع</button>
+        <button type="button" class="admin-tab" data-tab="matches">النتائج</button>
       </div>
 
-      <div id="tabQuestions" class="admin-tabpane">
+      <div id="tabVisitors" class="admin-tabpane">
         <div class="admin-filters">
-          <select id="fVersion" class="version-select"></select>
-          <select id="fCategory" class="version-select"></select>
-          <input id="fSearch" placeholder="بحث في السؤال/الإجابة/القصة…">
-          <button id="fApply" class="primary">عرض</button>
-          <button id="addNew">+ سؤال جديد</button>
+          <select id="vRange" class="version-select" aria-label="المدة الزمنية">
+            <option value="1">آخر ٢٤ ساعة</option>
+            <option value="7" selected>آخر ٧ أيام</option>
+            <option value="30">آخر ٣٠ يوماً</option>
+            <option value="0">كل الوقت</option>
+          </select>
+          <button type="button" id="vRefresh" class="primary">تحديث</button>
+        </div>
+        <div id="vStats" class="admin-stats"></div>
+        <div id="vBreak" class="v-break"></div>
+        <div class="admin-count">أحدث الزيارات</div>
+        <div class="admin-table-wrap"><table id="vTable" class="admin-table"></table></div>
+      </div>
+
+      <div id="tabQuestions" class="admin-tabpane hidden">
+        <div class="admin-filters">
+          <select id="fVersion" class="version-select" aria-label="النسخة"></select>
+          <select id="fCategory" class="version-select" aria-label="الفئة"></select>
+          <input id="fSearch" placeholder="بحث في السؤال/الإجابة/القصة…" aria-label="بحث">
+          <button id="fApply" type="button" class="primary">عرض</button>
+          <button id="addNew" type="button">+ سؤال جديد</button>
         </div>
         <div id="qCount" class="admin-count"></div>
         <div class="admin-table-wrap"><table id="qTable" class="admin-table"></table></div>
@@ -53,6 +77,15 @@
       <div id="tabCategories" class="admin-tabpane hidden">
         <div class="admin-filters"><button id="addCat" class="primary">+ فئة جديدة</button></div>
         <div class="admin-table-wrap"><table id="cTable" class="admin-table"></table></div>
+      </div>
+
+      <div id="tabBlitz" class="admin-tabpane hidden">
+        <div class="admin-filters">
+          <select id="bVersion" class="version-select" aria-label="تصفية حسب النسخة"></select>
+          <button type="button" id="bRefresh" class="primary">تحديث</button>
+        </div>
+        <div id="bCount" class="admin-count"></div>
+        <div class="admin-table-wrap"><table id="bTable" class="admin-table"></table></div>
       </div>
 
       <div id="tabMatches" class="admin-tabpane hidden">
@@ -100,7 +133,7 @@
   </div>
 
   <div id="toast" class="toast"></div>
-  <script src="assets/js/config.js?v=5"></script>
-  <script src="assets/js/admin.js?v=5"></script>
+  <script src="assets/js/config.js?v=26"></script>
+  <script src="assets/js/admin.js?v=26"></script>
 </body>
 </html>

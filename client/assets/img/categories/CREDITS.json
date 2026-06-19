@@ -1,0 +1,202 @@
+{
+  "football": {
+    "slug": "football",
+    "term": "football stadium pitch",
+    "file": "File:Stamford Bridge Stadium Football Pitch, 2.22.2013.jpg",
+    "source": "https://commons.wikimedia.org/wiki/File:Stamford_Bridge_Stadium_Football_Pitch,_2.22.2013.jpg",
+    "artist": "WorldTraveller101",
+    "license": "CC BY-SA 3.0"
+  },
+  "quran": {
+    "slug": "quran",
+    "term": "open Quran mushaf",
+    "file": "File:Quran-Mus'haf Al Tajweed.jpg",
+    "source": "https://commons.wikimedia.org/wiki/File:Quran-Mus%27haf_Al_Tajweed.jpg",
+    "artist": "Amr Fayez (TheEgyptian)",
+    "license": "CC BY 2.5"
+  },
+  "geo": {
+    "slug": "geo",
+    "term": "physical world map",
+    "file": "File:Physical World Map 2004-04-01.jpeg",
+    "source": "https://commons.wikimedia.org/wiki/File:Physical_World_Map_2004-04-01.jpeg",
+    "artist": "Central Intelligence Agency",
+    "license": "Public domain"
+  },
+  "history": {
+    "slug": "history",
+    "term": "Colosseum Rome",
+    "file": "File:Colosseum in Rome, Italy - April 2007.jpg",
+    "source": "https://commons.wikimedia.org/wiki/File:Colosseum_in_Rome,_Italy_-_April_2007.jpg",
+    "artist": "Diliff",
+    "license": "CC BY-SA 2.5"
+  },
+  "palestine": {
+    "slug": "palestine",
+    "term": "Al-Aqsa Mosque Jerusalem",
+    "file": "File:Jerusalem Al-Aqsa Mosque BW 2010-09-21 06-38-12.JPG",
+    "source": "https://commons.wikimedia.org/wiki/File:Jerusalem_Al-Aqsa_Mosque_BW_2010-09-21_06-38-12.JPG",
+    "artist": "Berthold Werner",
+    "license": "CC BY-SA 3.0"
+  },
+  "players": {
+    "slug": "players",
+    "via": "Category:Men's association football",
+    "file": "File:Arju10.jpg",
+    "source": "https://commons.wikimedia.org/wiki/File:Arju10.jpg",
+    "artist": "Wikipediaartictle",
+    "license": "CC BY-SA 4.0"
+  },
+  "rescue": {
+    "slug": "rescue",
+    "term": "courtroom interior bench",
+    "file": "File:Courtroom from bench.jpg",
+    "source": "https://commons.wikimedia.org/wiki/File:Courtroom_from_bench.jpg",
+    "artist": "Danielle Darling",
+    "license": "CC BY-SA 3.0"
+  },
+  "closest": {
+    "slug": "closest",
+    "term": "dartboard bullseye",
+    "file": "File:Harrows Bristle Board Bullseye.JPG",
+    "source": "https://commons.wikimedia.org/wiki/File:Harrows_Bristle_Board_Bullseye.JPG",
+    "artist": "Christian Gidlöf",
+    "license": "Public domain"
+  },
+  "capitals": {
+    "slug": "capitals",
+    "term": "city skyline night",
+    "file": "File:New York City at night HDR.jpg",
+    "source": "https://commons.wikimedia.org/wiki/File:New_York_City_at_night_HDR.jpg",
+    "artist": "Paulo Barcellos Jr.",
+    "license": "CC BY-SA 2.0"
+  },
+  "currencies": {
+    "slug": "currencies",
+    "via": "Category:Stacks of coins",
+    "file": "File:5lsstack.jpg",
+    "source": "https://commons.wikimedia.org/wiki/File:5lsstack.jpg",
+    "artist": "Photographed by the unloader, coin designed by Rihards Zariņš",
+    "license": "Public domain"
+  },
+  "verse": {
+    "slug": "verse",
+    "term": "Quran Arabic calligraphy",
+    "file": "File:Quran 14.jpg",
+    "source": "https://commons.wikimedia.org/wiki/File:Quran_14.jpg",
+    "artist": "Calligrapher: Abu Muhammad Khan al-Ma'rashi",
+    "license": "Public domain"
+  },
+  "ordering": {
+    "slug": "ordering",
+    "via": "Category:Soroban",
+    "file": "File:A made in Morocco soroban - 2.jpg",
+    "source": "https://commons.wikimedia.org/wiki/File:A_made_in_Morocco_soroban_-_2.jpg",
+    "artist": "Amjahed",
+    "license": "CC0"
+  },
+  "seerah": {
+    "slug": "seerah",
+    "via": "Category:Al-Masjid an-Nabawi",
+    "file": "File:Masjid-e-Nabawi During Sunrise May 2016.jpg",
+    "source": "https://commons.wikimedia.org/wiki/File:Masjid-e-Nabawi_During_Sunrise_May_2016.jpg",
+    "artist": "Ibuz4u",
+    "license": "CC BY-SA 4.0"
+  },
+  "whoami": {
+    "slug": "whoami",
+    "via": "File:Question mark (5230973747).jpg",
+    "file": "File:Question mark (5230973747).jpg",
+    "source": "https://commons.wikimedia.org/wiki/File:Question_mark_(5230973747).jpg",
+    "artist": "Mark Morgan from Trinidad",
+    "license": "CC BY 2.0"
+  },
+  "crime": {
+    "slug": "crime",
+    "via": "File:Aa tattonpark2010 handcuffs.jpg",
+    "file": "File:Aa tattonpark2010 handcuffs.jpg",
+    "source": "https://commons.wikimedia.org/wiki/File:Aa_tattonpark2010_handcuffs.jpg",
+    "artist": "Anthony Appleyard (talk)",
+    "license": "Public domain"
+  },
+  "dish": {
+    "slug": "dish",
+    "via": "File:Kabsa (6486384335).jpg",
+    "file": "File:Kabsa (6486384335).jpg",
+    "source": "https://commons.wikimedia.org/wiki/File:Kabsa_(6486384335).jpg",
+    "artist": "Sammy Six",
+    "license": "CC BY 2.0"
+  },
+  "flags": {
+    "slug": "flags",
+    "via": "File:Flags of countries participated in the European Games 2019 (Minsk) — general view.jpg",
+    "file": "File:Flags of countries participated in the European Games 2019 (Minsk) — general view.jpg",
+    "source": "https://commons.wikimedia.org/wiki/File:Flags_of_countries_participated_in_the_European_Games_2019_(Minsk)_%E2%80%94_general_view.jpg",
+    "artist": "Homoatrox",
+    "license": "CC BY-SA 3.0"
+  },
+  "science": {
+    "slug": "science",
+    "via": "File:Glassware.JPG",
+    "file": "File:Glassware.JPG",
+    "source": "https://commons.wikimedia.org/wiki/File:Glassware.JPG",
+    "artist": "Medicuspetrus",
+    "license": "Public domain"
+  },
+  "animals": {
+    "slug": "animals",
+    "via": "File:Lion cub with mother.jpg",
+    "file": "File:Lion cub with mother.jpg",
+    "source": "https://commons.wikimedia.org/wiki/File:Lion_cub_with_mother.jpg",
+    "artist": "Unknown",
+    "license": "CC BY-SA 2.0"
+  },
+  "sports": {
+    "slug": "sports",
+    "via": "athletics stadium track",
+    "file": "File:Clairville Stadium athletics track - geograph.org.uk - 1672615.jpg",
+    "source": "https://commons.wikimedia.org/wiki/File:Clairville_Stadium_athletics_track_-_geograph.org.uk_-_1672615.jpg",
+    "artist": "Philip Barker",
+    "license": "CC BY-SA 2.0"
+  },
+  "riddles": {
+    "slug": "riddles",
+    "via": "hedge maze labyrinth",
+    "file": "File:Toeput, Lodewijck (Pozzoserrato, Lodovico) - Pleasure garden with a maze - c. 1579-84.jpg",
+    "source": "https://commons.wikimedia.org/wiki/File:Toeput,_Lodewijck_(Pozzoserrato,_Lodovico)_-_Pleasure_garden_with_a_maze_-_c._1579-84.jpg",
+    "artist": "Lodewijk Toeput",
+    "license": "Public domain"
+  },
+  "tech": {
+    "slug": "tech",
+    "via": "circuit board macro",
+    "file": "File:Portable AM FM radio inside macro 0727 01.JPG",
+    "source": "https://commons.wikimedia.org/wiki/File:Portable_AM_FM_radio_inside_macro_0727_01.JPG",
+    "artist": "Mhzk1600",
+    "license": "CC BY-SA 3.0"
+  },
+  "general": {
+    "slug": "general",
+    "via": "old library bookshelves",
+    "file": "File:Dublin Old Library Trinity College 05.jpg",
+    "source": "https://commons.wikimedia.org/wiki/File:Dublin_Old_Library_Trinity_College_05.jpg",
+    "artist": "antomoro",
+    "license": "FAL"
+  },
+  "math": {
+    "slug": "math",
+    "via": "blackboard mathematical equations",
+    "file": "File:CMAP - Centre de Mathématiques Appliquées de l'Ecole polytechnique.jpg",
+    "source": "https://commons.wikimedia.org/wiki/File:CMAP_-_Centre_de_Math%C3%A9matiques_Appliqu%C3%A9es_de_l%27Ecole_polytechnique.jpg",
+    "artist": "Jérémy Barande",
+    "license": "CC BY-SA 3.0"
+  },
+  "proverbs": {
+    "slug": "proverbs",
+    "via": "old parchment scroll",
+    "file": "File:Scroll of esther.jpg",
+    "source": "https://commons.wikimedia.org/wiki/File:Scroll_of_esther.jpg",
+    "artist": "Unknown authorUnknown author",
+    "license": "Public domain"
+  }
+}

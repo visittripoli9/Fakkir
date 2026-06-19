@@ -1,0 +1,10 @@
+# Target modern evergreen browsers. FAKKIR uses modern CSS (color-mix,
+# backdrop-filter, etc.) that is supported across all of these, so the
+# compatibility checker (webhint / Edge Tools) should not flag them.
+last 2 Chrome versions
+last 2 Edge versions
+last 2 Firefox versions
+last 2 Safari versions
+last 2 iOS versions
+last 2 ChromeAndroid versions
+not dead

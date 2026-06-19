@@ -3,22 +3,31 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#f3f5f8">
+  <meta name="theme-color" content="#0b1625">
   <title>فكّر | FAKKIR</title>
+  <meta name="description" content="فكّر FAKKIR — لعبة المسابقات العربية بين فريقين: ٢٤ فئة وأكثر من ٢١٥٠ سؤالاً.">
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="فكّر">
+  <link rel="apple-touch-icon" href="assets/img/ui/logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/styles.css?v=14">
+  <link rel="stylesheet" href="assets/css/styles.css?v=26">
 </head>
 <body data-theme="light">
+  <script src="assets/js/theme-init.js?v=26"></script>
   <div class="app-shell">
     <header class="app-header">
       <button class="brand" data-screen="home" aria-label="الرئيسية">
-        <img class="brand-logo logo-light" src="assets/img/ui/logo-light.png" alt="فكّر FAKKIR" onerror="this.onerror=null;this.src='assets/img/ui/logo.png'">
-        <img class="brand-logo logo-dark" src="assets/img/ui/logo-dark.png" alt="فكّر FAKKIR" onerror="this.onerror=null;this.src='assets/img/ui/logo.png'">
+        <img class="brand-logo logo-light" src="assets/img/ui/logo-light.png" alt="فكّر FAKKIR">
+        <img class="brand-logo logo-dark" src="assets/img/ui/logo-dark.png" alt="فكّر FAKKIR">
       </button>
       <nav class="main-nav" id="mainNav">
         <button class="nav-link" data-screen="home">الرئيسية</button>
+        <button type="button" class="nav-link js-blitz">تحدٍّ سريع</button>
+        <button class="nav-link" data-screen="achievements">إنجازاتي</button>
         <button class="nav-link" data-screen="rules">القواعد</button>
         <button class="nav-link" data-screen="leaderboard">المتصدرون</button>
         <button class="nav-link" data-screen="settings">الإعدادات</button>
@@ -44,6 +53,11 @@
         <div class="hero">
           <h1 class="hero-title">فكّر<span>FAKKIR</span></h1>
           <p class="hero-sub">تحدٍّ جماعي بين فريقين على طريقة المسابقات الكبرى. اختر فئاتك، اضغط على النقاط، وأجب بسرعة لتجمع أعلى رصيد. أكثر من ٢٠٠٠ سؤال موزّعة على ٢٤ فئة و١٥ نسخة كاملة.</p>
+          <div id="homeAccount" class="home-account" data-state="out">
+            <span class="ha-ico">⚡</span>
+            <div class="ha-text"><b id="haName">زائر</b><small id="haSub">سجّل الدخول للعب التحدي السريع</small></div>
+            <button type="button" id="haAction" class="ha-btn">تسجيل الدخول</button>
+          </div>
           <div id="resumeBar" class="resume-bar hidden">
             <span class="resume-text">لديك مباراة قيد التقدّم — هل تريد متابعتها؟</span>
             <div class="resume-actions">
@@ -53,6 +67,7 @@
           </div>
           <div class="hero-cta">
             <button id="startBtn" class="primary big">ابدأ اللعبة</button>
+            <button type="button" class="ghost-btn big js-blitz">⚡ تحدٍّ فردي</button>
             <button data-screen="rules" class="ghost-btn big">كيف نلعب؟</button>
           </div>
           <div class="hero-stats">
@@ -125,7 +140,7 @@
           <span class="vp-text"><b>اختر النسخة</b><small>مجموعة الأسئلة · A إلى O</small></span>
           <div class="vp-dd" id="versionDD">
             <button type="button" class="vp-dd-btn" id="versionDDBtn" aria-haspopup="listbox" aria-expanded="false"><span class="vp-dd-current">النسخة A</span><svg class="vp-dd-arrow" viewBox="0 0 14 9" fill="none" stroke="#d7a018" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l6 6 6-6"/></svg></button>
-            <ul class="vp-dd-list" id="versionDDList" role="listbox"></ul>
+            <ul class="vp-dd-list" id="versionDDList" role="listbox" aria-label="اختر النسخة"></ul>
           </div>
         </div>
         <div class="tools-row">
@@ -183,7 +198,22 @@
         </div>
       </section>
 
-      <section id="leaderboard" class="screen"><div class="page-card"><h2>المتصدرين</h2><div id="leaderRows"></div><button data-screen="home">الرئيسية</button></div></section>
+      <section id="leaderboard" class="screen"><div class="page-card">
+        <h2>المتصدرون</h2>
+        <div class="lb-tabs" role="tablist">
+          <button type="button" class="lb-tab active" data-lb="blitz" role="tab">⚡ تحدٍّ سريع</button>
+          <button type="button" class="lb-tab" data-lb="teams" role="tab">👥 الفرق</button>
+        </div>
+        <div id="lbBlitz" class="lb-pane">
+          <div class="lb-filter">
+            <label for="blitzLbVersion">النسخة</label>
+            <select id="blitzLbVersion" class="setting-select lb-version" aria-label="تصفية حسب النسخة"></select>
+          </div>
+          <div id="blitzLeaderRows"></div>
+        </div>
+        <div id="lbTeams" class="lb-pane hidden"><div id="leaderRows"></div></div>
+        <button data-screen="home">الرئيسية</button>
+      </div></section>
       <section id="rules" class="screen"><div class="page-card"><h2>قواعد اللعبة</h2><ol>
         <li>اختر ٦ فئات للعب، وكل فئة تحتوي على ٦ أسئلة بدرجات مختلفة؛ وكلّما زاد السؤال صعوبةً زادت نقاطه.</li>
         <li>يتناوب الفريقان على اختيار الفئات والأسئلة والإجابة عليها، ويكون الدور أولًا للفريق صاحب الاختيار.</li>
@@ -201,6 +231,11 @@
       </ol><button data-screen="home">الرئيسية</button></div></section>
       <section id="settings" class="screen"><div class="page-card settings-card"><h2>الإعدادات</h2>
         <div class="settings-list">
+          <div class="setting-row" id="accountRow">
+            <span class="setting-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></span>
+            <span class="setting-text"><b id="accountName">زائر</b><small id="accountSub">غير مسجّل الدخول</small></span>
+            <button type="button" id="accountBtn" class="setting-select account-btn">تسجيل الدخول</button>
+          </div>
           <div class="setting-row">
             <span class="setting-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 9.5V13l2.5 2.5M9 2h6"/></svg></span>
             <span class="setting-text"><b>مدة السؤال</b><small>الوقت المتاح للإجابة على كل سؤال</small></span>
@@ -214,13 +249,90 @@
         </div>
         <div class="settings-actions">
           <button data-screen="home" class="primary">الرئيسية</button>
+          <button type="button" id="adminLink" class="ghost-btn hidden">🛠️ لوحة التحكم</button>
           <button id="resetLocal" class="danger btn-ghost">مسح النتائج المحلية</button>
         </div>
+      </div></section>
+
+      <section id="blitz" class="screen">
+        <div class="blitz-hud">
+          <div class="bh time"><span>الوقت</span><b id="blitzTime">60</b></div>
+          <div class="bh score"><span>النقاط</span><b id="blitzScore">0</b></div>
+          <div class="bh streak"><span>السلسلة 🔥</span><b id="blitzStreak">0</b></div>
+        </div>
+        <article class="question-card blitz-card">
+          <div class="question-meta"><span id="blitzCat"></span></div>
+          <div id="blitzStory" class="q-story hidden"></div>
+          <h2 id="blitzQ"></h2>
+          <div id="blitzVisual" class="question-visual"></div>
+          <div id="blitzAnswer" class="answer-box hidden"></div>
+          <div class="question-actions blitz-actions">
+            <button type="button" id="blitzReveal" class="primary">أظهر الإجابة</button>
+            <button type="button" id="blitzGood" class="success hidden">صحيحة ✓</button>
+            <button type="button" id="blitzBad" class="danger hidden">تخطٍّ / خطأ ✗</button>
+          </div>
+        </article>
+        <div class="bottom-actions"><button type="button" id="blitzQuit">إنهاء التحدي</button></div>
+      </section>
+
+      <section id="blitzResult" class="screen">
+        <div class="result-card">
+          <span id="blitzNewBest" class="golden-badge hidden">🎉 رقم قياسي جديد!</span>
+          <h2>انتهى الوقت!</h2>
+          <div class="blitz-final"><b id="blitzFinalScore">0</b><span>نقطة</span></div>
+          <p id="blitzRank" class="blitz-rank hidden"></p>
+          <p class="blitz-best-line">أفضل نتيجة: <b id="blitzBest">0</b></p>
+          <p id="blitzSummary" class="blitz-stats-line"></p>
+          <div class="bottom-actions">
+            <button type="button" class="primary js-blitz">العب مجدداً</button>
+            <button data-screen="achievements" class="ghost-btn">إنجازاتي</button>
+            <button data-screen="home" class="ghost-btn">الرئيسية</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="achievements" class="screen"><div class="page-card">
+        <h2>إنجازاتي</h2>
+        <div id="achStats" class="ach-stats"></div>
+        <div id="achGrid" class="ach-grid"></div>
+        <div class="bottom-actions">
+          <button type="button" class="primary js-blitz">⚡ تحدٍّ سريع</button>
+          <button data-screen="home" class="ghost-btn">الرئيسية</button>
+        </div>
+      </div></section>
+
+      <section id="auth" class="screen"><div class="page-card auth-card">
+        <div class="auth-icon">⚡</div>
+        <h2 id="authTitle">تسجيل الدخول</h2>
+        <p id="authIntro" class="auth-intro">سجّل الدخول لتلعب التحدي السريع وتُسجَّل نتيجتك في لوحة المتصدرين.</p>
+        <form id="authForm" class="auth-form" autocomplete="on">
+          <label class="auth-field auth-name-field" id="authNameWrap">
+            <span>الاسم الظاهر</span>
+            <input id="authName" type="text" maxlength="40" placeholder="اسمك في لوحة المتصدرين" autocomplete="nickname">
+          </label>
+          <label class="auth-field">
+            <span>البريد الإلكتروني</span>
+            <input id="authEmail" type="email" required placeholder="you@example.com" autocomplete="email">
+          </label>
+          <label class="auth-field">
+            <span>كلمة المرور</span>
+            <input id="authPass" type="password" required minlength="6" placeholder="٦ أحرف على الأقل" autocomplete="current-password">
+          </label>
+          <div id="authError" class="auth-error" role="alert"></div>
+          <button type="submit" id="authSubmit" class="primary big">دخول</button>
+        </form>
+        <p class="auth-toggle">
+          <span id="authToggleText">ليس لديك حساب؟</span>
+          <button type="button" id="authToggleBtn" class="link-btn">أنشئ حساباً</button>
+        </p>
+        <div class="bottom-actions"><button type="button" data-screen="home" class="ghost-btn">رجوع</button></div>
       </div></section>
     </main>
   </div>
   <div id="toast" class="toast"></div>
-  <script src="assets/js/config.js?v=14"></script>
-  <script type="module" src="assets/js/app.js?v=14"></script>
+  <script src="assets/js/config.js?v=26"></script>
+  <script src="assets/js/fx.js?v=26"></script>
+  <script type="module" src="assets/js/app.js?v=26"></script>
+  <script src="assets/js/sw-register.js?v=26"></script>
 </body>
 </html>

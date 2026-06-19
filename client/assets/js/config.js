@@ -6,5 +6,9 @@ window.FAKKIR_CONFIG = {
   apiBase: '/api',
   preferSupabase: true,
   fallbackToLocal: true,
-  defaultTheme: 'light'
+  defaultTheme: 'light',
+  // accounts that get admin powers (must match the `admins` table seeded in
+  // server/sql/admin-role.sql). Not a secret — it just declares who is admin;
+  // the real enforcement is the database RLS policies.
+  adminEmails: ['abedhajjo57@gmail.com']
 };

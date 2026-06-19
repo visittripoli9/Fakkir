@@ -4,6 +4,10 @@ let DATA_SOURCE = 'local';
 let SUPABASE = null;
 let timerInt = null;
 let _audio = null;
+let USER = null;               // current authenticated Supabase user, or null
+let pendingAfterAuth = null;   // action to run once login succeeds (e.g. 'blitz')
+let authMode = 'signin';       // 'signin' | 'signup' for the auth screen
+let blitzLbFilter = 'all';     // Blitz leaderboard version filter: 'all' | version number
 
 const SKIPS_PER_TEAM = 3;     // limited skips each team gets per match
 const GOLDEN_PER_BOARD = 2;   // random double-point questions on the board
@@ -28,6 +32,10 @@ const $$ = s => [...document.querySelectorAll(s)];
 const other = t => t === 'blue' ? 'red' : 'blue';
 // escape for safe innerHTML interpolation (XSS defence)
 const safe = v => String(v ?? '').replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+// asset cache-buster: bump when bundled images change so browsers/service worker
+// fetch the new file instead of an old cached copy (category art has no other version tag)
+const ASSET_V = 17;
+const bust = u => !u ? u : (u.startsWith('http') ? u : u + (u.includes('?') ? '&' : '?') + 'v=' + ASSET_V);
 
 // ---- security helpers: bounds + input sanitisation ----
 const STATE_VERSION = 3;          // saved-state schema version (bump invalidates old/incompatible saves)
@@ -63,6 +71,8 @@ function setStatus(text, kind='ok'){
 }
 
 function show(id){
+  // leaving the Blitz screen mid-run (e.g. via a nav link) stops its timer cleanly
+  if(id !== 'blitz' && typeof blitz !== 'undefined' && blitz.active){ blitz.active = false; clearInterval(blitzInt); }
   $$('.screen').forEach(s=>s.classList.remove('active'));
   const screen = $('#'+id);
   if(screen) screen.classList.add('active');
@@ -73,25 +83,33 @@ function show(id){
   if(id === 'category') renderCategories();
   if(id === 'board') buildBoard();
   if(id === 'leaderboard') renderLeaderboard();
+  if(id === 'achievements') renderAchievements();
   if(id === 'home') updateResumeUI();
   state.screen = id;          // remember where we are so a reload can restore it
   saveLocal();
   window.scrollTo({top:0, behavior:'smooth'});
 }
 
-async function loadScript(src){
+async function loadScript(src, integrity){
   return new Promise((resolve,reject)=>{
     if([...document.scripts].some(s => s.src === src)) return resolve();
     const s=document.createElement('script');
     s.src=src; s.onload=resolve; s.onerror=reject;
+    // Subresource Integrity + CORS: the browser refuses to run the file if its
+    // hash doesn't match (protects against a tampered/compromised CDN).
+    if(integrity){ s.integrity=integrity; s.crossOrigin='anonymous'; s.referrerPolicy='no-referrer'; }
     document.head.appendChild(s);
   });
 }
 
+// pinned, integrity-checked supabase-js (supply-chain safety — bump both together)
+const SUPABASE_JS_URL = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.108.2';
+const SUPABASE_JS_SRI = 'sha384-JWEyvHh+lRf0sN/WWY+QTQwX+CyWqmNg4tkc8GQzAMEtR2wGNrCJlvnu1lHD1kDm';
+
 async function initSupabase(){
   if(!CONFIG.supabaseUrl || !CONFIG.supabaseAnonKey) return null;
   try{
-    await loadScript('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2');
+    await loadScript(SUPABASE_JS_URL, SUPABASE_JS_SRI);
     SUPABASE = window.supabase.createClient(CONFIG.supabaseUrl, CONFIG.supabaseAnonKey);
     return SUPABASE;
   }catch(e){
@@ -340,8 +358,16 @@ function startNewMatch(){
   startFlow();
 }
 
+// resolve the active theme: an explicit saved choice wins, otherwise follow the device
+function resolveTheme(){
+  const saved = localStorage.getItem('theme');
+  if(saved === 'dark' || saved === 'light') return saved;
+  try{ return matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'; }
+  catch(e){ return CONFIG.defaultTheme || 'light'; }
+}
+
 function renderHeader(){
-  const theme = localStorage.getItem('theme') || CONFIG.defaultTheme || 'dark';
+  const theme = resolveTheme();
   document.body.dataset.theme = theme;
   $('#blueName').value = state.teams.blue.name;
   $('#redName').value = state.teams.red.name;
@@ -359,7 +385,11 @@ function renderCategories(){
     const el = document.createElement('button');
     el.type = 'button';
     el.className = 'cat-card' + (idx>=0?' selected':'');
-    el.innerHTML = `<img src="${safe(cat.image)}" alt="${safe(cat.name)}"><span class="num">${idx>=0?idx+1:''}</span><h3>${safe(cat.name)}</h3><small>${countQuestions(cat.slug)} أسئلة</small>`;
+    el.dataset.color = cat.color || 'blue';
+    el.innerHTML = `<img class="cc-img" src="${safe(bust(cat.image))}" alt="${safe(cat.name)}">`
+      + `<span class="cc-num">${idx>=0?idx+1:''}</span>`
+      + `<div class="cc-overlay"><h3 class="cc-title">${safe(cat.name)}</h3>`
+      + `<span class="cc-count">${countQuestions(cat.slug)} أسئلة</span></div>`;
     el.onclick = () => toggleCategory(cat.slug);
     grid.appendChild(el);
   });
@@ -370,10 +400,11 @@ function renderCategories(){
 function countQuestions(slug){ return DATA.questions.filter(q => q.category === slug && q.version === state.settings.version).length; }
 function toggleCategory(slug){
   const i = state.selected.indexOf(slug);
-  if(i>=0) state.selected.splice(i,1);
+  if(i>=0){ state.selected.splice(i,1); sfx('click'); }
   else {
     if(state.selected.length>=6) return toast('اخترت 6 فئات بالفعل');
     state.selected.push(slug);
+    sfx('select', 12);
   }
   state.golden={}; // board composition changed — re-roll golden tiles next time
   saveLocal();
@@ -381,6 +412,7 @@ function toggleCategory(slug){
 }
 
 function startFlow(){
+  sfx('start', 20);
   state.teams.blue.name = sanitizeName($('#blueName').value, 'الفريق الأزرق');
   state.teams.red.name = sanitizeName($('#redName').value, 'الفريق الأحمر');
   state.teams.blue.score = 0;
@@ -420,8 +452,8 @@ function buildBoard(){
   grid.innerHTML='';
   $('#blueBoardName').textContent = state.teams.blue.name;
   $('#redBoardName').textContent = state.teams.red.name;
-  $('#blueScore').textContent = state.teams.blue.score;
-  $('#redScore').textContent = state.teams.red.score;
+  if(window.FX){ window.FX.countUp($('#blueScore'), state.teams.blue.score); window.FX.countUp($('#redScore'), state.teams.red.score); }
+  else { $('#blueScore').textContent = state.teams.blue.score; $('#redScore').textContent = state.teams.red.score; }
   $('#turnLabel').textContent = state.teams[state.turn].name;
   renderSkips();
 
@@ -430,7 +462,8 @@ function buildBoard(){
     const qs = qList(slug).slice(0,6);
     const tile = document.createElement('section');
     tile.className='board-tile';
-    tile.innerHTML = `<div class="board-image"><img src="${safe(c.image)}" alt="${safe(c.name)}"></div><h3>${safe(c.name)}</h3><div class="points-grid">` + qs.map(q=>{
+    tile.dataset.color = c.color || 'blue';
+    tile.innerHTML = `<div class="bt-media"><img src="${safe(bust(c.image))}" alt="${safe(c.name)}"><h3 class="bt-title">${safe(c.name)}</h3></div><div class="points-grid">` + qs.map(q=>{
       const key = `${slug}:${q.ord}`;
       return `<button class="point-btn ${state.used[key]?'used':''}" data-slug="${safe(slug)}" data-ord="${q.ord}">${q.value}</button>`;
     }).join('') + `</div>`;
@@ -463,6 +496,7 @@ function openQuestion(slug, ord, opts={}){
   if(!q || state.used[key]) return; // already used -> can't be answered/scored twice
   const mode = opts.mode || 'normal';
   const answerer = opts.answerer || state.turn;
+  sfx('select', 12);         // tactile feedback when a tile is opened
   state.awards = {};         // fresh question -> no verdicts recorded yet
   state.current = { q, c, key, picker: answerer, answerer, phase:'initial', shown:false, mode };
   renderCurrentQuestion();   // builds the question screen from state.current (also starts a fresh timer)
@@ -521,7 +555,7 @@ function renderVisual(q,c,target,opts={}){
   // always show. Everything else falls back to the category icon.
   const reveal = !!opts.reveal;
   const flagSrc = (q.type === 'flag' && q.flag && DATA.flags[q.flag]) ? DATA.flags[q.flag] : null;
-  img.src = (q.image && reveal) ? q.image : (flagSrc || c.image);
+  img.src = (q.image && reveal) ? q.image : (flagSrc || bust(c.image));
   img.alt = c.name; // keep the category name (never the answer) as alt text
   box.appendChild(img);
   if(q.clues){
@@ -546,10 +580,11 @@ function handleTimeout(){
 // timer ran out: the question is UNANSWERED (no deduction) and the chance passes to the other team
 function timeoutPass(){
   const cur = state.current; if(!cur) return; // guard: a terminal action already cleared the question
-  beep(170,0.3,'square');
+  sfx('wrong', [60,30,60]);
   if(cur.phase==='initial'){
     cur.phase = 'steal';
     cur.answerer = other(cur.answerer);
+    sfx('steal');
     updateQTurn();
     updateSkipButton();
     $('#answerBox').classList.add('hidden');
@@ -571,12 +606,18 @@ function startTimerFrom(secs){
   clearInterval(timerInt);
   let n = Math.max(1, Math.round(secs));
   state.timerEndsAt = Date.now() + n*1000;
-  $('#timer').textContent = n;
+  const timerEl = $('#timer');
+  timerEl.textContent = n;
+  timerEl.classList.remove('urgent');
   saveLocal();
   timerInt = setInterval(()=>{
     n--;
-    $('#timer').textContent = n;
-    if(n<=0){ clearInterval(timerInt); state.timerEndsAt = null; handleTimeout(); }
+    timerEl.textContent = Math.max(0, n);
+    // final 5 seconds: urgent pulse + ticking
+    const urgent = n > 0 && n <= 5;
+    timerEl.classList.toggle('urgent', urgent);
+    if(urgent){ sfx('tick'); fxHaptic(15); }
+    if(n<=0){ clearInterval(timerInt); state.timerEndsAt = null; timerEl.classList.remove('urgent'); handleTimeout(); }
   },1000);
 }
 
@@ -640,7 +681,7 @@ function setAward(team, verdict){
 
 function correctAnswer(){
   const cur = state.current; if(!cur) return;
-  beep(880,0.16,'sine');
+  sfx('correct', 30);
   if(cur.mode==='challenge') return finishChallenge(true);
   setAward(cur.answerer, 'correct');
   finishQuestion(cur.phase==='steal' ? 'سرقة ناجحة' : 'إجابة صحيحة', cur.answerer);
@@ -648,7 +689,7 @@ function correctAnswer(){
 
 function wrongAnswer(reason){
   const cur = state.current; if(!cur) return;
-  beep(170,0.3,'square');
+  sfx('wrong', [40,40,40]);
   if(cur.mode==='challenge') return finishChallenge(false); // comeback round stays a bonus: no deduction
   setAward(cur.answerer, 'wrong'); // wrong answer = normal base deduction (golden never penalizes extra)
   const lead = reason ? (reason + ' — ') : '';
@@ -657,6 +698,7 @@ function wrongAnswer(reason){
     refreshQScores();
     cur.phase = 'steal';
     cur.answerer = other(cur.answerer);
+    sfx('steal');
     updateQTurn();
     updateSkipButton();
     $('#answerBox').classList.add('hidden');
@@ -680,6 +722,7 @@ function passQuestion(){
       return wrongAnswer('لا تخطيات متبقية');
     }
     state.teams[team].skips--;
+    sfx('pass');
     renderSkips();
     cur.phase = 'steal';
     cur.answerer = other(team);
@@ -721,6 +764,11 @@ function finishQuestion(title, team){
   $('#resultNote').textContent = (cur.q.category==='crime'||cur.q.category==='rescue') ? '' : (cur.q.note || cur.q.evidence || '');
   renderVisual(cur.q,cur.c,'#resultVisual',{reveal:true}); // answer screen: reveal player photo etc.
   renderGoldenReveal();
+  if(state.lastQ && state.lastQ.golden){ // secret golden tile just unmasked — sparkle + gold confetti
+    sfx('golden', [20,40,20]);
+    if(window.FX) window.FX.confetti({ count:90, colors:['#d7a018','#f0bd3e','#ffe08a','#fff4cf'] });
+    if(Object.values(state.awards||{}).some(a=>a && a.state==='correct')) recordStats({ goldenHits:1 });
+  }
   state.turn = other(cur.picker); // next pick alternates from who picked this one
   state.current = null;
   setupDecisionEditor();
@@ -886,6 +934,20 @@ async function concludeGame(forcedWinner){
     localStorage.setItem('fakkir_leaderboard', JSON.stringify(rows.slice(-100)));
   }catch(e){ /* corrupt/full local leaderboard — non-fatal */ }
   saveLocal();
+  // grand finale: fanfare + confetti (draw gets a gentler cue, no confetti storm)
+  const draw = match.winner === 'تعادل';
+  if(draw){ sfx('lose'); }
+  else {
+    sfx('win', [60,30,60,30,120]);
+    if(window.FX){
+      const winColor = match.winner === match.blue_name ? '#1f7bff' : '#d83a45';
+      window.FX.confetti({ count:220, colors:[winColor, '#d7a018', '#f0bd3e', '#ffffff'] });
+      setTimeout(()=>window.FX.confetti({ count:120, colors:[winColor, '#d7a018'] }), 650);
+    }
+  }
+  // lifetime stats: every concluded match counts; a decisive result counts as a win
+  recordStats({ matchesPlayed:1, matchWins: draw ? 0 : 1 });
+  checkAchievements();
   const remote = await saveMatchRemote(match);
   renderLeaderboard();
   show('leaderboard');
@@ -897,7 +959,11 @@ function leaderRow(i, winner, blueScore, redScore){
   const bs = Math.trunc(Number(blueScore) || 0), rs = Math.trunc(Number(redScore) || 0);
   return `<div class="leader-row"><b>${i+1}. ${safe(winner)}</b><span>${bs} - ${rs}</span></div>`;
 }
-async function renderLeaderboard(){
+// top-level leaderboard: render both tabs
+function renderLeaderboard(){ renderTeamLeaderboard(); renderBlitzLeaderboard(); }
+
+async function renderTeamLeaderboard(){
+  const box = $('#leaderRows'); if(!box) return;
   let localRows = [];
   try{ localRows = JSON.parse(localStorage.getItem('fakkir_leaderboard')||'[]'); }catch(e){ localRows = []; }
   if(!Array.isArray(localRows)) localRows = [];
@@ -906,12 +972,76 @@ async function renderLeaderboard(){
     try{
       const { data, error } = await SUPABASE.from('matches').select('winner,blue_score,red_score,created_at').order('created_at', { ascending:false }).limit(20);
       if(!error && data){
-        $('#leaderRows').innerHTML = data.length ? data.map((r,i)=>leaderRow(i, r.winner, r.blue_score, r.red_score)).join('') : '<p>لا توجد نتائج بعد.</p>';
+        box.innerHTML = data.length ? data.map((r,i)=>leaderRow(i, r.winner, r.blue_score, r.red_score)).join('') : '<p>لا توجد نتائج بعد.</p>';
         return;
       }
     }catch(e){ console.warn(e); }
   }
-  $('#leaderRows').innerHTML = localRows.length ? localRows.map((r,i)=>leaderRow(i, r.winner, r.blue_score ?? r.blue, r.red_score ?? r.red)).join('') : '<p>لا توجد نتائج بعد.</p>';
+  box.innerHTML = localRows.length ? localRows.map((r,i)=>leaderRow(i, r.winner, r.blue_score ?? r.blue, r.red_score ?? r.red)).join('') : '<p>لا توجد نتائج بعد.</p>';
+}
+
+const MEDALS = ['🥇','🥈','🥉'];
+// one ranked Blitz row; highlights the signed-in player's own entry
+function blitzRow(i, r){
+  const me = isLoggedIn() && r.user_id === USER.id;
+  const rank = MEDALS[i] || `${i+1}`;
+  const acc = r.answered > 0 ? Math.round((r.correct / r.answered) * 100) : 0;
+  return `<div class="lb-row${me?' me':''}">`
+    + `<span class="lb-rank">${rank}</span>`
+    + `<span class="lb-name">${safe(r.player_name)}${me?' <small>(أنت)</small>':''}</span>`
+    + `<span class="lb-meta">${acc}% · 🔥${Math.trunc(Number(r.max_streak)||0)}</span>`
+    + `<b class="lb-score">${Math.trunc(Number(r.score)||0)}</b></div>`;
+}
+
+// reduce raw rows to the single best run per player, ranked high→low
+function bestPerUser(rows){
+  const best = new Map();
+  for(const r of (rows||[])){ const cur = best.get(r.user_id); if(!cur || r.score > cur.score) best.set(r.user_id, r); }
+  return [...best.values()].sort((a,b)=> b.score - a.score);
+}
+
+// ranked best-score-per-player board; honors the version filter ('all' uses the view)
+async function renderBlitzLeaderboard(){
+  const box = $('#blitzLeaderRows'); if(!box) return;
+  if(!SUPABASE){ box.innerHTML = '<p class="lb-empty">لوحة المتصدرين تحتاج اتصالاً بالإنترنت.</p>'; return; }
+  box.innerHTML = '<p class="lb-empty">جارٍ التحميل...</p>';
+  try{
+    let rows;
+    if(blitzLbFilter === 'all'){
+      const { data, error } = await SUPABASE.from('blitz_leaderboard')
+        .select('user_id,player_name,score,correct,answered,max_streak')
+        .order('score', { ascending:false }).limit(50);
+      if(error) throw error;
+      rows = data || [];
+    } else {
+      // per-version: rank best run per player within the chosen version
+      const { data, error } = await SUPABASE.from('blitz_scores')
+        .select('user_id,player_name,score,correct,answered,max_streak')
+        .eq('version', Number(blitzLbFilter)).order('score', { ascending:false }).limit(400);
+      if(error) throw error;
+      rows = bestPerUser(data).slice(0, 50);
+    }
+    if(!rows.length){ box.innerHTML = '<p class="lb-empty">لا نتائج بعد — كن أول المتصدرين! ⚡</p>'; return; }
+    box.innerHTML = rows.map((r,i)=>blitzRow(i, r)).join('');
+  }catch(e){ box.innerHTML = '<p class="lb-empty">تعذّر تحميل المتصدرين.</p>'; }
+}
+
+// fill the leaderboard version filter (كل النسخ + each version)
+function populateBlitzLbVersions(){
+  const sel = $('#blitzLbVersion'); if(!sel || !DATA) return;
+  const versions = [...new Set(DATA.questions.map(q=>q.version))].sort((a,b)=>a-b);
+  sel.innerHTML = `<option value="all">كل النسخ</option>` + versions.map(v=>`<option value="${v}">النسخة ${verLetter(v)}</option>`).join('');
+  sel.value = blitzLbFilter;
+  sel.onchange = ()=>{ blitzLbFilter = sel.value; renderBlitzLeaderboard(); };
+}
+
+// switch leaderboard tabs (blitz | teams)
+function showLbTab(which){
+  const blitz = which !== 'teams';
+  $('#lbBlitz').classList.toggle('hidden', !blitz);
+  $('#lbTeams').classList.toggle('hidden', blitz);
+  $$('.lb-tab').forEach(b=> b.classList.toggle('active', b.dataset.lb === (blitz?'blitz':'teams')));
+  if(blitz) renderBlitzLeaderboard(); else renderTeamLeaderboard();
 }
 function resetLocal(){
   if(!askConfirm('مسح جميع النتائج والمباراة المحفوظة محليًا؟ لا يمكن التراجع.')) return; // confirm before clearing
@@ -953,13 +1083,37 @@ function bind(){
   if(ddBtn) ddBtn.onclick=e=>{ e.stopPropagation(); const dd=$('#versionDD'); const open=dd.classList.toggle('open'); ddBtn.setAttribute('aria-expanded',String(open)); };
   document.addEventListener('click', e=>{ const dd=$('#versionDD'); if(dd && dd.classList.contains('open') && !dd.contains(e.target)) closeVersionDD(); });
   const soundToggle=$('#soundToggle');
-  if(soundToggle){ updateSoundIcon(); soundToggle.onclick=()=>{ state.settings.sound=!state.settings.sound; saveLocal(); updateSoundIcon(); if(state.settings.sound) beep(700,0.12,'sine'); }; }
+  if(soundToggle){ updateSoundIcon(); soundToggle.onclick=()=>{ state.settings.sound=!state.settings.sound; saveLocal(); updateSoundIcon(); if(state.settings.sound) sfx('select'); }; }
+  // solo Blitz mode + achievements
+  $$('.js-blitz').forEach(b=> b.onclick = startBlitz);
+  const bR=$('#blitzReveal'); if(bR) bR.onclick=blitzReveal;
+  const bG=$('#blitzGood'); if(bG) bG.onclick=()=>blitzMark(true);
+  const bB=$('#blitzBad'); if(bB) bB.onclick=()=>blitzMark(false);
+  const bQ=$('#blitzQuit'); if(bQ) bQ.onclick=quitBlitz;
+  // auth: form submit, sign-in/up toggle, settings account button
+  const af=$('#authForm'); if(af) af.onsubmit=submitAuth;
+  const atb=$('#authToggleBtn'); if(atb) atb.onclick=()=>setAuthMode(authMode==='signup'?'signin':'signup');
+  const acb=$('#accountBtn'); if(acb) acb.onclick=accountAction;
+  const ha=$('#haAction'); if(ha) ha.onclick=accountAction;
+  const al=$('#adminLink'); if(al) al.onclick=()=>{ location.href='admin.html'; };
+  // leaderboard tabs
+  $$('.lb-tab').forEach(b=> b.onclick=()=>showLbTab(b.dataset.lb));
+  // follow the device theme live until the player makes an explicit choice
+  try{ matchMedia('(prefers-color-scheme: dark)').addEventListener('change', ()=>{ if(!localStorage.getItem('theme')) renderHeader(); }); }catch(e){}
+  // logo fallback without an inline onerror handler (CSP forbids inline scripts)
+  $$('.brand-logo').forEach(img=>{
+    const fix=()=>{ if(img.dataset.fb) return; img.dataset.fb='1'; img.src='assets/img/ui/logo.png'; };
+    img.addEventListener('error', fix, { once:true });
+    if(img.complete && img.naturalWidth === 0) fix();
+  });
 }
 
 const verLetter = n => String.fromCharCode(64 + n); // 1 -> A ... 15 -> O
 
 function beep(freq, dur, type){
   if(!state.settings.sound) return;
+  // route through the premium FX engine when present (richer, shared mixer)
+  if(window.FX){ window.FX.tone(freq, 0, dur, type); return; }
   try{
     _audio = _audio || new (window.AudioContext || window.webkitAudioContext)();
     if(_audio.state === 'suspended') _audio.resume();
@@ -972,7 +1126,16 @@ function beep(freq, dur, type){
     o.start(t); o.stop(t + dur + 0.02);
   }catch(e){}
 }
+
+// named premium SFX + light haptics; both respect the sound toggle
+function sfx(name, vibe){
+  if(!state.settings.sound){ if(vibe) fxHaptic(vibe); return; }
+  if(window.FX) window.FX.sound(name);
+  if(vibe) fxHaptic(vibe);
+}
+function fxHaptic(pattern){ if(window.FX) window.FX.haptic(pattern); }
 function updateSoundIcon(){
+  if(window.FX) window.FX.setEnabled(!!state.settings.sound); // keep the FX mixer in sync with the toggle
   const b = $('#soundToggle'); if(!b) return;
   b.classList.toggle('muted', !state.settings.sound);
   const l = $('#soundLabel'); if(l) l.textContent = state.settings.sound ? 'الصوت' : 'صامت';
@@ -1000,19 +1163,446 @@ function populateVersions(){
     list.querySelectorAll('.vp-dd-opt').forEach(li=> li.onclick=()=>{ setVersion(li.dataset.v); closeVersionDD(); });
   }
   const cur = $('#versionDDBtn .vp-dd-current'); if(cur) cur.textContent = 'النسخة ' + verLetter(state.settings.version);
+  populateBlitzLbVersions(); // keep the Blitz leaderboard version filter in sync
+}
+
+/* ===================== Authentication (email + password via Supabase) ===================== */
+// display name for the leaderboard: chosen name, else the email's local part
+function userName(){
+  const meta = USER && USER.user_metadata;
+  const n = meta && (meta.name || meta.full_name);
+  if(n) return sanitizeName(n, 'لاعب');
+  if(USER && USER.email) return sanitizeName(USER.email.split('@')[0], 'لاعب');
+  return 'لاعب';
+}
+const isLoggedIn = () => !!USER;
+// is the signed-in account an admin? (declared in config; enforced by DB RLS)
+function isAdmin(){
+  if(!isLoggedIn() || !USER.email) return false;
+  const list = Array.isArray(CONFIG.adminEmails) ? CONFIG.adminEmails.map(e=>String(e).toLowerCase()) : [];
+  return list.includes(String(USER.email).toLowerCase());
+}
+
+// read the current session and keep the UI in sync; called on load + auth changes
+async function refreshSession(){
+  if(!SUPABASE){ USER = null; updateAuthUI(); return; }
+  try{ const { data } = await SUPABASE.auth.getSession(); USER = (data && data.session && data.session.user) || null; }
+  catch(e){ USER = null; }
+  updateAuthUI();
+}
+
+// reflect login state in the settings "account" row + the home chip
+function updateAuthUI(){
+  const nameEl = $('#accountName'), subEl = $('#accountSub'), btn = $('#accountBtn');
+  if(nameEl) nameEl.textContent = isLoggedIn() ? userName() : 'زائر';
+  if(subEl) subEl.textContent = isLoggedIn() ? (USER.email || 'مسجّل الدخول') : 'غير مسجّل الدخول';
+  if(btn) btn.textContent = isLoggedIn() ? 'تسجيل الخروج' : 'تسجيل الدخول';
+  const al = $('#adminLink'); if(al) al.classList.toggle('hidden', !isAdmin()); // admin entry point in settings
+  refreshHomeChip();
+}
+
+// compact account chip on the home screen: login state + best score + live rank
+async function refreshHomeChip(){
+  const box = $('#homeAccount'); if(!box) return;
+  const nameEl = $('#haName'), subEl = $('#haSub'), act = $('#haAction');
+  if(!isLoggedIn()){
+    box.dataset.state = 'out';
+    if(nameEl) nameEl.textContent = 'زائر';
+    if(subEl) subEl.textContent = 'سجّل الدخول للعب التحدي السريع';
+    if(act) act.textContent = 'تسجيل الدخول';
+    return;
+  }
+  box.dataset.state = 'in';
+  if(nameEl) nameEl.textContent = userName();
+  if(act) act.textContent = 'تسجيل الخروج';
+  const best = Number(loadStats().blitzBest) || 0;
+  if(subEl) subEl.textContent = best ? ('أفضل نتيجة: ' + best) : 'العب أول تحدٍّ سريع!';
+  // enrich with the player's live global rank when the leaderboard is reachable
+  const rank = await myBlitzRank();
+  if(rank && subEl) subEl.textContent = `أفضل: ${rank.score} · المركز #${rank.pos} من ${rank.total}`;
+}
+
+// the signed-in player's best-score rank across all versions, or null
+async function myBlitzRank(){
+  if(!SUPABASE || !isLoggedIn()) return null;
+  try{
+    const { data, error } = await SUPABASE.from('blitz_leaderboard')
+      .select('user_id,score').order('score', { ascending:false }).limit(1000);
+    if(error || !data) return null;
+    const pos = data.findIndex(r => r.user_id === USER.id);
+    return pos >= 0 ? { pos: pos + 1, total: data.length, score: data[pos].score } : null;
+  }catch(e){ return null; }
+}
+
+// open the login screen, optionally with a custom intro + an action to resume after success
+function openAuth(intro, after){
+  pendingAfterAuth = after || null;
+  if(intro){ const el = $('#authIntro'); if(el) el.textContent = intro; }
+  setAuthMode('signin');
+  const err = $('#authError'); if(err) err.textContent = '';
+  show('auth');
+  setTimeout(()=>{ const e = $('#authEmail'); if(e) e.focus(); }, 60);
+}
+
+// toggle the form between sign-in and sign-up
+function setAuthMode(mode){
+  authMode = mode === 'signup' ? 'signup' : 'signin';
+  const signup = authMode === 'signup';
+  const t = $('#authTitle'); if(t) t.textContent = signup ? 'إنشاء حساب' : 'تسجيل الدخول';
+  const sub = $('#authSubmit'); if(sub) sub.textContent = signup ? 'إنشاء حساب' : 'دخول';
+  const nameWrap = $('#authNameWrap'); if(nameWrap) nameWrap.classList.toggle('hidden', !signup);
+  const tg = $('#authToggleText'); if(tg) tg.textContent = signup ? 'لديك حساب بالفعل؟' : 'ليس لديك حساب؟';
+  const tb = $('#authToggleBtn'); if(tb) tb.textContent = signup ? 'سجّل الدخول' : 'أنشئ حساباً';
+  const pass = $('#authPass'); if(pass) pass.setAttribute('autocomplete', signup ? 'new-password' : 'current-password');
+  const err = $('#authError'); if(err) err.textContent = '';
+}
+
+function authError(msg){ const el = $('#authError'); if(el) el.textContent = msg; sfx('wrong'); }
+
+// handle the auth form submit (sign in or sign up)
+async function submitAuth(e){
+  if(e) e.preventDefault();
+  if(!SUPABASE) return authError('تسجيل الدخول غير متاح الآن — تحقق من الاتصال.');
+  const email = ($('#authEmail').value || '').trim();
+  const pass = $('#authPass').value || '';
+  const name = sanitizeName($('#authName').value, '') || (email ? email.split('@')[0] : '');
+  if(!email || pass.length < 6) return authError('أدخل بريداً صحيحاً وكلمة مرور من ٦ أحرف على الأقل.');
+  const btn = $('#authSubmit'); if(btn){ btn.disabled = true; btn.textContent = '...'; }
+  try{
+    if(authMode === 'signup'){
+      const { data, error } = await SUPABASE.auth.signUp({ email, password: pass, options:{ data:{ name } } });
+      if(error) return authError(authMsg(error));
+      if(!data.session){ // email confirmation is ON → no session yet
+        toast('تم إنشاء الحساب — افحص بريدك لتأكيد الحساب ثم سجّل الدخول.');
+        setAuthMode('signin');
+        return;
+      }
+      USER = data.user;
+    } else {
+      const { data, error } = await SUPABASE.auth.signInWithPassword({ email, password: pass });
+      if(error) return authError(authMsg(error));
+      USER = data.user;
+    }
+    onAuthSuccess();
+  }catch(err){ authError('تعذّر تسجيل الدخول، حاول مجدداً.'); }
+  finally{ if(btn){ btn.disabled = false; setAuthMode(authMode); } }
+}
+
+// friendly Arabic messages for the common auth errors
+function authMsg(error){
+  const m = (error && error.message || '').toLowerCase();
+  if(m.includes('already registered') || m.includes('already exists')) return 'هذا البريد مسجّل بالفعل — سجّل الدخول.';
+  if(m.includes('invalid login')) return 'البريد أو كلمة المرور غير صحيحة.';
+  if(m.includes('email not confirmed')) return 'لم يتم تأكيد البريد بعد — افحص بريدك.';
+  if(m.includes('password')) return 'كلمة المرور ضعيفة جداً (٦ أحرف على الأقل).';
+  return error && error.message ? error.message : 'حدث خطأ، حاول مجدداً.';
+}
+
+function onAuthSuccess(){
+  updateAuthUI();
+  sfx('correct'); if(window.FX) window.FX.confetti({ count:90 });
+  toast('مرحباً ' + userName() + '!');
+  const after = pendingAfterAuth; pendingAfterAuth = null;
+  if(after === 'blitz') return startBlitz();
+  show('home');
+}
+
+async function signOut(){
+  if(SUPABASE){ try{ await SUPABASE.auth.signOut(); }catch(e){} }
+  USER = null;
+  updateAuthUI();
+  toast('تم تسجيل الخروج');
+  renderBlitzLeaderboard();
+}
+
+// settings "account" button: log in or out depending on state
+function accountAction(){ if(isLoggedIn()) signOut(); else openAuth('سجّل الدخول لحفظ نتائجك في لوحة المتصدرين.'); }
+
+/* ===================== Solo Blitz mode (isolated from the team engine) ===================== */
+const BLITZ_SECONDS = 60;
+const blitz = { active:false, score:0, streak:0, maxStreak:0, qs:[], i:0, endsAt:0, revealed:false, answered:0, correct:0 };
+let blitzInt = null, blitzLastSec = -1;
+
+function blitzBest(){ try{ return Math.max(0, Math.trunc(Number(localStorage.getItem('fakkir_blitz_best'))||0)); }catch(e){ return 0; } }
+function setBlitzBest(v){ try{ localStorage.setItem('fakkir_blitz_best', String(Math.trunc(v))); }catch(e){} }
+
+// every answerable question in the chosen version (needs a prompt and an answer)
+function blitzPool(){
+  const v = state.settings.version;
+  return DATA.questions.filter(q => q.version===v && (q.q || q.type) && q.a);
+}
+
+function startBlitz(){
+  if(!DATA){ return toast('جارٍ تحميل البيانات...'); }
+  // login required: results are saved to the shared leaderboard
+  if(!isLoggedIn()) return openAuth('سجّل الدخول لتلعب التحدي السريع وتُسجَّل نتيجتك في لوحة المتصدرين.', 'blitz');
+  const pool = blitzPool();
+  if(!pool.length) return toast('لا توجد أسئلة متاحة لهذه النسخة');
+  // progress from easiest to hardest: sort by point value ascending, random within each tier
+  blitz.qs = pool.slice().sort((a,b)=> (Number(a.value)||0) - (Number(b.value)||0) || (Math.random()-0.5));
+  blitz.active = true; blitz.score = 0; blitz.streak = 0; blitz.maxStreak = 0;
+  blitz.i = 0; blitz.answered = 0; blitz.correct = 0; blitz.revealed = false;
+  blitz.endsAt = Date.now() + BLITZ_SECONDS*1000;
+  sfx('start', 20);
+  renderBlitzQuestion();
+  show('blitz');
+  startBlitzTimer();
+}
+
+function startBlitzTimer(){
+  clearInterval(blitzInt); blitzLastSec = -1;
+  blitzInt = setInterval(()=>{
+    const left = Math.max(0, Math.ceil((blitz.endsAt - Date.now())/1000));
+    if(left !== blitzLastSec){
+      blitzLastSec = left;
+      const el = $('#blitzTime'); if(el){ el.textContent = left; el.classList.toggle('urgent', left<=5 && left>0); }
+      if(left<=5 && left>0){ sfx('tick'); fxHaptic(15); }
+    }
+    if(left<=0){ clearInterval(blitzInt); endBlitz(); }
+  }, 200);
+}
+
+function renderBlitzQuestion(){
+  if(blitz.i >= blitz.qs.length) return endBlitz(); // exhausted the pool before the clock
+  blitz.revealed = false;
+  const q = blitz.qs[blitz.i];
+  const c = cat(q.category) || { name:'', image:'' };
+  $('#blitzScore').textContent = blitz.score;
+  $('#blitzStreak').textContent = blitz.streak;
+  $('#blitzCat').textContent = c.name || '';
+  $('#blitzQ').textContent = q.q || questionTitle(q.type);
+  const story = (q.category==='crime' || q.category==='rescue') ? (q.note||'') : '';
+  const bs = $('#blitzStory'); if(bs){ bs.textContent = story; bs.classList.toggle('hidden', !story); }
+  renderVisual(q, c, '#blitzVisual');
+  const ab = $('#blitzAnswer'); ab.classList.add('hidden'); ab.textContent = '';
+  $('#blitzReveal').classList.remove('hidden');
+  $('#blitzGood').classList.add('hidden');
+  $('#blitzBad').classList.add('hidden');
+}
+
+function blitzReveal(){
+  const q = blitz.qs[blitz.i];
+  if(!q || blitz.revealed || !blitz.active) return;
+  blitz.revealed = true;
+  const c = cat(q.category) || { name:'', image:'' };
+  const scenario = q.category==='crime' || q.category==='rescue';
+  $('#blitzAnswer').textContent = answerText(q) + (!scenario && q.note ? ` — ${q.note}` : '');
+  $('#blitzAnswer').classList.remove('hidden');
+  if(q.image) renderVisual(q, c, '#blitzVisual', { reveal:true });
+  $('#blitzReveal').classList.add('hidden');
+  $('#blitzGood').classList.remove('hidden');
+  $('#blitzBad').classList.remove('hidden');
+  sfx('click');
+}
+
+function blitzMark(ok){
+  if(!blitz.active) return;
+  blitz.answered++;
+  if(ok){
+    blitz.correct++;
+    blitz.streak++; blitz.maxStreak = Math.max(blitz.maxStreak, blitz.streak);
+    const pts = 100 + (blitz.streak-1)*25; // streak combo bonus
+    blitz.score += pts;
+    sfx('correct', 20);
+    toast(`+${pts}${blitz.streak>=3 ? `  🔥 ×${blitz.streak}` : ''}`);
+  } else {
+    blitz.streak = 0;
+    sfx('wrong', [30,30]);
+  }
+  $('#blitzScore').textContent = blitz.score;
+  $('#blitzStreak').textContent = blitz.streak;
+  if(window.FX) window.FX.pop($('#blitzScore'));
+  blitz.i++;
+  if(blitz.active && Date.now() < blitz.endsAt) renderBlitzQuestion(); // else the timer's endBlitz wraps up
+}
+
+function endBlitz(){
+  if(!blitz.active) return; // idempotent: timer + pool-exhaustion can both call this
+  blitz.active = false;
+  clearInterval(blitzInt);
+  const prevBest = blitzBest();
+  const isBest = blitz.score > prevBest;
+  if(isBest) setBlitzBest(blitz.score);
+  recordStats({ blitzGames:1, blitzCorrect:blitz.correct, blitzBest: isBest ? blitz.score : null, maxStreak: blitz.maxStreak });
+  const rk = $('#blitzRank'); if(rk){ rk.classList.add('hidden'); rk.textContent = ''; } // reset; filled after the score saves
+  $('#blitzFinalScore').textContent = blitz.score;
+  $('#blitzBest').textContent = Math.max(prevBest, blitz.score);
+  $('#blitzSummary').textContent = `أجبت ${blitz.answered} سؤالًا · ${blitz.correct} صحيحة · أطول سلسلة ${blitz.maxStreak}`;
+  const badge = $('#blitzNewBest'); if(badge) badge.classList.toggle('hidden', !isBest);
+  if(isBest){ sfx('win', [60,30,60]); if(window.FX) window.FX.confetti({ count:200 }); }
+  else sfx('lose');
+  checkAchievements();
+  show('blitzResult');
+  submitBlitzScore(); // record this run on the shared leaderboard (fire-and-forget)
+}
+
+// persist a finished Blitz run to the Supabase leaderboard (requires login)
+async function submitBlitzScore(){
+  if(!SUPABASE || !isLoggedIn()) return;
+  try{
+    const { error } = await SUPABASE.from('blitz_scores').insert({
+      user_id: USER.id,
+      player_name: userName(),
+      score: clampScore(blitz.score),
+      correct: Math.max(0, Math.trunc(blitz.correct)),
+      answered: Math.max(0, Math.trunc(blitz.answered)),
+      max_streak: Math.max(0, Math.trunc(blitz.maxStreak)),
+      version: Number(state.settings.version) || 1
+    });
+    if(error){ console.warn('blitz score save failed', error); return; }
+    renderBlitzLeaderboard();
+    refreshHomeChip();
+    // reveal the player's new global rank on the result screen
+    const rank = await myBlitzRank();
+    const el = $('#blitzRank');
+    if(el && rank){
+      el.textContent = rank.pos <= 3 ? `🏆 المركز #${rank.pos} عالمياً!` : `مركزك: #${rank.pos} من ${rank.total}`;
+      el.classList.remove('hidden');
+      if(rank.pos === 1) sfx('golden');
+    }
+  }catch(e){ console.warn(e); }
+}
+
+function quitBlitz(){ blitz.active = false; clearInterval(blitzInt); show('home'); }
+
+/* ===================== Lifetime stats + achievements ===================== */
+function loadStats(){
+  try{ const s = JSON.parse(localStorage.getItem('fakkir_stats')||'{}'); return (s && typeof s==='object' && !Array.isArray(s)) ? s : {}; }
+  catch(e){ return {}; }
+}
+function saveStats(s){ try{ localStorage.setItem('fakkir_stats', JSON.stringify(s)); }catch(e){} }
+function recordStats(delta){
+  const s = loadStats();
+  const add = k => { s[k] = (Number(s[k])||0) + (Number(delta[k])||0); };
+  ['blitzGames','blitzCorrect','matchesPlayed','matchWins','goldenHits'].forEach(k => { if(delta[k]) add(k); });
+  if(delta.blitzBest != null) s.blitzBest = Math.max(Number(s.blitzBest)||0, delta.blitzBest);
+  if(delta.maxStreak != null) s.bestStreak = Math.max(Number(s.bestStreak)||0, delta.maxStreak);
+  saveStats(s);
+}
+
+const ACHIEVEMENTS = [
+  { id:'first_blitz', icon:'⚡', name:'انطلاقة',        desc:'أكمل أول تحدٍّ سريع',                 test:s=>(s.blitzGames||0)>=1 },
+  { id:'blitz_1000',  icon:'🚀', name:'سريع البديهة',   desc:'سجّل 1000 نقطة في تحدٍّ سريع',         test:s=>(s.blitzBest||0)>=1000 },
+  { id:'blitz_2500',  icon:'🌟', name:'أسطورة السرعة',  desc:'سجّل 2500 نقطة في تحدٍّ سريع',         test:s=>(s.blitzBest||0)>=2500 },
+  { id:'streak_5',    icon:'🔥', name:'سلسلة ملتهبة',   desc:'حقّق سلسلة من 5 إجابات صحيحة',         test:s=>(s.bestStreak||0)>=5 },
+  { id:'streak_10',   icon:'💥', name:'لا يُوقَف',       desc:'حقّق سلسلة من 10 إجابات صحيحة',        test:s=>(s.bestStreak||0)>=10 },
+  { id:'correct_50',  icon:'🎯', name:'خمسون إصابة',    desc:'أجب 50 سؤالًا صحيحًا في الوضع السريع', test:s=>(s.blitzCorrect||0)>=50 },
+  { id:'first_win',   icon:'🏆', name:'أول انتصار',     desc:'افز بمباراة فريقين',                  test:s=>(s.matchWins||0)>=1 },
+  { id:'golden',      icon:'⭐', name:'لمسة ذهبية',      desc:'أجب على سؤال ذهبي بنجاح',             test:s=>(s.goldenHits||0)>=1 },
+  { id:'veteran',     icon:'🎖️', name:'محترف',          desc:'العب 10 مباريات فريقين',              test:s=>(s.matchesPlayed||0)>=10 },
+];
+function unlockedSet(){ try{ const a = JSON.parse(localStorage.getItem('fakkir_achievements')||'[]'); return new Set(Array.isArray(a)?a:[]); }catch(e){ return new Set(); } }
+function saveUnlocked(set){ try{ localStorage.setItem('fakkir_achievements', JSON.stringify([...set])); }catch(e){} }
+
+// unlock any newly-earned achievements; toast + sparkle for fresh ones
+function checkAchievements(){
+  const s = loadStats(), set = unlockedSet(), fresh = [];
+  ACHIEVEMENTS.forEach(a=>{ if(!set.has(a.id) && a.test(s)){ set.add(a.id); fresh.push(a); } });
+  if(fresh.length){
+    saveUnlocked(set);
+    fresh.forEach((a,i)=> setTimeout(()=>{ toast(`${a.icon} إنجاز جديد: ${a.name}`); sfx('golden'); }, 600 + i*1100));
+  }
+  return fresh;
+}
+
+function renderAchievements(){
+  const grid = $('#achGrid'); if(!grid) return;
+  const s = loadStats(), set = unlockedSet();
+  ACHIEVEMENTS.forEach(a=>{ if(!set.has(a.id) && a.test(s)) set.add(a.id); }); // reflect anything just earned
+  saveUnlocked(set);
+  grid.innerHTML = ACHIEVEMENTS.map(a=>{
+    const on = set.has(a.id);
+    return `<div class="ach${on?' on':''}"><span class="ach-ico">${on?a.icon:'🔒'}</span><b>${safe(a.name)}</b><small>${safe(a.desc)}</small></div>`;
+  }).join('');
+  const st = $('#achStats');
+  if(st) st.innerHTML =
+    `<span><b>${Number(s.blitzBest)||0}</b>أفضل نتيجة سريعة</span>` +
+    `<span><b>${Number(s.bestStreak)||0}</b>أطول سلسلة</span>` +
+    `<span><b>${Number(s.matchWins)||0}</b>انتصارات</span>` +
+    `<span><b>${set.size}/${ACHIEVEMENTS.length}</b>إنجازات</span>`;
+}
+
+// stable per-browser id so the admin can tell returning visitors from new ones
+function sessionId(){
+  let id = '';
+  try{ id = localStorage.getItem('fakkir_sid') || ''; }catch(e){}
+  if(!id){
+    id = (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : (Date.now().toString(36)+Math.random().toString(16).slice(2));
+    try{ localStorage.setItem('fakkir_sid', id); }catch(e){}
+  }
+  return id;
+}
+
+// log one visit per tab-load to the private `visits` table (admin-only readable).
+// Fire-and-forget; never blocks the UI. The real IP is added server-side.
+async function logVisit(){
+  if(!SUPABASE) return;
+  try{ if(sessionStorage.getItem('fakkir_visit_logged')) return; }catch(e){}
+  try{
+    await SUPABASE.from('visits').insert({
+      session_id: sessionId(),
+      user_id: USER ? USER.id : null,
+      user_name: USER ? userName() : null,
+      path: location.pathname.slice(0,200),
+      referrer: document.referrer ? document.referrer.slice(0,300) : '',
+      user_agent: (navigator.userAgent||'').slice(0,400),
+      language: (navigator.language||'').slice(0,40),
+      screen: ((window.screen&&screen.width)||0)+'x'+((window.screen&&screen.height)||0),
+      tz: (Intl.DateTimeFormat().resolvedOptions().timeZone||'').slice(0,60)
+    });
+    try{ sessionStorage.setItem('fakkir_visit_logged','1'); }catch(e){}
+  }catch(e){ /* analytics is best-effort */ }
+}
+
+// Slow work (Supabase client + auth + leaderboard + a fresh data sync) runs here,
+// AFTER first paint, so it can never block the UI or make buttons feel laggy.
+async function initBackground(){
+  try{
+    await initSupabase();                       // loads supabase-js from CDN (slow) — off the critical path
+    if(SUPABASE){
+      await refreshSession();
+      try{ SUPABASE.auth.onAuthStateChange((_e, session)=>{ USER = (session && session.user) || null; updateAuthUI(); }); }
+      catch(e){ /* listener unavailable — login simply won't persist live */ }
+    } else { updateAuthUI(); }
+    renderLeaderboard();
+    logVisit();                                 // record this visit for the admin analytics
+  }catch(e){ console.warn('live services init failed', e); }
+  refreshGameData();                            // silently freshen questions from the live source
+}
+
+// Pull the freshest question set from Supabase/API and swap it in — but only when
+// it's safe (no active match / open question / blitz), so play is never disrupted.
+async function refreshGameData(){
+  if(CONFIG.preferSupabase === false) return;   // local is the chosen source: nothing to refresh
+  let fresh = null, src = '';
+  if(SUPABASE){ try{ fresh = await loadFromSupabase(); src = 'supabase'; }catch(e){} }
+  if(!fresh){ try{ fresh = await loadFromApi(); src = 'api'; }catch(e){} }
+  if(!fresh) return;                             // bundled local data is already showing — keep it
+  // sanity: never replace the full bundled set with an empty/half-seeded source
+  if(!Array.isArray(fresh.questions) || fresh.questions.length < 100 || !Array.isArray(fresh.categories) || !fresh.categories.length) return;
+  localizeFlags(fresh);
+  if(hasActiveMatch() || state.current || (typeof blitz !== 'undefined' && blitz.active)) return; // don't yank data mid-play
+  const prev = DATA;
+  DATA = fresh;
+  try{ await mergeLocalOnlyCategories(src); }catch(e){ DATA = prev; return; }
+  DATA_SOURCE = src;
+  populateVersions();
+  if(state.screen === 'category') renderCategories();
+  else if(state.screen === 'board' && !state.current) buildBoard();
 }
 
 try{
   loadLocalState();
-  await loadData();
-  bind();
-  populateVersions();
+  bind();                 // wire every button FIRST so the UI responds instantly
   renderHeader();
-  renderLeaderboard();
-  // after a reload, return the player to the screen they were on (not always home)
+  // instant content from the bundled file (cached by the service worker) — no network wait
+  try{ DATA = await loadLocal(); localizeFlags(DATA); DATA_SOURCE = 'local'; setStatus('', 'ok'); }
+  catch(e){ await loadData(); }   // bundled file unavailable -> fall back to the full source chain
+  populateVersions();
+  updateAuthUI();         // show the logged-out chip immediately; background sync updates it
   updateResumeUI();
-  restoreScreen();
-  // safe recovery notice if a corrupt/outdated save was discarded on load
+  restoreScreen();        // return to the last screen right away
+  initBackground();       // Supabase, auth, leaderboard, data refresh — all off the critical path
   if(recoveredCorruptState) setTimeout(()=>toast('تعذّرت استعادة الحفظ السابق (بيانات تالفة) — بدأنا من جديد بأمان.'), 400);
 }catch(e){
   console.error(e);

@@ -25,6 +25,25 @@ supabaseAnonKey: 'sb_publishable_Fe98o0FqpYIrgOb7YH25XA_2vNb6Ih5'
 
 The publishable key can be present in the browser as long as Row Level Security policies are configured. The SQL file includes public read policies for game data and public insert/read policies for match results.
 
+## Admin access
+
+The admin page is available at:
+
+```text
+/admin.html
+```
+
+It now uses Supabase email/password login. To make `abedhajjo57@gmail.com`
+the admin, create or confirm that Auth user in Supabase, then run:
+
+```text
+server/sql/admin-users.sql
+```
+
+This creates an `admin_users` allowlist, inserts `abedhajjo57@gmail.com`, and
+adds RLS policies so only that email can manage questions, categories, matches,
+Blitz scores, and visitor analytics from the admin panel.
+
 ## Quick setup with Supabase
 
 1. Open your Supabase project.
