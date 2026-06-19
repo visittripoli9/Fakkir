@@ -204,6 +204,7 @@ async function loadData(){
       DATA = await fn();
       localizeFlags(DATA);          // always serve flags from the app project folder, not a remote CDN
       await mergeLocalOnlyCategories(source); // surface bundled categories (e.g. players) missing from the source
+      await ensureBlitzSet(source); // Blitz has its own dedicated, bundled question set (separate from team versions)
       DATA_SOURCE = source;
       setStatus('', 'ok'); // hide the technical data-source banner from players
       return;
@@ -231,6 +232,16 @@ async function mergeLocalOnlyCategories(source){
     DATA.flags = Object.assign({}, local.flags, DATA.flags); // keep source flags, add any local-only ones
     localizeFlags(DATA);
   }catch(e){ console.warn('local category merge skipped', e); }
+}
+
+// The solo Blitz challenge runs on its OWN curated question set, authored in the
+// bundled assets/data.json (mixed media + difficulty levels) and intentionally
+// independent of the team game's A–O versions. It is not stored in Supabase, so
+// always source it from the local bundle no matter where the team data came from.
+async function ensureBlitzSet(source){
+  if(DATA && Array.isArray(DATA.blitz) && DATA.blitz.length) return; // local source already carries it
+  try{ const local = await loadLocal(); if(DATA) DATA.blitz = Array.isArray(local.blitz) ? local.blitz : []; }
+  catch(e){ if(DATA && !DATA.blitz) DATA.blitz = []; }
 }
 
 // Force every flag to its bundled local image (assets/img/flags/<code>.png) no
@@ -647,7 +658,17 @@ function updateQTurn(){
   if(cur.mode==='challenge') el.textContent = 'جولة التحدي: ' + name;
   else el.textContent = steal ? ('محاولة السرقة: ' + name) : ('الدور: ' + name);
 }
-function refreshQScores(){ $('#qBlueScore').textContent = state.teams.blue.score; $('#qRedScore').textContent = state.teams.red.score; }
+function refreshQScores(){
+  if(window.FX){ window.FX.countUp($('#qBlueScore'), state.teams.blue.score, 500); window.FX.countUp($('#qRedScore'), state.teams.red.score, 500); }
+  else { $('#qBlueScore').textContent = state.teams.blue.score; $('#qRedScore').textContent = state.teams.red.score; }
+}
+
+// brief correct/wrong flash on any card element (selector or node)
+function flash(sel, type){
+  const el = typeof sel === 'string' ? $(sel) : sel; if(!el) return;
+  el.classList.remove('flash-correct','flash-wrong'); void el.offsetWidth;
+  el.classList.add(type === 'correct' ? 'flash-correct' : 'flash-wrong');
+}
 
 // keep the skip button honest about the on-turn team's remaining skips (and warn when a skip would be penalized)
 function updateSkipButton(){
@@ -699,6 +720,7 @@ function wrongAnswer(reason){
   if(cur.phase==='initial'){
     // deducted from the team on turn — now hand the question to the other team to steal
     refreshQScores();
+    flash('.question-card', 'wrong');
     cur.phase = 'steal';
     cur.answerer = other(cur.answerer);
     sfx('steal');
@@ -1478,10 +1500,11 @@ let blitzInt = null, blitzLastSec = -1;
 function blitzBest(){ try{ return Math.max(0, Math.trunc(Number(localStorage.getItem('fakkir_blitz_best'))||0)); }catch(e){ return 0; } }
 function setBlitzBest(v){ try{ localStorage.setItem('fakkir_blitz_best', String(Math.trunc(v))); }catch(e){} }
 
-// every answerable question in the chosen version (needs a prompt and an answer)
+// the dedicated Blitz set (its own questions, mixed media), independent of the
+// team-game version. Needs a correct answer and some prompt (text, image, or video).
 function blitzPool(){
-  const v = state.settings.version;
-  return DATA.questions.filter(q => q.version===v && (q.q || q.type) && q.a);
+  const set = (DATA && Array.isArray(DATA.blitz)) ? DATA.blitz : [];
+  return set.filter(q => q && q.a && (q.q || q.media || q.video));
 }
 
 function startBlitz(){
@@ -1490,11 +1513,23 @@ function startBlitz(){
   if(!isLoggedIn()) return openAuth('سجّل الدخول لتلعب التحدي السريع وتُسجَّل نتيجتك في لوحة المتصدرين.', 'blitz');
   const pool = blitzPool();
   if(!pool.length) return toast('لا توجد أسئلة متاحة لهذه النسخة');
-  // progress from easiest to hardest: sort by point value ascending, random within each tier
-  blitz.qs = pool.slice().sort((a,b)=> (Number(a.value)||0) - (Number(b.value)||0) || (Math.random()-0.5));
+  // Build a round that actually RAMPS through every difficulty inside one 60s game.
+  // A short round only reaches ~15-20 questions, so instead of dumping all the easy
+  // ones first, take a few from each level (easiest→hardest) to form the main climb,
+  // then append the leftovers (still easiest→hardest) so a fast player never runs out.
+  // Each level is shuffled, so the order is fresh every run.
+  const byLevel = {};
+  for(const q of pool){ const L = Number(q.level) || 1; (byLevel[L] || (byLevel[L] = [])).push(q); }
+  const levels = Object.keys(byLevel).map(Number).sort((a,b)=> a-b);
+  const shuffled = {}; levels.forEach(L => { shuffled[L] = shuffleArr(byLevel[L]); });
+  const PER_LEVEL = 4; // first pass: ~4 per level → a full easy→hard climb in one round
+  const ramp = levels.flatMap(L => shuffled[L].slice(0, PER_LEVEL));
+  const rest = levels.flatMap(L => shuffled[L].slice(PER_LEVEL));
+  blitz.qs = ramp.concat(rest);
   blitz.active = true; blitz.score = 0; blitz.streak = 0; blitz.maxStreak = 0;
   blitz.i = 0; blitz.answered = 0; blitz.correct = 0; blitz.locked = false;
   blitz.endsAt = Date.now() + BLITZ_SECONDS*1000;
+  const sb = document.querySelector('.blitz-hud .streak'); if(sb) sb.dataset.heat = 0;
   sfx('start', 20);
   renderBlitzQuestion();
   show('blitz');
@@ -1527,7 +1562,12 @@ function distinctAnswers(pool, correct){
 // Auto-grading removes the old self-marking exploit. Returns null if it can't.
 function buildBlitzOptions(q){
   const correct = String(q.a || '').trim();
-  if(!correct || correct.length > 60) return null;
+  if(!correct || correct.length > 80) return null;
+  // dedicated Blitz questions ship their own curated distractors → use them directly
+  if(Array.isArray(q.options) && q.options.length){
+    const ds = q.options.map(s => String(s).trim()).filter(o => o && blitzNorm(o) !== blitzNorm(correct));
+    if(ds.length) return shuffleArr([{ text: correct, correct: true }, ...ds.slice(0, 3).map(d => ({ text: d, correct: false }))]);
+  }
   let distractors;
   if(q.category === 'rescue'){
     distractors = ['بريء', 'مذنب'].filter(o => blitzNorm(o) !== blitzNorm(correct));
@@ -1544,8 +1584,49 @@ function buildBlitzOptions(q){
   return shuffleArr([{ text: correct, correct: true }, ...distractors.map(d => ({ text: d, correct: false }))]);
 }
 
+// Render the Blitz prompt media: a real photo, a flag, or an autoplaying muted
+// video clip. Everything degrades gracefully to the category emblem so a question
+// never breaks (offline, blocked clip, or a missing file).
+function renderBlitzVisual(q, c, target){
+  const box = $(target); if(!box) return;
+  box.innerHTML = '';
+  const emblem = () => { const i = document.createElement('img'); i.className = 'blitz-emblem'; i.src = bust((c && c.image) || ''); i.alt = (c && c.name) || ''; return i; };
+  const kind = q.kind || 'text';
+
+  if(kind === 'video' && q.video){
+    const reduce = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+    const v = document.createElement('video');
+    v.className = 'blitz-video';
+    v.src = q.video; v.muted = true; v.controls = true; v.playsInline = true;
+    v.setAttribute('playsinline', ''); v.setAttribute('preload', 'metadata');
+    v.autoplay = !reduce; v.loop = !reduce;
+    if(q.poster) v.poster = q.poster;
+    // if the clip can't load (offline / blocked / 404), SKIP this question and move on,
+    // but only while it's still the active unanswered question (guards against stale timers).
+    const idx = blitz.i;
+    const skip = () => { if(blitz.active && !blitz.locked && blitz.i === idx){ blitz.i++; renderBlitzQuestion(); } };
+    v.onerror = skip;
+    box.appendChild(v);
+    if(!reduce){ try{ const p = v.play(); if(p && p.catch) p.catch(()=>{}); }catch(e){} }
+    setTimeout(() => { if(v.readyState < 1) skip(); }, 3500); // watchdog: a hung/blocked load also skips
+    return;
+  }
+
+  if((kind === 'image' || kind === 'flag') && q.media){
+    const img = document.createElement('img');
+    img.className = kind === 'flag' ? 'blitz-flag' : 'blitz-photo';
+    img.src = q.media; img.alt = ''; // never expose the answer via alt text
+    img.onerror = () => { box.innerHTML = ''; box.appendChild(emblem()); };
+    box.appendChild(img);
+    return;
+  }
+
+  // plain text question: a clean category emblem (never the answer)
+  box.appendChild(emblem());
+}
+
 function renderBlitzQuestion(){
-  if(blitz.i >= blitz.qs.length) return endBlitz(); // exhausted the pool before the clock
+  if(blitz.i >= blitz.qs.length) return endBlitz('done'); // exhausted the pool before the clock
   const q = blitz.qs[blitz.i];
   const opts = buildBlitzOptions(q);
   if(!opts){ blitz.i++; return renderBlitzQuestion(); } // skip a question we can't build choices for
@@ -1557,7 +1638,7 @@ function renderBlitzQuestion(){
   $('#blitzQ').textContent = q.q || questionTitle(q.type);
   const story = (q.category==='crime' || q.category==='rescue') ? (q.note||'') : '';
   const bs = $('#blitzStory'); if(bs){ bs.textContent = story; bs.classList.toggle('hidden', !story); }
-  renderVisual(q, c, '#blitzVisual');
+  renderBlitzVisual(q, c, '#blitzVisual');
   const box = $('#blitzOptions');
   box.innerHTML = opts.map((o,i)=>`<button type="button" class="blitz-opt" data-i="${i}" data-correct="${o.correct?1:0}">${safe(o.text)}</button>`).join('');
   box.querySelectorAll('.blitz-opt').forEach(b => b.onclick = () => answerBlitz(b));
@@ -1577,7 +1658,8 @@ function answerBlitz(btn){
   if(ok){
     blitz.correct++;
     blitz.streak++; blitz.maxStreak = Math.max(blitz.maxStreak, blitz.streak);
-    const pts = 100 + (blitz.streak-1)*25; // streak combo bonus
+    const lvl = Math.max(1, Number((blitz.qs[blitz.i] || {}).level) || 1);
+    const pts = (40 + lvl*30) + (blitz.streak-1)*20; // harder question = more points, plus streak combo
     blitz.score += pts;
     sfx('correct', 20); fxHaptic(25);
     toast(`+${pts}${blitz.streak>=3 ? `  🔥 ×${blitz.streak}` : ''}`);
@@ -1588,14 +1670,27 @@ function answerBlitz(btn){
   $('#blitzScore').textContent = blitz.score;
   $('#blitzStreak').textContent = blitz.streak;
   if(window.FX) window.FX.pop($('#blitzScore'));
+  flash('.blitz-card', ok ? 'correct' : 'wrong');
+  const streakBox = document.querySelector('.blitz-hud .streak');
+  if(streakBox) streakBox.dataset.heat = blitz.streak>=10 ? 3 : blitz.streak>=6 ? 2 : blitz.streak>=3 ? 1 : 0;
+  if(ok && blitz.streak>=3 && window.FX) window.FX.pop($('#blitzStreak'));
   blitz.i++;
-  setTimeout(()=>{ if(blitz.active && Date.now() < blitz.endsAt) renderBlitzQuestion(); }, ok ? 430 : 780);
+  // sudden death: a single wrong answer ends the round (after a beat to reveal the correct option)
+  setTimeout(()=>{
+    if(!blitz.active) return;
+    if(!ok) return endBlitz('wrong');
+    if(Date.now() < blitz.endsAt) renderBlitzQuestion();
+  }, ok ? 430 : 1100);
 }
 
-function endBlitz(){
+function endBlitz(reason){
   if(!blitz.active) return; // idempotent: timer + pool-exhaustion can both call this
   blitz.active = false;
   clearInterval(blitzInt);
+  const title = $('#blitzEndTitle');
+  if(title) title.textContent = reason==='wrong' ? 'إجابة خاطئة — انتهت الجولة!'
+    : reason==='done' ? 'أكملت كل الأسئلة! 🎉'
+    : 'انتهى الوقت!';
   const prevBest = blitzBest();
   const isBest = blitz.score > prevBest;
   if(isBest) setBlitzBest(blitz.score);
