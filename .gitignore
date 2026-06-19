@@ -7,6 +7,9 @@ node_modules/
 !.env.example
 server/.env
 
+# admin allow-list contains a real email — keep it private (use the .example)
+server/sql/admin-users.sql
+
 # logs
 *.log
 npm-debug.log*

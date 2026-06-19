@@ -1,13 +1,15 @@
 -- =====================================================================
--- FAKKIR — email-based admin access.
+-- FAKKIR — email-based admin access (TEMPLATE).
 --
--- Run this in the Supabase SQL Editor after schema.sql. It replaces the old
--- browser-side service_role-key workflow with Supabase Auth + RLS:
---   1) create/sign in with the Auth user abedhajjo57@gmail.com
---   2) this SQL allowlists that email as an admin
---   3) the admin page uses the user's JWT, and these policies decide access
+-- Copy this to `admin-users.sql` (which is gitignored so your real admin
+-- email is never committed), replace the placeholder email, and run it in
+-- the Supabase SQL Editor after schema.sql.
 --
--- Safe to re-run.
+-- An admin, once signed in with email+password, can manage all content and
+-- read the private visitor analytics — enforced entirely by RLS (tied to
+-- their JWT email). No service_role secret key needed.
+--
+-- Prerequisite: the admin email must have a Supabase Auth account.
 -- =====================================================================
 
 create table if not exists public.admin_users (
@@ -18,8 +20,9 @@ create table if not exists public.admin_users (
 
 alter table public.admin_users enable row level security;
 
+-- 🔴 REPLACE with your real admin email before running:
 insert into public.admin_users(email)
-values ('abedhajjo57@gmail.com')
+values ('your-admin@example.com')
 on conflict (email) do nothing;
 
 create or replace function public.fakkir_is_admin()
@@ -49,27 +52,19 @@ grant select on public.admin_users to authenticated;
 -- Core game tables.
 drop policy if exists "admin manage categories" on public.categories;
 create policy "admin manage categories" on public.categories
-  for all to authenticated
-  using (public.fakkir_is_admin())
-  with check (public.fakkir_is_admin());
+  for all to authenticated using (public.fakkir_is_admin()) with check (public.fakkir_is_admin());
 
 drop policy if exists "admin manage flags" on public.flags;
 create policy "admin manage flags" on public.flags
-  for all to authenticated
-  using (public.fakkir_is_admin())
-  with check (public.fakkir_is_admin());
+  for all to authenticated using (public.fakkir_is_admin()) with check (public.fakkir_is_admin());
 
 drop policy if exists "admin manage questions" on public.questions;
 create policy "admin manage questions" on public.questions
-  for all to authenticated
-  using (public.fakkir_is_admin())
-  with check (public.fakkir_is_admin());
+  for all to authenticated using (public.fakkir_is_admin()) with check (public.fakkir_is_admin());
 
 drop policy if exists "admin manage matches" on public.matches;
 create policy "admin manage matches" on public.matches
-  for all to authenticated
-  using (public.fakkir_is_admin())
-  with check (public.fakkir_is_admin());
+  for all to authenticated using (public.fakkir_is_admin()) with check (public.fakkir_is_admin());
 
 grant select, insert, update, delete on public.categories to authenticated;
 grant select, insert, update, delete on public.flags to authenticated;
@@ -78,7 +73,7 @@ grant select, insert, update, delete on public.matches to authenticated;
 grant usage, select on sequence public.questions_id_seq to authenticated;
 grant usage, select on sequence public.matches_id_seq to authenticated;
 
--- Optional admin analytics table from admin-analytics.sql.
+-- Optional analytics table (admin-analytics.sql).
 do $$
 begin
   if to_regclass('public.visits') is not null then
@@ -88,7 +83,7 @@ begin
   end if;
 end $$;
 
--- Optional Blitz leaderboard table from blitz.sql.
+-- Optional Blitz table (blitz.sql).
 do $$
 begin
   if to_regclass('public.blitz_scores') is not null then
@@ -96,7 +91,6 @@ begin
     execute 'create policy "admin manage blitz scores" on public.blitz_scores for all to authenticated using (public.fakkir_is_admin()) with check (public.fakkir_is_admin())';
     execute 'grant select, insert, update, delete on public.blitz_scores to authenticated';
   end if;
-
   if to_regclass('public.blitz_scores_id_seq') is not null then
     execute 'grant usage, select on sequence public.blitz_scores_id_seq to authenticated';
   end if;

@@ -7,8 +7,9 @@ window.FAKKIR_CONFIG = {
   preferSupabase: true,
   fallbackToLocal: true,
   defaultTheme: 'light',
-  // accounts that get admin powers (must match the `admins` table seeded in
-  // server/sql/admin-role.sql). Not a secret — it just declares who is admin;
-  // the real enforcement is the database RLS policies.
-  adminEmails: ['abedhajjo57@gmail.com']
+  // Accounts that see the in-app admin link. Left empty in the public repo to
+  // avoid publishing a real email. Add your admin email(s) locally if you want
+  // the Settings → admin button to appear, e.g. adminEmails: ['you@example.com'].
+  // Real admin access is enforced by the database (admin_users + RLS), not this.
+  adminEmails: []
 };

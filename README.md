@@ -33,14 +33,14 @@ The admin page is available at:
 /admin.html
 ```
 
-It now uses Supabase email/password login. To make `abedhajjo57@gmail.com`
+It now uses Supabase email/password login. To make `your-admin@example.com`
 the admin, create or confirm that Auth user in Supabase, then run:
 
 ```text
 server/sql/admin-users.sql
 ```
 
-This creates an `admin_users` allowlist, inserts `abedhajjo57@gmail.com`, and
+This creates an `admin_users` allowlist, inserts `your-admin@example.com`, and
 adds RLS policies so only that email can manage questions, categories, matches,
 Blitz scores, and visitor analytics from the admin panel.
 

@@ -10,7 +10,7 @@ import { ALL } from './players.mjs';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const outDir = path.join(root, 'client', 'assets', 'img', 'players');
 const manifestPath = path.join(root, 'tools', 'players-images.json');
-const UA = 'FakkirTriviaGame/1.0 (educational project; contact: abedhajjo57@gmail.com)';
+const UA = 'FakkirTriviaGame/1.0 (educational project; educational project)';
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 // alternate Wikipedia titles to try when the primary has no image / 404
