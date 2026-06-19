@@ -386,6 +386,35 @@ body[data-theme="dark"] .icon-btn .ico-moon{display:none}
 .profile-msg{min-height:18px;margin-top:8px;font-weight:800;font-size:13px;color:var(--green)}
 .profile-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:22px;border-top:1px solid var(--line);padding-top:18px}
 @media(max-width:560px){.profile-stats{grid-template-columns:repeat(2,1fr)}.profile-avatar{width:68px;height:68px;font-size:28px}.profile-id h2{font-size:22px}}
+
+/* ===================== v10: premium buttons (ripple + states) ===================== */
+/* needed so the ripple clips to the button; an element's own box-shadow is NOT
+   clipped by overflow:hidden, so button glows are unaffected */
+button{position:relative;overflow:hidden}
+/* keep the version dropdown button able to show its focus ring cleanly */
+.vp-dd-btn{overflow:hidden}
+
+.ripple{
+  position:absolute;border-radius:50%;pointer-events:none;
+  background:currentColor;opacity:.28;transform:scale(0);
+  animation:ripple .58s cubic-bezier(.2,.7,.3,1) forwards;will-change:transform,opacity;
+}
+@keyframes ripple{to{transform:scale(2.4);opacity:0}}
+
+/* crisp, consistent press + disabled states across every variant */
+button{transition:transform .12s cubic-bezier(.2,.8,.25,1),box-shadow .18s ease,filter .14s ease,border-color .16s ease,background .16s ease}
+button:active:not(:disabled){transform:translateY(1px) scale(.97)}
+button:disabled,button[disabled]{opacity:.5;cursor:not-allowed;filter:grayscale(.35);box-shadow:none!important;transform:none!important}
+button:disabled::after{display:none!important}            /* kill the primary sheen when disabled */
+button:disabled:hover{transform:none!important;filter:grayscale(.35)!important}
+
+/* ghost / nav / icon buttons get the same lift language as primary */
+.ghost-btn:active:not(:disabled),.nav-link:active,.icon-btn:active{transform:translateY(1px) scale(.97)}
+
+@media(prefers-reduced-motion:reduce){
+  .ripple{display:none}
+  button:active:not(:disabled){transform:none}
+}
 .admin-error{color:var(--red);font-weight:800;min-height:20px}
 .admin-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px}
 .admin-head h2{margin:0;font-size:28px}

@@ -1109,6 +1109,14 @@ function bind(){
   const hp=$('#hapticSetting'); if(hp) hp.onchange=e=>{ state.settings.haptics=!!e.target.checked; saveLocal(); if(state.settings.haptics) fxHaptic(20); };
   // leaderboard tabs
   $$('.lb-tab').forEach(b=> b.onclick=()=>showLbTab(b.dataset.lb));
+  // universal button feel: ripple + haptic on every press, soft click on UI buttons
+  document.addEventListener('pointerdown', e=>{
+    const btn = e.target.closest('button');
+    if(!btn || btn.disabled) return;
+    spawnRipple(btn, e);
+    fxHaptic(8);
+    if(!btn.matches(OWN_SOUND_SEL)) sfx('click');
+  });
   // follow the device theme live until the player makes an explicit choice
   try{ matchMedia('(prefers-color-scheme: dark)').addEventListener('change', ()=>{ if(!localStorage.getItem('theme')) renderHeader(); }); }catch(e){}
   // logo fallback without an inline onerror handler (CSP forbids inline scripts)
@@ -1145,6 +1153,27 @@ function sfx(name, vibe){
   if(vibe) fxHaptic(vibe);
 }
 function fxHaptic(pattern){ if(window.FX && state.settings && state.settings.haptics !== false) window.FX.haptic(pattern); }
+
+// material-style ripple from the press point — gives every button a tactile feel
+function spawnRipple(btn, e){
+  try{
+    const rect = btn.getBoundingClientRect();
+    if(!rect.width) return;
+    const size = Math.max(rect.width, rect.height);
+    const r = document.createElement('span');
+    r.className = 'ripple';
+    r.style.width = r.style.height = size + 'px';
+    const cx = (e && e.clientX != null) ? e.clientX : rect.left + rect.width / 2;
+    const cy = (e && e.clientY != null) ? e.clientY : rect.top + rect.height / 2;
+    r.style.left = (cx - rect.left - size / 2) + 'px';
+    r.style.top = (cy - rect.top - size / 2) + 'px';
+    btn.appendChild(r);
+    r.addEventListener('animationend', () => r.remove());
+    setTimeout(() => r.remove(), 700);
+  }catch(_){}
+}
+// buttons that already emit their own purposeful sound (skip the generic UI click)
+const OWN_SOUND_SEL = '#correctBtn,#wrongBtn,#passBtn,#showAnswerBtn,#nextBtn,#startBtn,#blitzReveal,#blitzGood,#blitzBad,#tbBlueBtn,#tbRedBtn,#soundToggle,.cat-card,.point-btn,.js-blitz';
 function updateSoundIcon(){
   if(window.FX) window.FX.setEnabled(!!state.settings.sound); // keep the FX mixer in sync with the toggle
   const b = $('#soundToggle'); if(!b) return;
